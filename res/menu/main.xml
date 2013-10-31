@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<item android:id="@+id/menu_nav" android:title="更多功能"
+        android:showAsAction="always|withText"
+        android:orderInCategory="2">
+        <menu>
+            <item android:id="@+id/menu_account_user_manager" 
+                android:showAsAction="ifRoom"
+                
+                android:title="功能2"/>
+
+            <item android:id="@+id/menu_search" android:showAsAction="ifRoom"
+                android:title="功能3"/>
+
+         </menu>
+</item>
+<item android:id="@+id/item1" 
+    android:title="功能1" 
+    android:showAsAction="ifRoom" 
+    android:actionViewClass="android.widget.SearchView"
+    android:orderInCategory="1"></item>
+</menu>
