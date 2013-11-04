@@ -7,24 +7,28 @@ import com.example.fragment.TestFragment;
 
 import android.app.ActionBar;
 import android.app.ActionBar.TabListener;
+import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.ActionBar.OnNavigationListener;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+
+
+import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
 
-public class MainActivity extends FragmentActivity implements OnNavigationListener{
+public class MainActivity extends Activity implements OnNavigationListener{
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,45 +37,44 @@ public class MainActivity extends FragmentActivity implements OnNavigationListen
 		setTheme(R.style.ActionBar);
 		setContentView(R.layout.activity_main);
 		
+		
+		
 		//actionBarTest();
-		tabsTest();
+		//tabsTest();
 	}
 
 	private void tabsTest() {
 		ActionBar actionBar = getActionBar();
-		ViewPager viewPager = (ViewPager)findViewById(R.id.pager);
+		final ViewPager viewPager = (ViewPager)findViewById(R.id.pager);
 		
 		actionBar.setDisplayHomeAsUpEnabled(false);
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		
-		FragmentPagerAdapter fragmentPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
+		
+		FragmentPagerAdapter fragmentPagerAdapter = new FragmentPagerAdapter(getFragmentManager()) {
 			
 			@Override
 			public int getCount() {
 				// TODO Auto-generated method stub
-				
 				return 10;
 			}
 			
 			@Override
-			public android.support.v4.app.Fragment getItem(int arg0) {
+			public Fragment getItem(int arg0) {
 				// TODO Auto-generated method stub
-				Fragment fragment = new TestFragment();
-				
-				
-				return fragment;
+				TestFragment testFragment = new TestFragment();
+				testFragment.setA(arg0);
+				return testFragment;
 			}
 
 			@Override
 			public CharSequence getPageTitle(int position) {
 				// TODO Auto-generated method stub
-				
-				return "TAB"+(position+1);
+				return "TAB"+position;
 			}
 			
 			
 		};
-		
 		viewPager.setAdapter(fragmentPagerAdapter);
 		viewPager.setOnPageChangeListener(new OnPageChangeListener() {
 			
@@ -108,7 +111,7 @@ public class MainActivity extends FragmentActivity implements OnNavigationListen
 				@Override
 				public void onTabSelected(Tab tab, FragmentTransaction ft) {
 					// TODO Auto-generated method stub
-					
+					viewPager.setCurrentItem(tab.getPosition());
 				}
 				
 				@Override
@@ -197,10 +200,25 @@ public class MainActivity extends FragmentActivity implements OnNavigationListen
 	}
 
 	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		
+		switch (item.getItemId()) {
+		case R.id.action_bar_user:
+			Intent intent = new Intent(this,LoginActivity.class);  
+            startActivity(intent);  
+			return true;
+		default:
+			break;
+		}
+		
+		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-
+				 
 }

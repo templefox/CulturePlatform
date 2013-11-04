@@ -14,9 +14,9 @@
 
          </menu>
 </item>
-<item android:id="@+id/item1" 
-    android:title="功能1" 
+<item android:id="@+id/action_bar_user" 
+    android:title="用户" 
     android:showAsAction="ifRoom" 
-    android:actionViewClass="android.widget.SearchView"
+    android:icon="@+drawable/ic_action_person"
     android:orderInCategory="1"></item>
 </menu>
