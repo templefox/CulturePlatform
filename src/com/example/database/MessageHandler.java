@@ -60,7 +60,7 @@ public class MessageHandler extends Handler {
 			//收到其他消息 以json格式
 			try {
 				JSONArray array = new JSONArray(get);
-				messageAdapter.getSucceedHandler();
+				messageAdapter.getSucceedHandler(array);
 			} catch (JSONException e) {
 				//其他错误
 				messageAdapter.errorHandler();

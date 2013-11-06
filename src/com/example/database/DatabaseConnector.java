@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,16 +29,19 @@ import android.util.Log;
 
 public class DatabaseConnector {
 	static public String target_url = "http://templefox.xicp.net:998/";
+	static public String METHOD = "METHOD";
+	private Map<String, String>	params = new HashMap<String, String>();
 	
-	static public void asyncConnect(
-			final Map<String, String> params,final MessageAdapter callback)
+	public DatabaseConnector addParams(String key,String value) {
+		params.put(key, value);
+		return this;
+	}
+
+	public void asyncConnect(final MessageAdapter callback)
 	{
 		final MessageHandler handler = new MessageHandler();
 		new Thread(){
 			@Override
-			
-			
-			
 			public void run(){		
 				handler.setMessageAdapter(callback);
 				syncConnect(target_url, params, handler);
@@ -45,7 +49,7 @@ public class DatabaseConnector {
 		}.start();
 	}
 	
-	private static void syncConnect(final String url, final Map<String, String> params, final MessageHandler handler)
+	private void syncConnect(final String url, final Map<String, String> params, final MessageHandler handler)
 	{
 		String json = null;
 		BufferedReader reader = null;

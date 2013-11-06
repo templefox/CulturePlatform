@@ -1,19 +1,37 @@
 package com.example.cultureplatform;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.example.database.DatabaseConnector;
+import com.example.database.MessageAdapter;
+import com.example.database.data.User;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Activity which displays a login screen to the user, offering registration as
@@ -26,11 +44,6 @@ public class LoginActivity extends Activity {
 	 */
 	private static final String[] DUMMY_CREDENTIALS = new String[] {
 			"foo@example.com:hello", "bar@example.com:world" };
-
-	/**
-	 * The default email to populate the email field with.
-	 */
-	public static final String EXTRA_EMAIL = "com.example.android.authenticatordemo.extra.EMAIL";
 
 	/**
 	 * Keep track of the login task to ensure we can cancel it if requested.
@@ -54,12 +67,21 @@ public class LoginActivity extends Activity {
 		setTheme(R.style.ActionBar);
 		setContentView(R.layout.activity_login);
 
-		// Set up the login form.
-		mEmail = getIntent().getStringExtra(EXTRA_EMAIL);
-		mEmailView = (EditText) findViewById(R.id.email);
-		mEmailView.setText(mEmail);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 
+		initFindView();
+		initListener();
+	}
+
+	private void initFindView() {
+		mEmailView = (EditText) findViewById(R.id.email);
 		mPasswordView = (EditText) findViewById(R.id.password);
+		mLoginFormView = findViewById(R.id.login_form);
+		mLoginStatusView = findViewById(R.id.login_status);
+		mLoginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
+	}
+
+	private void initListener() {
 		mPasswordView
 				.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 					@Override
@@ -72,11 +94,6 @@ public class LoginActivity extends Activity {
 						return false;
 					}
 				});
-
-		mLoginFormView = findViewById(R.id.login_form);
-		mLoginStatusView = findViewById(R.id.login_status);
-		mLoginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
-
 		findViewById(R.id.sign_in_button).setOnClickListener(
 				new View.OnClickListener() {
 					@Override
@@ -85,7 +102,8 @@ public class LoginActivity extends Activity {
 					}
 				});
 	}
-
+	
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
@@ -102,7 +120,12 @@ public class LoginActivity extends Activity {
 		if (mAuthTask != null) {
 			return;
 		}
-
+		
+		//Òþ²ØÈí¼üÅÌ
+		InputMethodManager imm =(InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE); 
+		imm.hideSoftInputFromWindow(mPasswordView.getWindowToken(), 0); 
+		
+		
 		// Reset errors.
 		mEmailView.setError(null);
 		mPasswordView.setError(null);
@@ -119,7 +142,7 @@ public class LoginActivity extends Activity {
 			mPasswordView.setError(getString(R.string.error_field_required));
 			focusView = mPasswordView;
 			cancel = true;
-		} else if (mPassword.length() < 4) {
+		} else if (mPassword.length() < 0) {
 			mPasswordView.setError(getString(R.string.error_invalid_password));
 			focusView = mPasswordView;
 			cancel = true;
@@ -128,10 +151,6 @@ public class LoginActivity extends Activity {
 		// Check for a valid email address.
 		if (TextUtils.isEmpty(mEmail)) {
 			mEmailView.setError(getString(R.string.error_field_required));
-			focusView = mEmailView;
-			cancel = true;
-		} else if (!mEmail.contains("@")) {
-			mEmailView.setError(getString(R.string.error_invalid_email));
 			focusView = mEmailView;
 			cancel = true;
 		}
@@ -145,8 +164,16 @@ public class LoginActivity extends Activity {
 			// perform the user login attempt.
 			mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
 			showProgress(true);
-			mAuthTask = new UserLoginTask();
-			mAuthTask.execute((Void) null);
+/*			mAuthTask = new UserLoginTask();
+			mAuthTask.execute((Void) null);*/
+			
+			DatabaseConnector connector = new DatabaseConnector();
+			connector.addParams(DatabaseConnector.METHOD, "GETUSER");
+			connector.addParams("name",mEmail);
+			connector.addParams("password", mPassword);
+			connector.asyncConnect(messageAdapter);
+			
+			
 		}
 	}
 
@@ -215,6 +242,8 @@ public class LoginActivity extends Activity {
 				}
 			}
 
+			
+			
 			// TODO: register the new account here.
 			return true;
 		}
@@ -239,4 +268,62 @@ public class LoginActivity extends Activity {
 			showProgress(false);
 		}
 	}
+
+	
+	private MessageAdapter messageAdapter = new MessageAdapter() {
+		User user = new User();
+		@Override
+		public void getSucceedHandler(JSONArray array) {
+			for(int i=0 ; i<array.length();i++)
+			{
+				
+				try {
+					JSONObject obj = array.getJSONObject(i);
+					user.setId(obj.getInt("id"));
+					user.setNickname(obj.getString("nickname"));
+					user.setEMail(obj.getString("E_mail"));
+					user.setPhoneNum(obj.getString("phone_num"));
+					user.setLoginName(obj.getString("login_name"));
+					user.setRegTime(SimpleDateFormat.getDateInstance().parse(obj.getString("reg_time")));
+					user.setAuthority(obj.getInt("authority"));
+					Toast.makeText(getApplicationContext(), "OK", Toast.LENGTH_SHORT).show();
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		@Override
+		public void onFinish() {
+			showProgress(false);
+			ApplicationHelper appHelper = (ApplicationHelper) getApplicationContext();
+			appHelper.setCurrentUser(user);
+			finish();
+		}
+		
+		
+		
+	};
+	
+	
+	
+	
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) { 
+        case android.R.id.home: 
+            Intent intent = new Intent(this, UserActivity.class); 
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); 
+            startActivity(intent); 
+            return true; 
+        default: 
+            return super.onOptionsItemSelected(item);  
+	    }
+	}
+	
+	
 }

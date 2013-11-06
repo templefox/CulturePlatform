@@ -204,14 +204,18 @@ public class MainActivity extends Activity implements OnNavigationListener{
 		
 		switch (item.getItemId()) {
 		case R.id.action_bar_user:
-			Intent intent = new Intent(this,LoginActivity.class);  
-            startActivity(intent);  
-			return true;
+			return intent2UserActivity();
 		default:
 			break;
 		}
 		
 		return super.onOptionsItemSelected(item);
+	}
+
+	private boolean intent2UserActivity() {
+		Intent intent = new Intent(this,UserActivity.class);  
+		startActivity(intent);  
+		return true;
 	}
 
 	@Override
