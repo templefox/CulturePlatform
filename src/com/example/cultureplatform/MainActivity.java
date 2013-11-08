@@ -3,6 +3,7 @@ package com.example.cultureplatform;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.fragment.RecommendFragment;
 import com.example.fragment.TestFragment;
 
 import android.app.ActionBar;
@@ -36,6 +37,100 @@ public class MainActivity extends Activity implements OnNavigationListener{
 		super.onCreate(savedInstanceState);
 		setTheme(R.style.ActionBar);
 		setContentView(R.layout.activity_main);
+		
+		final ActionBar actionBar = getActionBar();
+		final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+		
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		FragmentPagerAdapter fragmentPagerAdapter = new FragmentPagerAdapter(getFragmentManager()) {
+			@Override
+			public int getCount() {
+				// TODO Auto-generated method stub
+				return 3;
+			}
+			
+			@Override
+			public Fragment getItem(int arg0) {
+				// TODO Auto-generated method stub
+				Fragment fragment;
+				switch (arg0) {
+				case 0:
+					fragment = new RecommendFragment();
+					break;
+
+				default:
+					fragment = new TestFragment();
+					((TestFragment)fragment).setA(arg0);
+					break;
+				}
+				return fragment;
+			}
+
+			@Override
+			public CharSequence getPageTitle(int position) {
+				// TODO Auto-generated method stub
+				CharSequence s;
+				switch (position) {
+				case 0:
+					s="±à¼­ÍÆ¼ö";
+					break;
+
+				default:
+					s= "TAB"+position;
+					break;
+				}
+				return s;
+			}
+			
+			
+		};
+		viewPager.setAdapter(fragmentPagerAdapter);
+		viewPager.setOnPageChangeListener(new OnPageChangeListener() {
+			
+			@Override
+			public void onPageSelected(int arg0) {
+				// TODO Auto-generated method stub
+				actionBar.setSelectedNavigationItem(arg0);
+			}
+			
+			@Override
+			public void onPageScrolled(int arg0, float arg1, int arg2) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onPageScrollStateChanged(int arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+		for(int i = 0;i<fragmentPagerAdapter.getCount();i++)
+		{
+			Tab tab = actionBar.newTab();
+			tab.setText(fragmentPagerAdapter.getPageTitle(i)).setTabListener(new TabListener() {
+				
+				@Override
+				public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void onTabSelected(Tab tab, FragmentTransaction ft) {
+					// TODO Auto-generated method stub
+					viewPager.setCurrentItem(tab.getPosition());
+				}
+				
+				@Override
+				public void onTabReselected(Tab tab, FragmentTransaction ft) {
+					// TODO Auto-generated method stub
+					
+				}
+			});
+			actionBar.addTab(tab);
+		}
 		
 		
 		
