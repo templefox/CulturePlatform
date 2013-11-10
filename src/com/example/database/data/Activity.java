@@ -249,9 +249,6 @@ public class Activity implements java.io.Serializable {
 
 	@Override
 	public int hashCode() {
-		return 1;
-		//在Set中去除重复，只要判断主码即可。
+		return id;
 	}
-	
-	
 }

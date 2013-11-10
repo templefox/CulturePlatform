@@ -1,9 +1,21 @@
 package com.example.fragment;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.example.cultureplatform.ApplicationHelper;
 import com.example.cultureplatform.R;
+import com.example.database.DatabaseConnector;
+import com.example.database.MessageAdapter;
+import com.example.database.data.Activity;
 
 import android.app.Fragment;
 import android.database.DataSetObserver;
@@ -20,47 +32,107 @@ import android.widget.TextView;
 
 public class RecommendFragment extends Fragment {
 	private ListView listView;
+	private RecommendItemAdapter adapter = new RecommendItemAdapter(null);
+
+	private MessageAdapter recommendAdapter = new MessageAdapter() {
+		
+		@Override
+		public void getSucceedHandler(JSONArray array) {	
+			Set<Activity> activities = ((ApplicationHelper)getActivity().getApplication()).getActivities();
+			for(int i=0 ; i<array.length();i++)
+			{
+				Activity activity = new Activity();
+				JSONObject obj;
+				try {
+					obj = array.getJSONObject(i);
+					activity.setId(obj.getInt("id"));
+					activity.setAddress(obj.getString("address"));
+					activity.setContent(obj.getString("content"));
+					activity.setDate(new SimpleDateFormat("HH:mm:ss").parse(obj.getString("time")));
+					activity.setName(obj.getString("name"));
+					activity.setLocation(obj.getInt("locationID"));
+					activity.setUser(obj.getInt("organiserID"));
+					activity.setType(obj.getString("type"));
+					activity.setIsRating(obj.getInt("isRating"));
+					activity.setisAttention(1);
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				activities.add(activity);
+				
+			}
+		}
+
+		@Override
+		public void onFinish() {
+			Set<Activity> setActivities = ((ApplicationHelper)getActivity().getApplication()).getActivities();
+			List<Activity> activities = new ArrayList<Activity>(setActivities);
+
+			setActivities(activities);
+		}
+		
+	};
+	
+ 	public void setActivities(List<Activity> activities) {
+ 		try {
+			adapter.setActivities(activities);
+		} catch (Exception e) {
+			String s = e.getMessage();
+		}
+
+	}
+
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.frag_recommend, container,false);
 		listView = (ListView) view.findViewById(R.id.list_recommend);
-		List<String> list = new ArrayList<String>();
-		list.add("11111");
-		list.add("22222");		
-		list.add("33333");		
-		list.add("44444");	
-		try {
-			listView.setAdapter(new RecommendItemAdapter(list));
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
+
+		listView.setAdapter(adapter);
 		
+		connectForRecommend();
 		
 		return view;
 	}
 	
+	public void connectForRecommend()
+	{
+		DatabaseConnector connector = new DatabaseConnector();
+		connector.addParams(DatabaseConnector.METHOD, "GETACTIVITY");
+		connector.asyncConnect(recommendAdapter);
+	}
 	
-	private class RecommendItemAdapter extends BaseAdapter{
-		List<String> list;
+	public class RecommendItemAdapter extends BaseAdapter{
+		List<Activity> activities;
 		
 		
-		public RecommendItemAdapter(List<String> list) {
+		public void setActivities(List<Activity> activities) {
+			this.activities = activities;
+		}
+
+		public RecommendItemAdapter(List<Activity> activities) {
 			super();
 			// TODO Auto-generated constructor stub
-			this.list = list;
+			this.activities = activities;
 		}
 
 		@Override
 		public int getCount() {
 			// TODO Auto-generated method stub
-			return list.size();
+			if(activities==null)
+				return 0;
+			return activities.size();
 		}
 
 		@Override
 		public Object getItem(int position) {
 			// TODO Auto-generated method stub
-			return list.get(position);
+			return activities.get(position);
 		}
 
 		@Override
@@ -82,8 +154,8 @@ public class RecommendFragment extends Fragment {
 			button = (Button) convertView.findViewById(R.id.item_recommend_button);
 			textView = (TextView) convertView.findViewById(R.id.item_recommend_name);
 			
-			button.setText(list.get(position));
-			textView.setText(list.get(position));
+			button.setText(activities.get(position).getName());
+			textView.setText(activities.get(position).getName());
 			
 			return convertView;
 		}

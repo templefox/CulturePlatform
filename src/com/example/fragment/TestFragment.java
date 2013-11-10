@@ -13,6 +13,7 @@ public class TestFragment extends Fragment {
 	int a;
 	public void setA(int a) {
 		this.a =a;
+		
 	}
 	
 	
