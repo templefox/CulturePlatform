@@ -18,6 +18,7 @@ import android.widget.TextView;
 public class UserActivity extends Activity {
 	private User currentUser;
 	private Button loginButton;
+	private Button logOutButton;
 	private TextView nameView;
 	private View userView;
 	private View noUserView;
@@ -33,11 +34,14 @@ public class UserActivity extends Activity {
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		
 		loginButton = (Button) findViewById(R.id.button_log_in);
+		logOutButton = (Button)findViewById(R.id.button_log_out);
 		userView = findViewById(R.id.user_view);
 		noUserView = findViewById(R.id.no_user_view);
 		nameView = (TextView) findViewById(R.id.user_name);
 		
+		
 		loginButton.setOnClickListener(loginListener);
+		logOutButton.setOnClickListener(logOutListener);
 	}
 
 	@Override
@@ -83,6 +87,17 @@ public class UserActivity extends Activity {
 		}
 	};
 
+	private OnClickListener logOutListener = new OnClickListener() {
+		
+		@Override
+		public void onClick(View v) {
+			((ApplicationHelper)getApplication()).setCurrentUser(null);
+			Intent intent = new Intent(UserActivity.this,MainActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); 
+			startActivity(intent);
+		}
+	};
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    switch (item.getItemId()) { 
