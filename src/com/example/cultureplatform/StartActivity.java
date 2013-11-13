@@ -1,6 +1,17 @@
 package com.example.cultureplatform;
 
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.example.database.DatabaseConnector;
+import com.example.database.MessageAdapter;
+import com.example.database.data.User;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
@@ -9,6 +20,7 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.view.Menu;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 public class StartActivity extends Activity {
 	
@@ -47,7 +59,7 @@ public class StartActivity extends Activity {
 				}
 			}
 			SharedPreferences sp = getSharedPreferences("Setting",0);
-			if(sp.getBoolean("autoLogin", false))
+			if(sp.getBoolean("autologin", false))
 				ret = 1;
 			else ret = 2;
 			return ret;
@@ -90,23 +102,59 @@ public class StartActivity extends Activity {
 		@Override
 		protected void onPostExecute(Integer result) {
 			//if(result == 1)//请求自动登录
-			if(true)
+			if(result == 1)
 			{
 				SharedPreferences sp = getSharedPreferences("Setting",0);
-				String name = sp.getString("name", "");
-				String pass = sp.getString("password","");
-				Bundle b = new Bundle();
-				b.putString("name", name);
-				b.putString("password", pass);
+				String Email = sp.getString("Email", "");
+				String password = sp.getString("password","");
+				
+				DatabaseConnector connector = new DatabaseConnector();
+				connector.addParams(DatabaseConnector.METHOD, "GETUSER");
+				connector.addParams("Email",Email);
+				connector.addParams("password", password);
+				connector.asyncConnect(new MessageAdapter(){
+					@Override
+					public void onRcvJSONArray(JSONArray array) {
+						User user = new User();
+						for(int i=0 ; i<array.length();i++)
+						{
+							
+							try {
+								JSONObject obj = array.getJSONObject(i);
+								user.setId(obj.getInt("id"));
+								user.setName(obj.getString("name"));
+								user.setEMail(obj.getString("E_mail"));
+								user.setPhoneNum(obj.getString("phone_num"));
+								user.setRegTime(SimpleDateFormat.getDateInstance().parse(obj.getString("reg_time")));
+								user.setAuthority(obj.getInt("authority"));
+								Toast.makeText(getApplicationContext(), "OK", Toast.LENGTH_SHORT).show();
+							} catch (JSONException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (ParseException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+						ApplicationHelper appHelper = (ApplicationHelper) getApplicationContext();
+						appHelper.setCurrentUser(user);
+						
+					}
+					
+					
+					
+					
+					
+				});
+				
 				Intent toMain = new Intent(getApplication(),MainActivity.class);
-				toMain.putExtras(b);
 				startActivity(toMain);
 				StartActivity.this.finish();
 			}
-			else if(result == 2)//用户需登录或注册
+			else if(result == 2)
 			{
-				//Intent tolog = new Intent(getApplication(),LoginActivity.class);
-				//startActivity(tolog);
+				Intent toMain = new Intent(StartActivity.this,MainActivity.class);
+				startActivity(toMain);
 				StartActivity.this.finish();
 			}
 		}

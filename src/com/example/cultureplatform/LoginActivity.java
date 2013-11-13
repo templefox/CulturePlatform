@@ -17,16 +17,22 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -48,7 +54,6 @@ public class LoginActivity extends Activity {
 	/**
 	 * Keep track of the login task to ensure we can cancel it if requested.
 	 */
-	private UserLoginTask mAuthTask = null;
 
 	// Values for email and password at the time of the login attempt.
 	private String mEmail;
@@ -117,9 +122,6 @@ public class LoginActivity extends Activity {
 	 * errors are presented and no actual login attempt is made.
 	 */
 	public void attemptLogin() {
-		if (mAuthTask != null) {
-			return;
-		}
 		
 		//隐藏软键盘
 		InputMethodManager imm =(InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE); 
@@ -153,6 +155,10 @@ public class LoginActivity extends Activity {
 			mEmailView.setError(getString(R.string.error_field_required));
 			focusView = mEmailView;
 			cancel = true;
+		} else if (!mEmail.contains("@")) {
+			mEmailView.setError(getString(R.string.error_invalid_email));
+			focusView = mEmailView;
+			cancel = true;
 		}
 
 		if (cancel) {
@@ -167,14 +173,18 @@ public class LoginActivity extends Activity {
 /*			mAuthTask = new UserLoginTask();
 			mAuthTask.execute((Void) null);*/
 			
-			DatabaseConnector connector = new DatabaseConnector();
-			connector.addParams(DatabaseConnector.METHOD, "GETUSER");
-			connector.addParams("name",mEmail);
-			connector.addParams("password", mPassword);
-			connector.asyncConnect(messageAdapter);
+			login(mEmail,mPassword);
 			
 			
 		}
+	}
+
+	public void login(String mEmail,String mPassword) {
+		DatabaseConnector connector = new DatabaseConnector();
+		connector.addParams(DatabaseConnector.METHOD, "GETUSER");
+		connector.addParams("Email",mEmail);
+		connector.addParams("password", mPassword);
+		connector.asyncConnect(loginAdapter);
 	}
 
 	/**
@@ -218,11 +228,20 @@ public class LoginActivity extends Activity {
 		}
 	}
 
+	public void setAutoLogin()
+	{
+		SharedPreferences sp = getSharedPreferences("Setting",0);
+		Editor ed = sp.edit();
+		ed.putBoolean("autologin", true);
+		ed.putString("Email", mEmail);
+		ed.putString("password", mPassword);
+		ed.commit();
+	}
 	/**
 	 * Represents an asynchronous login/registration task used to authenticate
 	 * the user.
 	 */
-	public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+/*	public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 		@Override
 		protected Boolean doInBackground(Void... params) {
 			// TODO: attempt authentication against a network service.
@@ -268,22 +287,21 @@ public class LoginActivity extends Activity {
 			showProgress(false);
 		}
 	}
-
+*/
 	
-	private MessageAdapter messageAdapter = new MessageAdapter() {
+	private MessageAdapter loginAdapter = new MessageAdapter() {
 		User user = new User();
 		@Override
-		public void getSucceedHandler(JSONArray array) {
+		public void onRcvJSONArray(JSONArray array) {
 			for(int i=0 ; i<array.length();i++)
 			{
 				
 				try {
 					JSONObject obj = array.getJSONObject(i);
 					user.setId(obj.getInt("id"));
-					user.setNickname(obj.getString("nickname"));
+					user.setName(obj.getString("name"));
 					user.setEMail(obj.getString("E_mail"));
 					user.setPhoneNum(obj.getString("phone_num"));
-					user.setLoginName(obj.getString("login_name"));
 					user.setRegTime(SimpleDateFormat.getDateInstance().parse(obj.getString("reg_time")));
 					user.setAuthority(obj.getInt("authority"));
 					Toast.makeText(getApplicationContext(), "OK", Toast.LENGTH_SHORT).show();
@@ -293,22 +311,77 @@ public class LoginActivity extends Activity {
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
+				} 
 			}
-		}
-		@Override
-		public void onFinish() {
+			
 			showProgress(false);
 			ApplicationHelper appHelper = (ApplicationHelper) getApplicationContext();
 			appHelper.setCurrentUser(user);
+			setAutoLogin();
 			finish();
 		}
 		
-		
-		
+		@Override
+		public void onEmptyReceived() {
+			final EditText editText = new EditText(LoginActivity.this);
+			editText.setHint("请再次输入密码");
+			editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+			// 为搜索到用户信息，自动为用户注册新账户
+			android.content.DialogInterface.OnClickListener positive = new android.content.DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					if(editText.getText().toString().equals(mPassword))
+					{
+						DatabaseConnector connector = new DatabaseConnector();
+						connector.addParams(DatabaseConnector.METHOD, "ADDUSER");
+						connector.addParams("Email", mEmail);
+						connector.addParams("password", mPassword);
+						connector.asyncConnect(registerAdapter);
+					}
+					else {
+						Toast.makeText(LoginActivity.this, "密码不匹配", Toast.LENGTH_SHORT).show();
+						showProgress(false);
+					}
+				}
+			};
+			
+			android.content.DialogInterface.OnClickListener negative = new android.content.DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					showProgress(false);
+				}
+			};
+			
+			new AlertDialog.Builder(LoginActivity.this).setTitle("注册确认").setIcon(
+				     android.R.drawable.ic_dialog_info).setView(
+				     editText).setPositiveButton("确定", positive)
+				     .setNegativeButton("取消", negative).show();
+		}
 	};
 	
-	
+	private MessageAdapter registerAdapter = new MessageAdapter() {
+
+		@Override
+		public void onGetSuccessNum(String ret) {
+			// TODO Auto-generated method stub
+			ApplicationHelper helper = (ApplicationHelper) getApplication();
+			helper.setCurrentUser(new User());
+			helper.getCurrentUser().setEMail(ret);
+			helper.getCurrentUser().setName(ret);
+			setAutoLogin();
+			finish();
+		}
+
+		@Override
+		public void onGetFail() {
+			// TODO Auto-generated method stub
+			Toast.makeText(LoginActivity.this, "邮箱已被使用", Toast.LENGTH_SHORT).show();
+			showProgress(false);
+		}
+		
+	};
 	
 	
 	

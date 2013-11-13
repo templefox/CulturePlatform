@@ -35,7 +35,7 @@ public class MessageHandler extends Handler {
 		if(get == null || get.isEmpty() || get.equals("-"))
 		{
 			//收到空信息
-			messageAdapter.noReceiveHandler();
+			messageAdapter.onEmptyReceived();
 		}
 		else if(get.equals("CONERROR"))
 		{
@@ -45,25 +45,21 @@ public class MessageHandler extends Handler {
 		else if(get.equals("ERROR")) 
 		{
 			//数据库操作错误
-			messageAdapter.setFailedHandler();
+			messageAdapter.onGetFail();
 		}
 		else if(get.startsWith("DONE")) {
 			//数据库操作成功
-			int activity_id = 0;
-			try {
-				activity_id = Integer.parseInt(get.substring(4));
-			} catch (Exception e) {}
-			messageAdapter.setSucceedHandler(activity_id);
+			messageAdapter.onGetSuccessNum(get.substring(4));
 			
 		}
 		else {
 			//收到其他消息 以json格式
 			try {
 				JSONArray array = new JSONArray(get);
-				messageAdapter.getSucceedHandler(array);
+				messageAdapter.onRcvJSONArray(array);
 			} catch (JSONException e) {
 				//其他错误
-				messageAdapter.errorHandler();
+				messageAdapter.onErrorOccur();
 			}
 		}
 		

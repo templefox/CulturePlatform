@@ -37,7 +37,7 @@ public class RecommendFragment extends Fragment {
 	private MessageAdapter recommendAdapter = new MessageAdapter() {
 		
 		@Override
-		public void getSucceedHandler(JSONArray array) {	
+		public void onRcvJSONArray(JSONArray array) {	
 			Set<Activity> activities = ((ApplicationHelper)getActivity().getApplication()).getActivities();
 			for(int i=0 ; i<array.length();i++)
 			{

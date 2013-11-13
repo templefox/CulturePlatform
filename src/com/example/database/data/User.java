@@ -13,8 +13,7 @@ public class User implements java.io.Serializable {
 
 	private Integer id;
 	private Location location;
-	private String loginName;
-	private String nickname;
+	private String name;
 	private Date regTime;
 	private String phoneNum;
 	private String EMail;
@@ -27,21 +26,19 @@ public class User implements java.io.Serializable {
 	public User() {
 	}
 
-	public User(String loginName, String nickname, Date regTime,
+	public User(String nickname, Date regTime,
 			int authority, String password) {
-		this.loginName = loginName;
-		this.nickname = nickname;
+		this.name = nickname;
 		this.regTime = regTime;
 		this.authority = authority;
 		this.password = password;
 	}
 
-	public User(Location location, String loginName, String nickname,
+	public User(Location location, String nickname,
 			Date regTime, String phoneNum, String EMail, int authority,
 			String password, Set attentions, Set comments, Set activities) {
 		this.location = location;
-		this.loginName = loginName;
-		this.nickname = nickname;
+		this.name = nickname;
 		this.regTime = regTime;
 		this.phoneNum = phoneNum;
 		this.EMail = EMail;
@@ -68,20 +65,14 @@ public class User implements java.io.Serializable {
 		this.location = location;
 	}
 
-	public String getLoginName() {
-		return this.loginName;
+
+
+	public String getName() {
+		return this.name;
 	}
 
-	public void setLoginName(String loginName) {
-		this.loginName = loginName;
-	}
-
-	public String getNickname() {
-		return this.nickname;
-	}
-
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public Date getRegTime() {

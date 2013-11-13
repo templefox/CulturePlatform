@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -64,7 +66,7 @@ public class UserActivity extends Activity {
 			noUserView.setVisibility(View.INVISIBLE);
 			userView.setVisibility(View.VISIBLE);
 			
-			nameView.setText(currentUser.getNickname());
+			nameView.setText(currentUser.getName());
 		}
 		
 	}
@@ -92,6 +94,12 @@ public class UserActivity extends Activity {
 		@Override
 		public void onClick(View v) {
 			((ApplicationHelper)getApplication()).setCurrentUser(null);
+			SharedPreferences sp = getSharedPreferences("Setting",0);
+			Editor ed = sp.edit();
+			ed.putBoolean("autologin",false);
+			ed.putString("Email", "");
+			ed.putString("password", "");
+			ed.commit();
 			Intent intent = new Intent(UserActivity.this,MainActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); 
 			startActivity(intent);
