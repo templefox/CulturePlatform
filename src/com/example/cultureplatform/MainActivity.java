@@ -3,6 +3,7 @@ package com.example.cultureplatform;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.fragment.ClassifyFragment;
 import com.example.fragment.RecommendFragment;
 import com.example.fragment.TestFragment;
 
@@ -57,7 +58,9 @@ public class MainActivity extends Activity implements OnNavigationListener{
 				case 0:
 					fragment = new RecommendFragment();
 					break;
-
+				case 1:
+					fragment = new ClassifyFragment();
+					break;
 				default:
 					fragment = new TestFragment();
 					((TestFragment)fragment).setA(arg0);
@@ -70,7 +73,8 @@ public class MainActivity extends Activity implements OnNavigationListener{
 			public CharSequence getPageTitle(int position) {
 				// TODO Auto-generated method stub
 				CharSequence s;
-				switch (position) {
+				
+/*				switch (position) {
 				case 0:
 					s="±à¼­ÍÆ¼ö";
 					break;
@@ -78,7 +82,8 @@ public class MainActivity extends Activity implements OnNavigationListener{
 				default:
 					s= "TAB"+position;
 					break;
-				}
+				}*/
+				s = getItem(position).toString();
 				return s;
 			}
 			

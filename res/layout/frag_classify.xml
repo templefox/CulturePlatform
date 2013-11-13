@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:panel="http://schemas.android.com/apk/res/com.example.cultureplatform"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+	<com.example.widget.Panel
+		    android:layout_width="fill_parent" 
+		    android:layout_height="wrap_content" 
+		    android:id="@+id/topPanel" 
+		    android:paddingBottom="4dip"
+		    panel:handle="@+id/panelHandle"
+		    panel:content="@+id/panelContent"
+		    panel:position="top"
+		    panel:animationDuration="1000"
+		    panel:linearFlying="true"
+
+		   	>
+			
+			<Button
+				android:id="@+id/panelHandle" 
+			    android:layout_width="fill_parent" 
+			    android:layout_height="33dip" 
+			/>
+			<LinearLayout
+				android:id="@+id/panelContent" 
+			    android:orientation="vertical"
+	    		android:layout_width="fill_parent"
+	    		android:layout_height="wrap_content"
+			>
+
+				<TextView
+				    android:layout_width="fill_parent" 
+				    android:layout_height="wrap_content" 
+				    android:gravity="center"
+				    android:text="Bounce\nInterpolator"
+				    android:textSize="16dip"
+				    android:padding="4dip"
+				    android:textColor="#eee"
+				    android:textStyle="bold"
+				    android:background="#323299"
+				/>
+			</LinearLayout>
+		</com.example.widget.Panel>
+
+</RelativeLayout>

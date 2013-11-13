@@ -161,5 +161,11 @@ public class RecommendFragment extends Fragment {
 		}
 		
 	}
+
+	@Override
+	public String toString() {
+		return "ÍÆ¼ö»î¶¯";
+	}
+
 	
 }
