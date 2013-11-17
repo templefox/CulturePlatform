@@ -1,8 +1,5 @@
 package com.example.cultureplatform;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.example.fragment.ClassifyFragment;
 import com.example.fragment.RecommendFragment;
 import com.example.fragment.TestFragment;
@@ -11,7 +8,6 @@ import android.app.ActionBar;
 import android.app.ActionBar.TabListener;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.app.ActionBar.OnNavigationListener;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.content.Intent;
@@ -25,13 +21,12 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 
 
-public class MainActivity extends Activity implements OnNavigationListener{
-
+public class MainActivity extends Activity{
+	private ViewPager viewPager;
+	private FragmentPagerAdapter fragmentPagerAdapter;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -40,10 +35,10 @@ public class MainActivity extends Activity implements OnNavigationListener{
 		setContentView(R.layout.activity_main);
 		
 		final ActionBar actionBar = getActionBar();
-		final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+		viewPager = (ViewPager) findViewById(R.id.pager);
 		
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		FragmentPagerAdapter fragmentPagerAdapter = new FragmentPagerAdapter(getFragmentManager()) {
+		fragmentPagerAdapter = new FragmentPagerAdapter(getFragmentManager()) {
 			@Override
 			public int getCount() {
 				// TODO Auto-generated method stub
@@ -71,18 +66,7 @@ public class MainActivity extends Activity implements OnNavigationListener{
 
 			@Override
 			public CharSequence getPageTitle(int position) {
-				// TODO Auto-generated method stub
 				CharSequence s;
-				
-/*				switch (position) {
-				case 0:
-					s="编辑推荐";
-					break;
-
-				default:
-					s= "TAB"+position;
-					break;
-				}*/
 				s = getItem(position).toString();
 				return s;
 			}
@@ -90,6 +74,7 @@ public class MainActivity extends Activity implements OnNavigationListener{
 			
 		};
 		viewPager.setAdapter(fragmentPagerAdapter);
+		
 		viewPager.setOnPageChangeListener(new OnPageChangeListener() {
 			
 			@Override
@@ -143,156 +128,8 @@ public class MainActivity extends Activity implements OnNavigationListener{
 		//tabsTest();
 	}
 
-	private void tabsTest() {
-		ActionBar actionBar = getActionBar();
-		final ViewPager viewPager = (ViewPager)findViewById(R.id.pager);
-		
-		actionBar.setDisplayHomeAsUpEnabled(false);
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		
-		
-		FragmentPagerAdapter fragmentPagerAdapter = new FragmentPagerAdapter(getFragmentManager()) {
-			
-			@Override
-			public int getCount() {
-				// TODO Auto-generated method stub
-				return 10;
-			}
-			
-			@Override
-			public Fragment getItem(int arg0) {
-				// TODO Auto-generated method stub
-				TestFragment testFragment = new TestFragment();
-				testFragment.setA(arg0);
-				return testFragment;
-			}
-
-			@Override
-			public CharSequence getPageTitle(int position) {
-				// TODO Auto-generated method stub
-				return "TAB"+position;
-			}
-			
-			
-		};
-		viewPager.setAdapter(fragmentPagerAdapter);
-		viewPager.setOnPageChangeListener(new OnPageChangeListener() {
-			
-			@Override
-			public void onPageSelected(int arg0) {
-				// TODO Auto-generated method stub
-				getActionBar().setSelectedNavigationItem(arg0);
-			}
-			
-			@Override
-			public void onPageScrolled(int arg0, float arg1, int arg2) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void onPageScrollStateChanged(int arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
-		
-		for(int i = 0;i<fragmentPagerAdapter.getCount();i++)
-		{
-			Tab tab = actionBar.newTab();
-			tab.setText(fragmentPagerAdapter.getPageTitle(i)).setTabListener(new TabListener() {
-				
-				@Override
-				public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-					// TODO Auto-generated method stub
-					
-				}
-				
-				@Override
-				public void onTabSelected(Tab tab, FragmentTransaction ft) {
-					// TODO Auto-generated method stub
-					viewPager.setCurrentItem(tab.getPosition());
-				}
-				
-				@Override
-				public void onTabReselected(Tab tab, FragmentTransaction ft) {
-					// TODO Auto-generated method stub
-					
-				}
-			});
-			actionBar.addTab(tab);
-		}
-	}
-
-	private void actionBarTest() {
-		ActionBar actionBar = getActionBar();
-		actionBar.setTitle("hehe");
-		actionBar.setDisplayHomeAsUpEnabled(true);
-		//actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		//两者择一
-		actionBar.setDisplayShowTitleEnabled(false);
-		
-		List<String> list = new ArrayList<String>();
-		list.add("111");
-		list.add("222");
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line, list);
-		actionBar.setListNavigationCallbacks(adapter, this);
-		
-		Tab tab = actionBar.newTab()
-				.setText("HAHA")
-				.setTabListener(new TabListener(){
-					
-					@Override
-					public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-						// TODO Auto-generated method stub
-						
-					}
-					
-					@Override
-					public void onTabSelected(Tab tab, FragmentTransaction ft) {
-						// TODO Auto-generated method stub
-						
-					}
-					
-					@Override
-					public void onTabReselected(Tab tab, FragmentTransaction ft) {
-						// TODO Auto-generated method stub
-						
-					}
-				});
-		
-		actionBar.addTab(tab);
-		
-		tab = actionBar.newTab()
-				.setText("heihei")
-				.setTabListener(new TabListener(){
-					
-					@Override
-					public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-						// TODO Auto-generated method stub
-						
-					}
-					
-					@Override
-					public void onTabSelected(Tab tab, FragmentTransaction ft) {
-						// TODO Auto-generated method stub
-						
-					}
-					
-					@Override
-					public void onTabReselected(Tab tab, FragmentTransaction ft) {
-						// TODO Auto-generated method stub
-						
-					}
-				});
-		
-		actionBar.addTab(tab);
-	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// TODO Auto-generated method stub
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.main, menu);
 		return true;
@@ -305,6 +142,14 @@ public class MainActivity extends Activity implements OnNavigationListener{
 		switch (item.getItemId()) {
 		case R.id.action_bar_user:
 			return intent2UserActivity();
+		case R.id.menu_account_user_manager:
+		{
+			
+			Fragment classifyFragment = 
+					(Fragment) fragmentPagerAdapter.instantiateItem(viewPager, getActionBar().getSelectedNavigationIndex());
+			if(classifyFragment instanceof ClassifyFragment)	
+				((ClassifyFragment)classifyFragment).dropDown();
+		}
 		default:
 			break;
 		}
@@ -318,11 +163,6 @@ public class MainActivity extends Activity implements OnNavigationListener{
 		return true;
 	}
 
-	@Override
-	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 				 
 }
