@@ -63,8 +63,10 @@ public class Panel extends LinearLayout
 		 * Invoked when the panel becomes fully opened.
 		 */
 		public void onPanelOpened(Panel panel);
+		
+		public void onTouch(Panel panel);
 	}
-
+	
 	private boolean mIsShrinking;
 	private int mPosition;
 	private int mDuration;
@@ -218,11 +220,14 @@ public class Panel extends LinearLayout
 	 */
 	public boolean setOpen(boolean open, boolean animate)
 	{
+		
 		if (mState == State.READY && isOpen() ^ open)
 		{
+			
 			mIsShrinking = !open;
 			if (animate)
 			{
+				
 				mState = State.ABOUT_TO_ANIMATE;
 				if (!mIsShrinking)
 				{
@@ -410,7 +415,7 @@ public class Panel extends LinearLayout
 		
 		public boolean onTouch(View v, MotionEvent event)
 		{
-
+			panelListener.onTouch(Panel.this);
 			if (mAnimating)
 			{
 				// we are animating

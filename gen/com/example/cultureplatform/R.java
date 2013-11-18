@@ -30,30 +30,11 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int content=0x7f010003;
-        /**  Defines opened handle (drawable). 
-         <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
-or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
-         */
-        public static final int decreaseButton=0x7f01000d;
         /**  Identifier for the child that represents the panel's handle. 
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
         public static final int handle=0x7f010002;
-        /**  Defines switcher idle timeout in ms. 
-         <p>Must be an integer value, such as "<code>100</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-         */
-        public static final int idleTimeout=0x7f01000c;
-        /**  Defines opened handle (drawable). 
-         <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
-or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
-         */
-        public static final int increaseButton=0x7f01000e;
         /**  Defines if flying gesture forces linear interpolator in animation. 
          <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
 <p>This may also be a reference to a resource (in the form
@@ -84,36 +65,6 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 </table>
          */
         public static final int position=0x7f010001;
-        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
-or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
-         */
-        public static final int transitionDrawable=0x7f010008;
-        /** <p>Must be an integer value, such as "<code>100</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-         */
-        public static final int transitionDrawableLength=0x7f010009;
-        /** <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
-"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-         */
-        public static final int transitionTextColorDown=0x7f01000b;
-        /** <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
-"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-         */
-        public static final int transitionTextColorUp=0x7f01000a;
         /**  Defines size relative to parent (must be in form: nn%p). 
          <p>Must be a fractional value, which is a floating point number appended with either % or %p, such as "<code>14.5%</code>".
 The % suffix always means a percentage of the base size; the optional %p suffix provides a size relative to
@@ -148,33 +99,36 @@ containing a value of this type.
         public static final int TextView03=0x7f040018;
         public static final int TextView04=0x7f040017;
         public static final int TextView05=0x7f040019;
-        public static final int action_bar_user=0x7f04002a;
-        public static final int action_forgot_password=0x7f040026;
-        public static final int action_settings=0x7f04002b;
+        public static final int action_bar_user=0x7f04002d;
+        public static final int action_forgot_password=0x7f040029;
+        public static final int action_settings=0x7f04002e;
         public static final int asdf=0x7f04000d;
         public static final int bottom=0x7f040001;
-        public static final int button1=0x7f04001f;
+        public static final int button1=0x7f040020;
         public static final int button_log_in=0x7f040013;
         public static final int button_log_out=0x7f040011;
-        public static final int classify_panel=0x7f040020;
+        public static final int classify_panel=0x7f040021;
         public static final int email=0x7f040007;
         public static final int horizontalScrollView1=0x7f04001a;
         public static final int imageView1=0x7f04000f;
-        public static final int item_recommend_button=0x7f040025;
-        public static final int item_recommend_name=0x7f040024;
+        public static final int item_recommend_button=0x7f040026;
+        public static final int item_recommend_name=0x7f040025;
         public static final int left=0x7f040002;
-        public static final int list_recommend=0x7f040023;
+        public static final int list_recommend=0x7f040024;
         public static final int login=0x7f040009;
         public static final int login_form=0x7f040006;
         public static final int login_status=0x7f040004;
         public static final int login_status_message=0x7f040005;
-        public static final int menu_account_user_manager=0x7f040028;
-        public static final int menu_nav=0x7f040027;
-        public static final int menu_search=0x7f040029;
+        public static final int menu_account_user_manager=0x7f04002b;
+        public static final int menu_nav=0x7f04002a;
+        public static final int menu_search=0x7f04002c;
         public static final int no_user_view=0x7f040012;
+        public static final int optionor=0x7f040027;
+        public static final int optionor1=0x7f04001f;
+        public static final int optionor_radiogroup=0x7f040028;
         public static final int pager=0x7f04000c;
-        public static final int panelContent=0x7f040021;
-        public static final int panelHandle=0x7f040022;
+        public static final int panelContent=0x7f040022;
+        public static final int panelHandle=0x7f040023;
         public static final int password=0x7f040008;
         public static final int right=0x7f040003;
         public static final int sign_in_button=0x7f04000a;
@@ -197,6 +151,7 @@ containing a value of this type.
         public static final int frag_recommend=0x7f030006;
         public static final int frag_test=0x7f030007;
         public static final int item_recommend=0x7f030008;
+        public static final int optionor=0x7f030009;
     }
     public static final class menu {
         public static final int login=0x7f080000;
@@ -408,153 +363,5 @@ containing a value of this type.
           @attr name com.example.cultureplatform:weight
         */
         public static final int Panel_weight = 5;
-        /** Attributes that can be used with a SmoothButton.
-           <p>Includes the following attributes:</p>
-           <table>
-           <colgroup align="left" />
-           <colgroup align="left" />
-           <tr><th>Attribute</th><th>Description</th></tr>
-           <tr><td><code>{@link #SmoothButton_transitionDrawable com.example.cultureplatform:transitionDrawable}</code></td><td></td></tr>
-           <tr><td><code>{@link #SmoothButton_transitionDrawableLength com.example.cultureplatform:transitionDrawableLength}</code></td><td></td></tr>
-           <tr><td><code>{@link #SmoothButton_transitionTextColorDown com.example.cultureplatform:transitionTextColorDown}</code></td><td></td></tr>
-           <tr><td><code>{@link #SmoothButton_transitionTextColorUp com.example.cultureplatform:transitionTextColorUp}</code></td><td></td></tr>
-           </table>
-           @see #SmoothButton_transitionDrawable
-           @see #SmoothButton_transitionDrawableLength
-           @see #SmoothButton_transitionTextColorDown
-           @see #SmoothButton_transitionTextColorUp
-         */
-        public static final int[] SmoothButton = {
-            0x7f010008, 0x7f010009, 0x7f01000a, 0x7f01000b
-        };
-        /**
-          <p>This symbol is the offset where the {@link com.example.cultureplatform.R.attr#transitionDrawable}
-          attribute's value can be found in the {@link #SmoothButton} array.
-
-
-          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
-or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
-          @attr name com.example.cultureplatform:transitionDrawable
-        */
-        public static final int SmoothButton_transitionDrawable = 0;
-        /**
-          <p>This symbol is the offset where the {@link com.example.cultureplatform.R.attr#transitionDrawableLength}
-          attribute's value can be found in the {@link #SmoothButton} array.
-
-
-          <p>Must be an integer value, such as "<code>100</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-          @attr name com.example.cultureplatform:transitionDrawableLength
-        */
-        public static final int SmoothButton_transitionDrawableLength = 1;
-        /**
-          <p>This symbol is the offset where the {@link com.example.cultureplatform.R.attr#transitionTextColorDown}
-          attribute's value can be found in the {@link #SmoothButton} array.
-
-
-          <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
-"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-          @attr name com.example.cultureplatform:transitionTextColorDown
-        */
-        public static final int SmoothButton_transitionTextColorDown = 3;
-        /**
-          <p>This symbol is the offset where the {@link com.example.cultureplatform.R.attr#transitionTextColorUp}
-          attribute's value can be found in the {@link #SmoothButton} array.
-
-
-          <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
-"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-          @attr name com.example.cultureplatform:transitionTextColorUp
-        */
-        public static final int SmoothButton_transitionTextColorUp = 2;
-        /** Attributes that can be used with a Switcher.
-           <p>Includes the following attributes:</p>
-           <table>
-           <colgroup align="left" />
-           <colgroup align="left" />
-           <tr><th>Attribute</th><th>Description</th></tr>
-           <tr><td><code>{@link #Switcher_animationDuration com.example.cultureplatform:animationDuration}</code></td><td> Defines switcher animation duration in ms.</td></tr>
-           <tr><td><code>{@link #Switcher_decreaseButton com.example.cultureplatform:decreaseButton}</code></td><td> Defines opened handle (drawable).</td></tr>
-           <tr><td><code>{@link #Switcher_idleTimeout com.example.cultureplatform:idleTimeout}</code></td><td> Defines switcher idle timeout in ms.</td></tr>
-           <tr><td><code>{@link #Switcher_increaseButton com.example.cultureplatform:increaseButton}</code></td><td> Defines opened handle (drawable).</td></tr>
-           </table>
-           @see #Switcher_animationDuration
-           @see #Switcher_decreaseButton
-           @see #Switcher_idleTimeout
-           @see #Switcher_increaseButton
-         */
-        public static final int[] Switcher = {
-            0x7f010000, 0x7f01000c, 0x7f01000d, 0x7f01000e
-        };
-        /**
-          <p>
-          @attr description
-           Defines switcher animation duration in ms. 
-
-
-          <p>Must be an integer value, such as "<code>100</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-          <p>This is a private symbol.
-          @attr name com.example.cultureplatform:animationDuration
-        */
-        public static final int Switcher_animationDuration = 0;
-        /**
-          <p>
-          @attr description
-           Defines opened handle (drawable). 
-
-
-          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
-or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
-          <p>This is a private symbol.
-          @attr name com.example.cultureplatform:decreaseButton
-        */
-        public static final int Switcher_decreaseButton = 2;
-        /**
-          <p>
-          @attr description
-           Defines switcher idle timeout in ms. 
-
-
-          <p>Must be an integer value, such as "<code>100</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-          <p>This is a private symbol.
-          @attr name com.example.cultureplatform:idleTimeout
-        */
-        public static final int Switcher_idleTimeout = 1;
-        /**
-          <p>
-          @attr description
-           Defines opened handle (drawable). 
-
-
-          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
-or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
-          <p>This is a private symbol.
-          @attr name com.example.cultureplatform:increaseButton
-        */
-        public static final int Switcher_increaseButton = 3;
     };
 }

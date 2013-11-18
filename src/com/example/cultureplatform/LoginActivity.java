@@ -298,12 +298,7 @@ public class LoginActivity extends Activity {
 				
 				try {
 					JSONObject obj = array.getJSONObject(i);
-					user.setId(obj.getInt("id"));
-					user.setName(obj.getString("name"));
-					user.setEMail(obj.getString("E_mail"));
-					user.setPhoneNum(obj.getString("phone_num"));
-					user.setRegTime(SimpleDateFormat.getDateInstance().parse(obj.getString("reg_time")));
-					user.setAuthority(obj.getInt("authority"));
+					user.transJSON(obj);
 					Toast.makeText(getApplicationContext(), "OK", Toast.LENGTH_SHORT).show();
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block

@@ -45,16 +45,7 @@ public class RecommendFragment extends Fragment {
 				JSONObject obj;
 				try {
 					obj = array.getJSONObject(i);
-					activity.setId(obj.getInt("id"));
-					activity.setAddress(obj.getString("address"));
-					activity.setContent(obj.getString("content"));
-					activity.setDate(new SimpleDateFormat("HH:mm:ss").parse(obj.getString("time")));
-					activity.setName(obj.getString("name"));
-					activity.setLocation(obj.getInt("locationID"));
-					activity.setUser(obj.getInt("organiserID"));
-					activity.setType(obj.getString("type"));
-					activity.setIsRating(obj.getInt("isRating"));
-					activity.setisAttention(1);
+					activity.transJSON(obj);
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -66,6 +57,8 @@ public class RecommendFragment extends Fragment {
 				
 			}
 		}
+
+
 
 		@Override
 		public void onFinish() {
@@ -80,6 +73,7 @@ public class RecommendFragment extends Fragment {
  	public void setActivities(List<Activity> activities) {
  		try {
 			adapter.setActivities(activities);
+			listView.setAdapter(adapter);
 		} catch (Exception e) {
 			String s = e.getMessage();
 		}

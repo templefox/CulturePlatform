@@ -106,6 +106,12 @@
             </LinearLayout>
         </HorizontalScrollView>
 
+        <com.example.widget.Optionor
+            android:id="@+id/optionor1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+        </com.example.widget.Optionor>
+
     </LinearLayout>
 
 </FrameLayout>

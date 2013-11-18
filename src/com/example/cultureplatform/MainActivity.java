@@ -3,6 +3,7 @@ package com.example.cultureplatform;
 import com.example.fragment.ClassifyFragment;
 import com.example.fragment.RecommendFragment;
 import com.example.fragment.TestFragment;
+import com.example.widget.InterceptableViewPager;
 
 import android.app.ActionBar;
 import android.app.ActionBar.TabListener;
@@ -18,13 +19,14 @@ import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 
 public class MainActivity extends Activity{
-	private ViewPager viewPager;
+	private InterceptableViewPager viewPager;
 	private FragmentPagerAdapter fragmentPagerAdapter;
 	
 	@Override
@@ -35,8 +37,7 @@ public class MainActivity extends Activity{
 		setContentView(R.layout.activity_main);
 		
 		final ActionBar actionBar = getActionBar();
-		viewPager = (ViewPager) findViewById(R.id.pager);
-		
+		viewPager = (InterceptableViewPager) findViewById(R.id.pager);
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		fragmentPagerAdapter = new FragmentPagerAdapter(getFragmentManager()) {
 			@Override
@@ -81,6 +82,14 @@ public class MainActivity extends Activity{
 			public void onPageSelected(int arg0) {
 				// TODO Auto-generated method stub
 				actionBar.setSelectedNavigationItem(arg0);
+				viewPager.setInterceptable(true);
+				
+				Fragment classifyFragment = 
+						(Fragment) fragmentPagerAdapter.instantiateItem(viewPager, viewPager.getCurrentItem());
+				if(classifyFragment instanceof ClassifyFragment)
+				{
+					((ClassifyFragment)classifyFragment).open(false, false);
+				}
 			}
 			
 			@Override
@@ -148,7 +157,7 @@ public class MainActivity extends Activity{
 			Fragment classifyFragment = 
 					(Fragment) fragmentPagerAdapter.instantiateItem(viewPager, getActionBar().getSelectedNavigationIndex());
 			if(classifyFragment instanceof ClassifyFragment)	
-				((ClassifyFragment)classifyFragment).dropDown();
+				((ClassifyFragment)classifyFragment).switchPanel();
 		}
 		default:
 			break;
@@ -163,6 +172,32 @@ public class MainActivity extends Activity{
 		return true;
 	}
 
-
-				 
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if(keyCode == KeyEvent.KEYCODE_BACK)
+		{
+			Fragment classifyFragment = 
+				(Fragment) fragmentPagerAdapter.instantiateItem(viewPager, getActionBar().getSelectedNavigationIndex());
+			if(classifyFragment instanceof ClassifyFragment && ((ClassifyFragment) classifyFragment).isOpen())
+			{
+				((ClassifyFragment) classifyFragment).switchPanel();
+				return true;
+			}
+		}
+		
+		
+		
+		return super.onKeyDown(keyCode, event);
+	}
+	
+    /**
+     * 设置ViewPager是否拦截点击事件
+     * @param value if true, ViewPager拦截点击事件
+     *                                 if false, ViewPager将不能滑动，ViewPager的子View可以获得点击事件
+     *                                 主要受影响的点击事件为横向滑动
+     *
+     */		 
+	public void setViewPagerInterceptable(boolean isIntercept){
+		viewPager.setInterceptable(isIntercept);
+	}
 }

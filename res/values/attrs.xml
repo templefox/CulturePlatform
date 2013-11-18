@@ -28,22 +28,4 @@
         <attr name="closedHandle" format="reference|color" />
     </declare-styleable>
     
-    <declare-styleable name="SmoothButton">
-        <attr name="transitionDrawable" format="reference" />
-        <attr name="transitionDrawableLength" format="integer" />
-        <attr name="transitionTextColorUp" format="color" />
-        <attr name="transitionTextColorDown" format="color" />
-    </declare-styleable>
-    
-    <declare-styleable name="Switcher">
-        <!-- Defines switcher animation duration in ms. -->
-        <attr name="animationDuration" />
-        <!-- Defines switcher idle timeout in ms. -->
-        <attr name="idleTimeout" format="integer" />
-        <!-- Defines opened handle (drawable). -->
-        <attr name="decreaseButton" format="reference" />
-        <!-- Defines opened handle (drawable). -->
-        <attr name="increaseButton" format="reference" />
-    </declare-styleable>
-    
 </resources>
