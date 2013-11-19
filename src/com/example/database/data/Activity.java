@@ -272,4 +272,5 @@ public class Activity implements java.io.Serializable {
 		activity.setisAttention(1);
 		return activity;
 	}
+	
 }

@@ -19,9 +19,13 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 
 
+import android.R.integer;
 import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
@@ -30,6 +34,7 @@ import android.util.Log;
 public class DatabaseConnector {
 	static public String target_url = "http://templefox.xicp.net:998/";
 	static public String METHOD = "METHOD";
+	static private int TIME_OUT = 3000;
 	private Map<String, String>	params = new HashMap<String, String>();
 	
 	public DatabaseConnector addParams(String key,String value) {
@@ -56,10 +61,15 @@ public class DatabaseConnector {
 
 		try
 		{
-			HttpClient client = new DefaultHttpClient();
+			HttpParams param = new BasicHttpParams();
+			HttpConnectionParams.setConnectionTimeout(param, TIME_OUT);
+			//HttpConnectionParams.setSoTimeout(param, 4000);
+			
+			HttpClient client = new DefaultHttpClient(param);
+			
 			HttpUriRequest request = getRequest(url, params);
 			HttpResponse response = client.execute(request);
-
+			
 			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK){
 				reader = new BufferedReader(new InputStreamReader(response
 						.getEntity().getContent()));
@@ -83,6 +93,11 @@ public class DatabaseConnector {
 			Log.e("HttpConnectionUtil", e.getMessage(), e);
 		} catch (IOException e)
 		{
+			Message msg = new Message();
+	        Bundle b = new Bundle();// ´æ·ÅÊý¾Ý
+	        b.putString(null, "timeout");
+	        msg.setData(b);
+			handler.sendMessage(msg);
 		} catch(Exception e)
 		{
 			Log.e("HttpConnectionUtil", e.getMessage(), e);

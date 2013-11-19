@@ -28,6 +28,8 @@ import android.view.MenuItem;
 public class MainActivity extends Activity{
 	private InterceptableViewPager viewPager;
 	private FragmentPagerAdapter fragmentPagerAdapter;
+	private boolean first = true;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

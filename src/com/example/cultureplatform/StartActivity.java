@@ -3,6 +3,8 @@ package com.example.cultureplatform;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -10,13 +12,17 @@ import org.json.JSONObject;
 
 import com.example.database.DatabaseConnector;
 import com.example.database.MessageAdapter;
+import com.example.database.SQLiteManager;
+import com.example.database.data.Type;
 import com.example.database.data.User;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
 import android.view.Menu;
 import android.widget.ImageView;
@@ -30,7 +36,7 @@ public class StartActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.activity_start);
-			
+		
 		new init_task().execute(3);
 	}
 
@@ -48,6 +54,10 @@ public class StartActivity extends Activity {
 			//此处处理事务
 			//判断用户是否选择自动登录
 			int ret;
+			
+
+
+			
 			for(int i = 0; i< arg0[0];i++)
 			{
 				try {
@@ -121,12 +131,7 @@ public class StartActivity extends Activity {
 							
 							try {
 								JSONObject obj = array.getJSONObject(i);
-								user.setId(obj.getInt("id"));
-								user.setName(obj.getString("name"));
-								user.setEMail(obj.getString("E_mail"));
-								user.setPhoneNum(obj.getString("phone_num"));
-								user.setRegTime(SimpleDateFormat.getDateInstance().parse(obj.getString("reg_time")));
-								user.setAuthority(obj.getInt("authority"));
+								user.transJSON(obj);
 								Toast.makeText(getApplicationContext(), "OK", Toast.LENGTH_SHORT).show();
 							} catch (JSONException e) {
 								// TODO Auto-generated catch block

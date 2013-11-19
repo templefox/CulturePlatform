@@ -30,7 +30,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class RecommendFragment extends Fragment {
+public class RecommendFragment extends FragmentRoot {
 	private ListView listView;
 	private RecommendItemAdapter adapter = new RecommendItemAdapter(null);
 
@@ -159,6 +159,22 @@ public class RecommendFragment extends Fragment {
 	@Override
 	public String toString() {
 		return "ÍÆ¼ö»î¶¯";
+	}
+
+
+
+	
+	@Override
+	public void reDownload() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void reLoad() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	

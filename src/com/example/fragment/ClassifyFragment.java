@@ -1,10 +1,18 @@
 package com.example.fragment;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import com.example.cultureplatform.MainActivity;
 import com.example.cultureplatform.R;
+import com.example.database.DatabaseConnector;
+import com.example.database.MessageAdapter;
+import com.example.database.data.Type;
 import com.example.widget.Optionor;
 import com.example.widget.Panel;
 import com.example.widget.Panel.OnPanelListener;
@@ -18,7 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-public class ClassifyFragment extends Fragment {
+public class ClassifyFragment extends FragmentRoot {
 	private Optionor optionor;
 	private Panel panel;
 	@Override
@@ -29,9 +37,7 @@ public class ClassifyFragment extends Fragment {
 		LayoutInflater localInflater = inflater.cloneInContext(theme);
 		View view = inflater.inflate(R.layout.frag_classify, container,false);
 		panel = (Panel) view.findViewById(R.id.classify_panel);
-		optionor = (Optionor) view.findViewById(R.id.optionor1);
-		
-		
+		optionor = (Optionor) view.findViewById(R.id.optionor1);		
 		panel.setOnPanelListener(new OnPanelListener() {
 			
 			@Override
@@ -53,12 +59,10 @@ public class ClassifyFragment extends Fragment {
 			}
 		});
 		
-		
-		optionor.add("66");
-		optionor.add("22");
-		optionor.add("33");		
-		optionor.add("44");		
-		optionor.add("55");
+		if(fisrtIn()){
+			reDownload();
+		}
+
 		
 		return view;
 	}
@@ -89,5 +93,49 @@ public class ClassifyFragment extends Fragment {
 	public boolean isOpen(){
 		return panel.isOpen();
 	}
+
+	@Override
+	public void reDownload() {
+		// TODO Auto-generated method stub
+		MessageAdapter adapter = new MessageAdapter() {
+			@Override
+			public void onRcvJSONArray(JSONArray array) {
+				Set<Type> types = new HashSet<Type>();
+				for (int i = 0; i < array.length(); i++) {
+					try {	
+						Type type = new Type();					
+						JSONObject obj = array.getJSONObject(i);
+						type.transJSON(obj);
+						types.add(type);	
+					} catch (Exception e) {
+						// TODO: handle exception
+					}
+								
+				}
+				Type.insertIntoSQLite(types, getActivity());
+			}
+
+			@Override
+			public void onFinish() {
+				reLoad();
+			}
+		};
+		
+		DatabaseConnector connector = new DatabaseConnector();
+		connector.addParams(DatabaseConnector.METHOD, "GETTYPE");
+		connector.asyncConnect(adapter);
+	}
+
+	@Override
+	public void reLoad() {
+		// TODO Auto-generated method stub
+		optionor.add("È«²¿");
+		List<Type> types = Type.selectFromSQLite(getActivity());
+		for (Type type : types) {
+			optionor.add(type.getName());
+		}
+	}
+
+	
 
 }
