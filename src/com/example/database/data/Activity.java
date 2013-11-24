@@ -273,4 +273,13 @@ public class Activity implements java.io.Serializable {
 		return activity;
 	}
 	
+	
+	public static void insertIntoSQLite(){
+		
+	}
+	
+	
+	public static void insertOrUpdata(){
+		
+	}
 }

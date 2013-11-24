@@ -30,45 +30,21 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class RecommendFragment extends FragmentRoot {
+
+/**
+ * 默认的第一屏，在此第一次载入当前所有活动
+ * @author Administrator
+ *
+ */
+public class RecommendFragment extends FragmentHelper {
 	private ListView listView;
 	private RecommendItemAdapter adapter = new RecommendItemAdapter(null);
 
-	private MessageAdapter recommendAdapter = new MessageAdapter() {
-		
-		@Override
-		public void onRcvJSONArray(JSONArray array) {	
-			Set<Activity> activities = ((ApplicationHelper)getActivity().getApplication()).getActivities();
-			for(int i=0 ; i<array.length();i++)
-			{
-				Activity activity = new Activity();
-				JSONObject obj;
-				try {
-					obj = array.getJSONObject(i);
-					activity.transJSON(obj);
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				activities.add(activity);
-				
-			}
-		}
 
 
 
-		@Override
-		public void onFinish() {
-			Set<Activity> setActivities = ((ApplicationHelper)getActivity().getApplication()).getActivities();
-			List<Activity> activities = new ArrayList<Activity>(setActivities);
 
-			setActivities(activities);
-		}
-		
-	};
+
 	
  	public void setActivities(List<Activity> activities) {
  		try {
@@ -77,7 +53,6 @@ public class RecommendFragment extends FragmentRoot {
 		} catch (Exception e) {
 			String s = e.getMessage();
 		}
-
 	}
 
 
@@ -89,17 +64,17 @@ public class RecommendFragment extends FragmentRoot {
 
 		listView.setAdapter(adapter);
 		
-		connectForRecommend();
+		//connectForRecommend();
+		
+		if(firstIn()){
+
+		}
+		
 		
 		return view;
 	}
 	
-	public void connectForRecommend()
-	{
-		DatabaseConnector connector = new DatabaseConnector();
-		connector.addParams(DatabaseConnector.METHOD, "GETACTIVITY");
-		connector.asyncConnect(recommendAdapter);
-	}
+
 	
 	public class RecommendItemAdapter extends BaseAdapter{
 		List<Activity> activities;
@@ -166,8 +141,42 @@ public class RecommendFragment extends FragmentRoot {
 	
 	@Override
 	public void reDownload() {
-		// TODO Auto-generated method stub
+		MessageAdapter recommendAdapter = new MessageAdapter() {
+			
+			@Override
+			public void onRcvJSONArray(JSONArray array) {	
+				Set<Activity> activities = ((ApplicationHelper)getActivity().getApplication()).getActivities();
+				for(int i=0 ; i<array.length();i++)
+				{
+					Activity activity = new Activity();
+					JSONObject obj;
+					try {
+						obj = array.getJSONObject(i);
+						activity.transJSON(obj);
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					activities.add(activity);
+					
+				}
+			}
+			@Override
+			public void onFinish() {
+				Set<Activity> setActivities = ((ApplicationHelper)getActivity().getApplication()).getActivities();
+				List<Activity> activities = new ArrayList<Activity>(setActivities);
+
+				setActivities(activities);
+			}
+			
+		};
 		
+		DatabaseConnector connector = new DatabaseConnector();
+		connector.addParams(DatabaseConnector.METHOD, "GETACTIVITY");
+		connector.asyncConnect(recommendAdapter);
 	}
 
 

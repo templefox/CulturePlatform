@@ -12,12 +12,15 @@ import com.example.cultureplatform.MainActivity;
 import com.example.cultureplatform.R;
 import com.example.database.DatabaseConnector;
 import com.example.database.MessageAdapter;
+import com.example.database.data.Entity;
 import com.example.database.data.Type;
+import com.example.database.data.User;
 import com.example.widget.Optionor;
 import com.example.widget.Panel;
 import com.example.widget.Panel.OnPanelListener;
 
 import android.app.Fragment;
+import android.content.ContentValues;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
@@ -26,7 +29,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-public class ClassifyFragment extends FragmentRoot {
+public class ClassifyFragment extends FragmentHelper {
 	private Optionor optionor;
 	private Panel panel;
 	@Override
@@ -59,7 +62,8 @@ public class ClassifyFragment extends FragmentRoot {
 			}
 		});
 		
-		if(fisrtIn()){
+		if(firstIn()){
+			reLoad();
 			reDownload();
 		}
 
@@ -97,6 +101,7 @@ public class ClassifyFragment extends FragmentRoot {
 	@Override
 	public void reDownload() {
 		// TODO Auto-generated method stub
+		optionor.removeAllString();
 		MessageAdapter adapter = new MessageAdapter() {
 			@Override
 			public void onRcvJSONArray(JSONArray array) {
@@ -112,7 +117,7 @@ public class ClassifyFragment extends FragmentRoot {
 					}
 								
 				}
-				Type.insertIntoSQLite(types, getActivity());
+				Entity.insertIntoSQLite(types, getActivity());
 			}
 
 			@Override
@@ -129,13 +134,11 @@ public class ClassifyFragment extends FragmentRoot {
 	@Override
 	public void reLoad() {
 		// TODO Auto-generated method stub
-		optionor.add("全部");
-		List<Type> types = Type.selectFromSQLite(getActivity());
-		for (Type type : types) {
-			optionor.add(type.getName());
+		optionor.removeAllString();
+		optionor.addString("全部");
+		List<ContentValues> list = Entity.selectFromSQLite(getActivity());
+		for (ContentValues contentValue : list) {
+			optionor.addString(contentValue.getAsString("name"));
 		}
 	}
-
-	
-
 }

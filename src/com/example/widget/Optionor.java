@@ -43,7 +43,11 @@ public class Optionor extends LinearLayout {
 		
 	}
 	
-	public void add(String name){
+	public void removeAllString(){
+		group.removeAllViews();
+	}
+	
+	public void addString(String name){
 		RadioButton button = new RadioButton(getContext());
 		button.setText(name);
 		button.setButtonDrawable(android.R.color.transparent);
@@ -66,7 +70,7 @@ public class Optionor extends LinearLayout {
 	
 	public void addAll(List<String> names){
 		for (String name : names) {
-			add(name);
+			addString(name);
 		}
 	}
 	

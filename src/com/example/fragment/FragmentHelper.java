@@ -2,10 +2,10 @@ package com.example.fragment;
 
 import android.app.Fragment;
 
-public abstract class FragmentRoot extends Fragment {
+public abstract class FragmentHelper extends Fragment {
 	private boolean first = true;
 	
-	protected boolean fisrtIn()
+	protected boolean firstIn()
 	{
 		boolean result = first;
 		first = false;
