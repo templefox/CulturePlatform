@@ -22,7 +22,6 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 
 public class Optionor extends LinearLayout {
 	private RadioGroup group;
-	private OnCheckedChangeListener onCheckedChangeListener;
 	private HorizontalScrollView view;
 	
 	public Optionor(Context context) {
@@ -50,6 +49,7 @@ public class Optionor extends LinearLayout {
 	public void addString(String name){
 		RadioButton button = new RadioButton(getContext());
 		button.setText(name);
+
 		button.setButtonDrawable(android.R.color.transparent);
 		button.setPadding(10, 0, 0, 0);
 		button.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -63,9 +63,12 @@ public class Optionor extends LinearLayout {
 				
 			}
 		});
-		
+
 		
 		group.addView(button);
+		if(name.equals("È«²¿")){
+			button.setChecked(true);
+		}
 	}
 	
 	public void addAll(List<String> names){
@@ -74,8 +77,8 @@ public class Optionor extends LinearLayout {
 		}
 	}
 	
-	public void setOnCheckChangedListener(OnCheckedChangeListener listener){
-		onCheckedChangeListener = listener;
+	public void setOnCheckedChangedListener(OnCheckedChangeListener listener){
 		group.setOnCheckedChangeListener(listener);
 	}
+
 }

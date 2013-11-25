@@ -16,8 +16,10 @@ import com.example.cultureplatform.R;
 import com.example.database.DatabaseConnector;
 import com.example.database.MessageAdapter;
 import com.example.database.data.Activity;
+import com.example.database.data.Entity;
 
 import android.app.Fragment;
+import android.content.ContentValues;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -40,13 +42,7 @@ public class RecommendFragment extends FragmentHelper {
 	private ListView listView;
 	private RecommendItemAdapter adapter = new RecommendItemAdapter(null);
 
-
-
-
-
-
-	
- 	public void setActivities(List<Activity> activities) {
+ 	public void freshList(List<Activity> activities) {
  		try {
 			adapter.setActivities(activities);
 			listView.setAdapter(adapter);
@@ -64,19 +60,20 @@ public class RecommendFragment extends FragmentHelper {
 
 		listView.setAdapter(adapter);
 		
-		//connectForRecommend();
 		
 		if(firstIn()){
-
+			reLoad();
+			reDownload();
+		}else {
+			reLoad();
 		}
-		
 		
 		return view;
 	}
 	
 
 	
-	public class RecommendItemAdapter extends BaseAdapter{
+	private class RecommendItemAdapter extends BaseAdapter{
 		List<Activity> activities;
 		
 		
@@ -145,7 +142,7 @@ public class RecommendFragment extends FragmentHelper {
 			
 			@Override
 			public void onRcvJSONArray(JSONArray array) {	
-				Set<Activity> activities = ((ApplicationHelper)getActivity().getApplication()).getActivities();
+				Set<Activity> activities = new HashSet<Activity>();
 				for(int i=0 ; i<array.length();i++)
 				{
 					Activity activity = new Activity();
@@ -163,13 +160,11 @@ public class RecommendFragment extends FragmentHelper {
 					activities.add(activity);
 					
 				}
+				Entity.insertIntoSQLite(activities, getActivity());
 			}
 			@Override
 			public void onFinish() {
-				Set<Activity> setActivities = ((ApplicationHelper)getActivity().getApplication()).getActivities();
-				List<Activity> activities = new ArrayList<Activity>(setActivities);
-
-				setActivities(activities);
+				reLoad();
 			}
 			
 		};
@@ -182,7 +177,15 @@ public class RecommendFragment extends FragmentHelper {
 
 	@Override
 	public void reLoad() {
-		// TODO Auto-generated method stub
+		List<Activity> activities = new ArrayList<Activity>();
+		List<ContentValues> list = Entity.selectFromSQLite("activity", new String[]{"id","name"}, getActivity());
+		for(ContentValues contentValue: list){
+			Activity activity = new Activity();
+			activity.setId(contentValue.getAsInteger("id"));
+			activity.setName(contentValue.getAsString("name"));
+			activities.add(activity);
+		}
+		freshList(activities);
 		
 	}
 

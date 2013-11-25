@@ -48,7 +48,7 @@ public abstract class Entity {
 			manager.close();
 		}
 	}
-	private static void insertOrUpdata(Entity entity, SQLiteDatabase db) {
+	private static synchronized void insertOrUpdata(Entity entity, SQLiteDatabase db) {
 		ContentValues values = entity.getContentValues();
 		if(db.insert(entity.getTableName(), null, values)==-1)
 		{
@@ -60,15 +60,40 @@ public abstract class Entity {
 	protected abstract ContentValues getContentValues();
 	protected abstract String getTableName();
 
-	public static List<ContentValues> selectFromSQLite(Context context) {
+	//TODO ¼ÌÐø
+	public static List<ContentValues> selectFromSQLite(String table,String[] columns,Context context) {
 		List<ContentValues> list = new ArrayList<ContentValues>();
 		
 		
 		SQLiteManager manager = new SQLiteManager(context);
-		SQLiteDatabase db = manager.getWritableDatabase();
+		SQLiteDatabase db = manager.getReadableDatabase();
 		
 	
-		Cursor cursor = db.query("type", new String[]{"name"}, null, null, null, null, null);
+		Cursor cursor = db.query(table, columns, null, null, null, null, null);
+		
+		while (cursor.moveToNext()) {
+			ContentValues contentValues = new ContentValues();
+			for (String columnName : cursor.getColumnNames()) {
+				String value = cursor.getString(cursor.getColumnIndex(columnName));
+				contentValues.put(columnName, value);
+			}
+			list.add(contentValues);
+		}
+		
+		manager.close();
+		
+		return list;
+	}
+	
+	public static List<ContentValues> selectFromSQLite(String table,String[] columns,String where,String[] whereArgs,Context context) {
+		List<ContentValues> list = new ArrayList<ContentValues>();
+		
+		
+		SQLiteManager manager = new SQLiteManager(context);
+		SQLiteDatabase db = manager.getReadableDatabase();
+		
+	
+		Cursor cursor = db.query(table, columns, where, whereArgs, null, null, null);
 		
 		while (cursor.moveToNext()) {
 			ContentValues contentValues = new ContentValues();
@@ -86,12 +111,6 @@ public abstract class Entity {
 	
 	
 	public abstract Entity transJSON(JSONObject obj) throws JSONException, ParseException;
-	/* {
-		Entity entity = this;
-		type.setId(obj.getInt("id"));
-		type.setName(obj.getString("name"));
-		return entity;
-	}*/
 
 	
 }

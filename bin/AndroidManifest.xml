@@ -42,6 +42,10 @@
             android:name="com.example.cultureplatform.UserActivity"
             android:label="@string/title_activity_user" >
         </activity>
+        <activity
+            android:name="com.example.cultureplatform.SearchActivity"
+            android:label="@string/title_activity_search" >
+        </activity>
     </application>
 
     <instrumentation

@@ -93,50 +93,44 @@ containing a value of this type.
         public static final int init=0x7f020002;
     }
     public static final class id {
-        public static final int HorizontalScrollView01=0x7f040014;
-        public static final int TextView01=0x7f040016;
-        public static final int TextView02=0x7f040015;
-        public static final int TextView03=0x7f040018;
-        public static final int TextView04=0x7f040017;
-        public static final int TextView05=0x7f040019;
-        public static final int action_bar_user=0x7f04002d;
-        public static final int action_forgot_password=0x7f040029;
-        public static final int action_settings=0x7f04002e;
+        public static final int action_bar_user=0x7f040027;
+        public static final int action_forgot_password=0x7f040023;
+        public static final int action_settings=0x7f040028;
         public static final int asdf=0x7f04000d;
         public static final int bottom=0x7f040001;
-        public static final int button1=0x7f040020;
+        public static final int button1=0x7f04001c;
         public static final int button_log_in=0x7f040013;
         public static final int button_log_out=0x7f040011;
-        public static final int classify_panel=0x7f040021;
+        public static final int classify_panel=0x7f040017;
         public static final int email=0x7f040007;
-        public static final int horizontalScrollView1=0x7f04001a;
         public static final int imageView1=0x7f04000f;
-        public static final int item_recommend_button=0x7f040026;
-        public static final int item_recommend_name=0x7f040025;
+        public static final int item_cla_button=0x7f04001d;
+        public static final int item_cla_name=0x7f04001e;
+        public static final int item_recommend_button=0x7f040020;
+        public static final int item_recommend_name=0x7f04001f;
         public static final int left=0x7f040002;
-        public static final int list_recommend=0x7f040024;
+        public static final int list_classify=0x7f040016;
+        public static final int list_recommend=0x7f04001a;
         public static final int login=0x7f040009;
         public static final int login_form=0x7f040006;
         public static final int login_status=0x7f040004;
         public static final int login_status_message=0x7f040005;
-        public static final int menu_account_user_manager=0x7f04002b;
-        public static final int menu_nav=0x7f04002a;
-        public static final int menu_search=0x7f04002c;
+        public static final int menu_account_user_manager=0x7f040025;
+        public static final int menu_nav=0x7f040024;
+        public static final int menu_search=0x7f040026;
         public static final int no_user_view=0x7f040012;
-        public static final int optionor=0x7f040027;
-        public static final int optionor1=0x7f04001f;
-        public static final int optionor_radiogroup=0x7f040028;
+        public static final int optionor=0x7f040021;
+        public static final int optionor1=0x7f040014;
+        public static final int optionor2=0x7f040015;
+        public static final int optionor_radiogroup=0x7f040022;
         public static final int pager=0x7f04000c;
-        public static final int panelContent=0x7f040022;
-        public static final int panelHandle=0x7f040023;
+        public static final int panelContent=0x7f040018;
+        public static final int panelHandle=0x7f040019;
         public static final int password=0x7f040008;
         public static final int right=0x7f040003;
         public static final int sign_in_button=0x7f04000a;
         public static final int textView1=0x7f04000b;
         public static final int textView2=0x7f04001b;
-        public static final int textView3=0x7f04001c;
-        public static final int textView4=0x7f04001d;
-        public static final int textView5=0x7f04001e;
         public static final int top=0x7f040000;
         public static final int user_name=0x7f040010;
         public static final int user_view=0x7f04000e;
@@ -144,38 +138,42 @@ containing a value of this type.
     public static final class layout {
         public static final int activity_login=0x7f030000;
         public static final int activity_main=0x7f030001;
-        public static final int activity_start=0x7f030002;
-        public static final int activity_user=0x7f030003;
-        public static final int classify_content=0x7f030004;
-        public static final int frag_classify=0x7f030005;
-        public static final int frag_recommend=0x7f030006;
-        public static final int frag_test=0x7f030007;
-        public static final int item_recommend=0x7f030008;
-        public static final int optionor=0x7f030009;
+        public static final int activity_search=0x7f030002;
+        public static final int activity_start=0x7f030003;
+        public static final int activity_user=0x7f030004;
+        public static final int classify_content=0x7f030005;
+        public static final int frag_classify=0x7f030006;
+        public static final int frag_recommend=0x7f030007;
+        public static final int frag_test=0x7f030008;
+        public static final int item_classify=0x7f030009;
+        public static final int item_recommend=0x7f03000a;
+        public static final int optionor=0x7f03000b;
     }
     public static final class menu {
         public static final int login=0x7f080000;
         public static final int main=0x7f080001;
-        public static final int start=0x7f080002;
-        public static final int user=0x7f080003;
+        public static final int search=0x7f080002;
+        public static final int start=0x7f080003;
+        public static final int user=0x7f080004;
     }
     public static final class string {
-        public static final int action_forgot_password=0x7f060009;
+        public static final int action_forgot_password=0x7f06000a;
         public static final int action_settings=0x7f060001;
-        public static final int action_sign_in_register=0x7f060007;
-        public static final int action_sign_in_short=0x7f060008;
+        public static final int action_sign_in_register=0x7f060008;
+        public static final int action_sign_in_short=0x7f060009;
         public static final int app_name=0x7f060000;
-        public static final int error_field_required=0x7f06000e;
-        public static final int error_incorrect_password=0x7f06000d;
-        public static final int error_invalid_email=0x7f06000b;
-        public static final int error_invalid_password=0x7f06000c;
+        public static final int error_field_required=0x7f06000f;
+        public static final int error_incorrect_password=0x7f06000e;
+        public static final int error_invalid_email=0x7f06000c;
+        public static final int error_invalid_password=0x7f06000d;
         public static final int hello_world=0x7f060002;
-        public static final int login_progress_signing_in=0x7f06000a;
+        public static final int login_progress_signing_in=0x7f06000b;
         /**  Strings related to login 
          */
-        public static final int prompt_email=0x7f060005;
-        public static final int prompt_password=0x7f060006;
-        public static final int title_activity_login=0x7f060004;
+        public static final int prompt_email=0x7f060006;
+        public static final int prompt_password=0x7f060007;
+        public static final int title_activity_login=0x7f060005;
+        public static final int title_activity_search=0x7f060004;
         public static final int title_activity_user=0x7f060003;
     }
     public static final class style {
