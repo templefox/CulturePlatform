@@ -208,7 +208,7 @@ public class ClassifyFragment extends FragmentHelper {
 		freshList(activities);
 	}
 	
-	private class ClassifyItemAdapter extends BaseAdapter{
+	public static class ClassifyItemAdapter extends BaseAdapter{
 		List<Activity> activities;
 		
 		
@@ -249,7 +249,7 @@ public class ClassifyFragment extends FragmentHelper {
 			TextView textView = null;
 			
 			if(convertView == null){
-				convertView = LayoutInflater.from(getActivity()).inflate(R.layout.item_classify, null);
+				convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_classify, null);
 			}
 			
 			button = (Button) convertView.findViewById(R.id.item_cla_button);

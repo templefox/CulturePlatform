@@ -152,7 +152,7 @@ public class MainActivity extends Activity{
 		
 		switch (item.getItemId()) {
 		case R.id.action_bar_user:
-			return intent2UserActivity();
+			return intent2(UserActivity.class);
 		case R.id.menu_account_user_manager:
 		{
 			
@@ -161,6 +161,8 @@ public class MainActivity extends Activity{
 			if(classifyFragment instanceof ClassifyFragment)	
 				((ClassifyFragment)classifyFragment).switchPanel();
 		}
+		case R.id.action_bar_search:
+			return intent2(SearchActivity.class);
 		default:
 			break;
 		}
@@ -168,8 +170,8 @@ public class MainActivity extends Activity{
 		return super.onOptionsItemSelected(item);
 	}
 
-	private boolean intent2UserActivity() {
-		Intent intent = new Intent(this,UserActivity.class);  
+	private <T> boolean intent2(Class<T> cls) {
+		Intent intent = new Intent(this,cls);  
 		startActivity(intent);  
 		return true;
 	}
