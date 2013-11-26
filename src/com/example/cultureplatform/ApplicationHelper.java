@@ -28,4 +28,5 @@ public class ApplicationHelper extends Application {
 	{
 		return !(currentUser == null);
 	}
+	
 }

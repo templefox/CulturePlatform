@@ -45,11 +45,11 @@ public class MessageHandler extends Handler {
 		else if(get.equals("ERROR")) 
 		{
 			//数据库操作错误
-			messageAdapter.onGetFail();
+			messageAdapter.onErrorOccur();
 		}
 		else if(get.startsWith("DONE")) {
 			//数据库操作成功
-			messageAdapter.onGetSuccessNum(get.substring(4));
+			messageAdapter.onDone(get.substring(4));
 			
 		}
 		else {
@@ -59,7 +59,7 @@ public class MessageHandler extends Handler {
 				messageAdapter.onRcvJSONArray(array);
 			} catch (JSONException e) {
 				//其他错误
-				messageAdapter.onErrorOccur();
+				messageAdapter.onElseFail();
 			}
 		}
 		

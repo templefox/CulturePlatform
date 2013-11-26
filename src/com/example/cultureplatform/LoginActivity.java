@@ -359,7 +359,7 @@ public class LoginActivity extends Activity {
 	private MessageAdapter registerAdapter = new MessageAdapter() {
 
 		@Override
-		public void onGetSuccessNum(String ret) {
+		public void onDone(String ret) {
 			// TODO Auto-generated method stub
 			ApplicationHelper helper = (ApplicationHelper) getApplication();
 			helper.setCurrentUser(new User());
@@ -370,7 +370,7 @@ public class LoginActivity extends Activity {
 		}
 
 		@Override
-		public void onGetFail() {
+		public void onErrorOccur() {
 			// TODO Auto-generated method stub
 			Toast.makeText(LoginActivity.this, "邮箱已被使用", Toast.LENGTH_SHORT).show();
 			showProgress(false);

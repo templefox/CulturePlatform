@@ -17,4 +17,11 @@
         android:text="Medium Text"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
+    <ToggleButton
+        android:id="@+id/item_cla_attention"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textOn="已关注"
+        android:textOff="关注"
+        android:paddingLeft="0dp" />
 </LinearLayout>

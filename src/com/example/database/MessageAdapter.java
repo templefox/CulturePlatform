@@ -4,7 +4,7 @@ import org.json.JSONArray;
 
 public abstract class MessageAdapter {
 	public void onEmptyReceived(){}
-	public void onErrorOccur() {}
+	public void onElseFail() {}
 	
 	
 	/**
@@ -13,7 +13,7 @@ public abstract class MessageAdapter {
 	public void onRcvJSONArray(JSONArray array){}
 	
 	
-	public void onGetSuccessNum(String ret) {}
-	public void onGetFail() {}
+	public void onDone(String ret) {}
+	public void onErrorOccur() {}
 	public void onFinish() {}
 }

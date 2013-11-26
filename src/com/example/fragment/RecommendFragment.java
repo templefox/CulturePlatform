@@ -16,7 +16,9 @@ import com.example.cultureplatform.R;
 import com.example.database.DatabaseConnector;
 import com.example.database.MessageAdapter;
 import com.example.database.data.Activity;
+import com.example.database.data.Attention;
 import com.example.database.data.Entity;
+import com.example.database.data.User;
 
 import android.app.Fragment;
 import android.content.ContentValues;
@@ -138,7 +140,7 @@ public class RecommendFragment extends FragmentHelper {
 	
 	@Override
 	public void reDownload() {
-		MessageAdapter recommendAdapter = new MessageAdapter() {
+		final MessageAdapter activityAdapter = new MessageAdapter() {
 			
 			@Override
 			public void onRcvJSONArray(JSONArray array) {	
@@ -169,9 +171,42 @@ public class RecommendFragment extends FragmentHelper {
 			
 		};
 		
+		MessageAdapter attentionAdapter = new MessageAdapter() {
+
+			@Override
+			public void onRcvJSONArray(JSONArray array) {
+				Set<Attention> attentions = new HashSet<Attention>();
+				for (int i = 0; i < array.length(); i++) {
+					try {	
+						Attention attention = new Attention();					
+						JSONObject obj = array.getJSONObject(i);
+						attention.transJSON(obj);
+						attentions.add(attention);	
+					} catch (Exception e) {
+						// TODO: handle exception
+					}
+								
+				}
+				Entity.insertIntoSQLite(attentions, getActivity());
+			}
+
+			@Override
+			public void onFinish() {
+				// TODO Auto-generated method stub
+				DatabaseConnector connector = new DatabaseConnector();
+				connector.addParams(DatabaseConnector.METHOD, "GETACTIVITY");
+				connector.asyncConnect(activityAdapter);
+			}
+
+		};
+		
+		User user = ((ApplicationHelper)getActivity().getApplication()).getCurrentUser();
+		
 		DatabaseConnector connector = new DatabaseConnector();
-		connector.addParams(DatabaseConnector.METHOD, "GETACTIVITY");
-		connector.asyncConnect(recommendAdapter);
+		connector.addParams(DatabaseConnector.METHOD, "GETATTENTION");
+		if(user !=null)
+			connector.addParams("userID", user.getId().toString());
+		connector.asyncConnect(attentionAdapter);
 	}
 
 

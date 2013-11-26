@@ -8,11 +8,13 @@ import java.util.Set;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.example.cultureplatform.ApplicationHelper;
 import com.example.cultureplatform.MainActivity;
 import com.example.cultureplatform.R;
 import com.example.database.DatabaseConnector;
 import com.example.database.MessageAdapter;
 import com.example.database.data.Activity;
+import com.example.database.data.Attention;
 import com.example.database.data.Entity;
 import com.example.database.data.Type;
 import com.example.database.data.User;
@@ -31,11 +33,13 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 public class ClassifyFragment extends FragmentHelper {
 	private Optionor optionor;
@@ -96,6 +100,8 @@ public class ClassifyFragment extends FragmentHelper {
 				}
 			}
 		});
+
+
 		view.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -145,7 +151,7 @@ public class ClassifyFragment extends FragmentHelper {
 	public void reDownload() {
 		// TODO Auto-generated method stub
 		optionor.removeAllString();
-		MessageAdapter adapter = new MessageAdapter() {
+		final MessageAdapter typeAdapter = new MessageAdapter() {
 			@Override
 			public void onRcvJSONArray(JSONArray array) {
 				Set<Type> types = new HashSet<Type>();
@@ -168,10 +174,11 @@ public class ClassifyFragment extends FragmentHelper {
 				reLoad();
 			}
 		};
-		
+
 		DatabaseConnector connector = new DatabaseConnector();
 		connector.addParams(DatabaseConnector.METHOD, "GETTYPE");
-		connector.asyncConnect(adapter);
+		connector.asyncConnect(typeAdapter);
+
 	}
 
 	@Override
@@ -211,6 +218,50 @@ public class ClassifyFragment extends FragmentHelper {
 	public static class ClassifyItemAdapter extends BaseAdapter{
 		List<Activity> activities;
 		
+		/**
+		 * 关注按钮的触发监听
+		 * @author Administrator
+		 *
+		 */
+		private class onTakeAttentionListener implements CompoundButton.OnCheckedChangeListener{
+			
+			Activity activity;
+			User user;
+			public onTakeAttentionListener(Activity activity,User user) {
+				this.activity = activity;
+				this.user = user;
+			}
+			@Override
+			public void onCheckedChanged(final CompoundButton buttonView,
+					boolean isChecked) {
+
+				if(user == null){
+					return;
+				}
+				DatabaseConnector connector = new DatabaseConnector();
+				connector.addParams(DatabaseConnector.METHOD, "SETATTENTION");
+				connector.addParams("user_id", user.getId().toString());
+				connector.addParams("activity_id", activity.getId().toString());
+				connector.asyncConnect(new MessageAdapter() {
+
+					@Override
+					public void onDone(String ret) {
+						Attention attention = new Attention();
+						attention.setId(Integer.getInteger(ret));
+						attention.setActivityID(activity.getId());
+						attention.setUser(user.getId());
+						Entity.insertIntoSQLite(attention, buttonView.getContext());
+						buttonView.setEnabled(false);
+					}
+
+					@Override
+					public void onErrorOccur() {
+						// TODO Auto-generated method stub
+						super.onErrorOccur();
+					}
+				});
+			}
+		}
 		
 		public void setActivities(List<Activity> activities) {
 			this.activities = activities;
@@ -244,19 +295,33 @@ public class ClassifyFragment extends FragmentHelper {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			// TODO Auto-generated method stub
-			Button button = null;
-			TextView textView = null;
-			
+			// TODO 在此初始化每一个item内的内容，添加item的交互功能。
+
 			if(convertView == null){
 				convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_classify, null);
 			}
+						Button button = (Button) convertView.findViewById(R.id.item_cla_button);
+			TextView textView = (TextView) convertView.findViewById(R.id.item_cla_name);
+			ToggleButton toggleButton = (ToggleButton)convertView.findViewById(R.id.item_cla_attention);
 			
-			button = (Button) convertView.findViewById(R.id.item_cla_button);
-			textView = (TextView) convertView.findViewById(R.id.item_cla_name);
+			Activity currentActivity = activities.get(position);
+			User user = ((ApplicationHelper)parent.getContext().getApplicationContext()).getCurrentUser();
+			if(user!=null)
+			{
+				List<ContentValues> values = Entity.selectFromSQLite("attention", new String[]{"ActivityID"},"UserID = ?",new String[]{user.getId().toString()}, parent.getContext());
+				for (ContentValues value : values) {
+					if(value.getAsInteger("ActivityID") == currentActivity.getId()){
+						toggleButton.setOnCheckedChangeListener(null);
+						toggleButton.setChecked(true);
+						toggleButton.setEnabled(false);
+					}
+				}
+			}
+			toggleButton.setOnCheckedChangeListener(new onTakeAttentionListener(currentActivity,user));
 			
-			button.setText(activities.get(position).getName());
-			textView.setText(activities.get(position).getName());
+			
+			button.setText(currentActivity.getName());
+			textView.setText(currentActivity.getName());
 			
 			return convertView;
 		}

@@ -88,6 +88,7 @@ public class DatabaseConnector {
 	        b.putString(null, json);
 	        msg.setData(b);
 			handler.sendMessage(msg);
+			
 		} catch (ClientProtocolException e)
 		{
 			Log.e("HttpConnectionUtil", e.getMessage(), e);
@@ -105,6 +106,7 @@ public class DatabaseConnector {
 		finally{
 			try
 			{
+				
 				if(reader!= null)
 				{
 					reader.close();
