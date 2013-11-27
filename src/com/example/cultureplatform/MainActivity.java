@@ -1,8 +1,10 @@
 package com.example.cultureplatform;
 
 import com.example.fragment.ClassifyFragment;
+import com.example.fragment.FragmentHelper;
 import com.example.fragment.RecommendFragment;
 import com.example.fragment.TestFragment;
+import com.example.fragment.UserFragment;
 import com.example.widget.InterceptableViewPager;
 
 import android.app.ActionBar;
@@ -23,13 +25,14 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 
 public class MainActivity extends Activity{
 	private InterceptableViewPager viewPager;
 	private FragmentPagerAdapter fragmentPagerAdapter;
 	private boolean first = true;
-	
+	private Class<Fragment>[] cls = new Class[]{RecommendFragment.class,ClassifyFragment.class,UserFragment.class,TestFragment.class};
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +41,8 @@ public class MainActivity extends Activity{
 		setTheme(R.style.ActionBar);
 		setContentView(R.layout.activity_main);
 		
+		
+		
 		final ActionBar actionBar = getActionBar();
 		viewPager = (InterceptableViewPager) findViewById(R.id.pager);
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -45,14 +50,30 @@ public class MainActivity extends Activity{
 			@Override
 			public int getCount() {
 				// TODO Auto-generated method stub
-				return 3;
+				return cls.length;
 			}
 			
 			@Override
 			public Fragment getItem(int arg0) {
 				// TODO Auto-generated method stub
-				Fragment fragment;
-				switch (arg0) {
+				Fragment fragment = null;
+				Class<Fragment> class1 = cls[arg0];
+				try {
+					fragment = class1.newInstance();
+				} catch (InstantiationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}finally{
+					if(fragment == null){
+						fragment = new TestFragment();
+						((TestFragment)fragment).setA(arg0);			
+					}
+				}
+				return fragment;
+				/*switch (arg0) {
 				case 0:
 					fragment = new RecommendFragment();
 					break;
@@ -64,7 +85,7 @@ public class MainActivity extends Activity{
 					((TestFragment)fragment).setA(arg0);
 					break;
 				}
-				return fragment;
+				return fragment;*/
 			}
 
 			@Override
@@ -204,4 +225,5 @@ public class MainActivity extends Activity{
 	public void setViewPagerInterceptable(boolean isIntercept){
 		viewPager.setInterceptable(isIntercept);
 	}
+	
 }
