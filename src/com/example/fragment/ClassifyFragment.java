@@ -47,6 +47,7 @@ public class ClassifyFragment extends FragmentHelper {
 	private Panel panel;
 	private ClassifyItemAdapter adapter = new ClassifyItemAdapter(null);
 	private ListView listView;
+	private User currentUser;
 	
  	public void freshList(List<Activity> activities) {
  		try {
@@ -68,6 +69,7 @@ public class ClassifyFragment extends FragmentHelper {
 		optionor = (Optionor) view.findViewById(R.id.optionor1);	
 		optionor2 = (Optionor)view.findViewById(R.id.optionor2);
 		listView = (ListView)view.findViewById(R.id.list_classify);
+		currentUser = ((ApplicationHelper)getActivity().getApplication()).getCurrentUser();
 		panel.setOnPanelListener(new OnPanelListener() {
 			
 			@Override
@@ -115,7 +117,7 @@ public class ClassifyFragment extends FragmentHelper {
 			reLoad();
 			reDownload();
 		}
-
+		reLoad();
 		
 		return view;
 	}
@@ -202,14 +204,21 @@ public class ClassifyFragment extends FragmentHelper {
 			type = "%";
 		}
 		
-		List<ContentValues> list = Entity.selectFromSQLite("activity", new String[]{"id","name"}
+		List<ContentValues> list = Entity.selectFromSQLite("activity", new String[]{"id","activity.name"}
 					,"type like ?",new String[]{type}, getActivity());
 		
+		List<ContentValues> attentionList = Entity.selectFromSQLite("attention", new String[]{"ActivityID"}, getActivity());
 		
 		for(ContentValues contentValue: list){
 			Activity activity = new Activity();
 			activity.setId(contentValue.getAsInteger("id"));
 			activity.setName(contentValue.getAsString("name"));
+			for(ContentValues attentionCV : attentionList){
+				if(activity.getId()==attentionCV.getAsInteger("ActivityID")){
+					activity.setisAttention(1);
+					break;
+				}
+			}
 			activities.add(activity);
 		}
 		freshList(activities);
@@ -305,19 +314,13 @@ public class ClassifyFragment extends FragmentHelper {
 			ToggleButton toggleButton = (ToggleButton)convertView.findViewById(R.id.item_cla_attention);
 			
 			Activity currentActivity = activities.get(position);
-			User user = ((ApplicationHelper)parent.getContext().getApplicationContext()).getCurrentUser();
-			if(user!=null)
+			if(currentActivity.getisAttention()==1)
 			{
-				List<ContentValues> values = Entity.selectFromSQLite("attention", new String[]{"ActivityID"},"UserID = ?",new String[]{user.getId().toString()}, parent.getContext());
-				for (ContentValues value : values) {
-					if(value.getAsInteger("ActivityID") == currentActivity.getId()){
-						toggleButton.setOnCheckedChangeListener(null);
-						toggleButton.setChecked(true);
-						toggleButton.setEnabled(false);
-					}
-				}
+				toggleButton.setOnCheckedChangeListener(null);
+				toggleButton.setChecked(true);
+				toggleButton.setEnabled(false);
 			}
-			toggleButton.setOnCheckedChangeListener(new onTakeAttentionListener(currentActivity,user));
+			toggleButton.setOnCheckedChangeListener(new onTakeAttentionListener(currentActivity,null));
 			
 			
 			button.setText(currentActivity.getName());

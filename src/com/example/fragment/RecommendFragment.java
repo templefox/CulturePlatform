@@ -50,6 +50,7 @@ public class RecommendFragment extends FragmentHelper {
 			listView.setAdapter(adapter);
 		} catch (Exception e) {
 			String s = e.getMessage();
+			s.getBytes();
 		}
 	}
 

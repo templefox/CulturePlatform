@@ -1,5 +1,6 @@
 package com.example.cultureplatform;
 
+import com.example.fragment.CalendarFragment;
 import com.example.fragment.ClassifyFragment;
 import com.example.fragment.FragmentHelper;
 import com.example.fragment.RecommendFragment;
@@ -31,8 +32,13 @@ import android.view.View;
 public class MainActivity extends Activity{
 	private InterceptableViewPager viewPager;
 	private FragmentPagerAdapter fragmentPagerAdapter;
-	private boolean first = true;
-	private Class<Fragment>[] cls = new Class[]{RecommendFragment.class,ClassifyFragment.class,UserFragment.class,TestFragment.class};
+	@SuppressWarnings("unchecked")
+	private Class<Fragment>[] cls = new Class[]{RecommendFragment.class,
+												ClassifyFragment.class,
+												UserFragment.class,
+												CalendarFragment.class,
+												TestFragment.class
+												};
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
