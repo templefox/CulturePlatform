@@ -272,7 +272,7 @@ public class Activity extends Entity implements java.io.Serializable {
 		activity.setUser(obj.getInt("organiserID"));
 		activity.setType(obj.getString("type"));
 		activity.setIsRating(obj.getInt("isRating"));
-		activity.setisAttention(1);
+		activity.setisAttention(0);
 		return activity;
 	}
 	

@@ -19,6 +19,7 @@ import com.example.database.data.Activity;
 import com.example.database.data.Attention;
 import com.example.database.data.Entity;
 import com.example.database.data.User;
+import com.example.fragment.item.RecommendItemAdapter;
 
 import android.app.Fragment;
 import android.content.ContentValues;
@@ -74,63 +75,6 @@ public class RecommendFragment extends FragmentHelper {
 		return view;
 	}
 	
-
-	
-	private class RecommendItemAdapter extends BaseAdapter{
-		List<Activity> activities;
-		
-		
-		public void setActivities(List<Activity> activities) {
-			this.activities = activities;
-		}
-
-		public RecommendItemAdapter(List<Activity> activities) {
-			super();
-			// TODO Auto-generated constructor stub
-			this.activities = activities;
-		}
-
-		@Override
-		public int getCount() {
-			// TODO Auto-generated method stub
-			if(activities==null)
-				return 0;
-			return activities.size();
-		}
-
-		@Override
-		public Object getItem(int position) {
-			// TODO Auto-generated method stub
-			return activities.get(position);
-		}
-
-		@Override
-		public long getItemId(int position) {
-			// TODO Auto-generated method stub
-			return position;
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			// TODO Auto-generated method stub
-			Button button = null;
-			TextView textView = null;
-			
-			if(convertView == null){
-				convertView = LayoutInflater.from(getActivity()).inflate(R.layout.item_recommend, null);
-			}
-			
-			button = (Button) convertView.findViewById(R.id.item_recommend_button);
-			textView = (TextView) convertView.findViewById(R.id.item_recommend_name);
-			
-			button.setText(activities.get(position).getName());
-			textView.setText(activities.get(position).getName());
-			
-			return convertView;
-		}
-		
-	}
-
 	@Override
 	public String toString() {
 		return "ÍÆ¼ö»î¶¯";

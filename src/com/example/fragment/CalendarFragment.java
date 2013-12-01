@@ -1,10 +1,18 @@
 package com.example.fragment;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import com.example.cultureplatform.ApplicationHelper;
 import com.example.cultureplatform.R;
 import com.example.database.data.Activity;
+import com.example.database.data.Entity;
+import com.example.database.data.User;
+import com.example.fragment.item.CalendarItemAdapter;
 
+import android.content.ContentValues;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +28,9 @@ public class CalendarFragment extends FragmentHelper {
 	private ListView listView;
 	private CalendarItemAdapter adapter = new CalendarItemAdapter(null);
 	private CalendarView calendarView;
-	
+	private View view_yes;
+	private View view_no;
+	private User currentUser;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -29,6 +39,9 @@ public class CalendarFragment extends FragmentHelper {
 		View view = inflater.inflate(R.layout.frag_calendar, container,false);
 		listView = (ListView) view.findViewById(R.id.list_calendar);
 		calendarView = (CalendarView) view.findViewById(R.id.my_calendar);
+		view_yes = view.findViewById(R.id.calendar_yes);
+		view_no = view.findViewById(R.id.calendar_no);
+		
 		
 		calendarView.setOnDateChangeListener(new OnDateChangeListener() {
 			
@@ -36,11 +49,45 @@ public class CalendarFragment extends FragmentHelper {
 			public void onSelectedDayChange(CalendarView view, int year, int month,
 					int dayOfMonth) {
 				// TODO Auto-generated method stub
+				String query_date = Integer.toString(year)+"."+Integer.toString(month+1)+"."+Integer.toString(dayOfMonth);
+				List<ContentValues> list = Entity.selectFromSQLite("activity", new String[]{"id,name"},"date = ? ",new String[]{query_date}, view.getContext());
+				List<Activity> activities = new ArrayList<Activity>();
 				
+				for(ContentValues value:list){
+					Activity activity = new Activity();
+					activity.setId(value.getAsInteger("id"));
+					activity.setName(value.getAsString("name"));
+					activities.add(activity);
+				}
+				freshList(activities);
 			}
 		});
 		
 		return view;
+	}
+
+	public void freshList(List<Activity> activities){
+		adapter.setActivities(activities);
+		listView.setAdapter(adapter);
+	}
+	
+	@Override
+	public void onStart() {
+		currentUser = ((ApplicationHelper)this.getActivity().getApplication()).getCurrentUser();
+		
+		if(currentUser == null){
+			view_yes.setVisibility(View.GONE);
+			view_no.setVisibility(View.VISIBLE);
+		}
+		else{
+			view_yes.setVisibility(View.VISIBLE);
+			view_no.setVisibility(View.GONE);
+			if(firstIn()){}		
+			reLoad();
+		}
+		
+		
+		super.onStart();
 	}
 
 	@Override
@@ -51,8 +98,16 @@ public class CalendarFragment extends FragmentHelper {
 
 	@Override
 	public void reLoad() {
-		// TODO Auto-generated method stub
-
+		List<ContentValues> list = Entity.selectFromSQLite("activity", new String[]{"id,name"},"date = strftime('%Y.%m.%d','now') ",new String[]{}, getActivity());
+		List<Activity> activities = new ArrayList<Activity>();
+		
+		for(ContentValues value:list){
+			Activity activity = new Activity();
+			activity.setId(value.getAsInteger("id"));
+			activity.setName(value.getAsString("name"));
+			activities.add(activity);
+		}
+		freshList(activities);
 	}
 
 	@Override
@@ -60,63 +115,4 @@ public class CalendarFragment extends FragmentHelper {
 		// TODO Auto-generated method stub
 		return "我的日历";
 	}
-	
-	private class CalendarItemAdapter extends BaseAdapter{
-		List<Activity> activities;
-		
-		/**
-		 * 关注按钮的触发监听
-		 * @author Administrator
-		 *
-		 */	
-		public void setActivities(List<Activity> activities) {
-			this.activities = activities;
-		}
-
-		public CalendarItemAdapter(List<Activity> activities) {
-			super();
-			// TODO Auto-generated constructor stub
-			this.activities = activities;
-		}
-
-		@Override
-		public int getCount() {
-			// TODO Auto-generated method stub
-			if(activities==null)
-				return 0;
-			return activities.size();
-		}
-
-		@Override
-		public Object getItem(int position) {
-			// TODO Auto-generated method stub
-			return activities.get(position);
-		}
-
-		@Override
-		public long getItemId(int position) {
-			// TODO Auto-generated method stub
-			return position;
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			// TODO 在此初始化每一个item内的内容，添加item的交互功能。
-
-			if(convertView == null){
-				convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_calendar, null);
-			}
-			
-			TextView textView = (TextView) convertView.findViewById(R.id.item_calendar_name);
-						
-			Activity currentActivity = activities.get(position);
-					
-			textView.setText(currentActivity.getName());
-			
-			return convertView;
-		}
-		
-	}
-	
-	
 }

@@ -42,6 +42,7 @@ public class SQLiteManager extends SQLiteOpenHelper {
 				"staffRating  REAL NOT NULL DEFAULT 0," +
 				"contentRating  REAL NOT NULL DEFAULT 0," +
 				"environmentRating  REAL NOT NULL DEFAULT 0," +
+				"isAttention INTEGER(1) NOT NULL DEFAULT 0"+
 				"PRIMARY KEY (id));");
 		
 		db.execSQL(

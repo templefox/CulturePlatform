@@ -1,5 +1,6 @@
 package com.example.cultureplatform;
 
+import com.example.database.data.User;
 import com.example.fragment.CalendarFragment;
 import com.example.fragment.ClassifyFragment;
 import com.example.fragment.FragmentHelper;
@@ -47,7 +48,12 @@ public class MainActivity extends Activity{
 		setTheme(R.style.ActionBar);
 		setContentView(R.layout.activity_main);
 		
-		
+		/*为了测验模拟登录*/
+		User user = new User();
+		user.setId(1);
+		user.setName("test@test");
+		((ApplicationHelper)this.getApplication()).setCurrentUser(user);
+		/*测验结束*/
 		
 		final ActionBar actionBar = getActionBar();
 		viewPager = (InterceptableViewPager) findViewById(R.id.pager);

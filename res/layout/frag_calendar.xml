@@ -1,18 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="match_parent">
+	<LinearLayout 
+	    android:id="@+id/calendar_yes"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:orientation="vertical" 
+	     >
+	
+	    <CalendarView
+	        android:id="@+id/my_calendar"
+	        android:layout_width="match_parent"
+	        android:layout_height="266dp" />
+	
+	    <ListView
+	        android:id="@+id/list_calendar"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content" >
+	    </ListView>
+	
+	</LinearLayout>
 
-    <CalendarView
-        android:id="@+id/my_calendar"
-        android:layout_width="match_parent"
-        android:layout_height="266dp" />
+	<RelativeLayout
+	    android:id="@+id/calendar_no"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent" 
+	    android:visibility="gone">
 
-    <ListView
-        android:id="@+id/list_calendar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-    </ListView>
+		<Button
+		    android:id="@+id/calendar_button_login"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_centerHorizontal="true"
+		    android:layout_centerVertical="true"
+		    android:text="登录/注册" />
 
-</LinearLayout>
+		<TextView
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_above="@+id/calendar_button_login"
+		    android:layout_alignLeft="@+id/button1"
+		    android:text="登录后可以使用"
+		    android:textAppearance="?android:attr/textAppearanceLarge" />
+	    
+	</RelativeLayout>
+</FrameLayout>

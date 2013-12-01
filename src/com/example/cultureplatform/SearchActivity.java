@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.database.data.Entity;
-import com.example.fragment.ClassifyFragment.ClassifyItemAdapter;
+import com.example.fragment.item.ClassifyItemAdapter;
 
 import android.os.Bundle;
 import android.app.Activity;
