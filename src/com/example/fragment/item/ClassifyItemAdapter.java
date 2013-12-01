@@ -1,8 +1,11 @@
 package com.example.fragment.item;
 
 import java.util.List;
+
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -10,6 +13,7 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.example.cultureplatform.DetailActivity;
 import com.example.cultureplatform.R;
 import com.example.database.DatabaseConnector;
 import com.example.database.MessageAdapter;
@@ -113,6 +117,17 @@ public class ClassifyItemAdapter extends BaseAdapter {
 				.findViewById(R.id.item_cla_name);
 		ToggleButton toggleButton = (ToggleButton) convertView
 				.findViewById(R.id.item_cla_attention);
+		
+		convertView.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(v.getContext(),DetailActivity.class);  
+				v.getContext().startActivity(intent);
+				return;
+			}
+		});
 
 		Activity currentActivity = activities.get(position);
 		if (currentActivity.getisAttention() == 1) {
