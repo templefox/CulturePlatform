@@ -50,12 +50,7 @@ public abstract class Entity {
 	}
 	private static synchronized void insertOrUpdata(Entity entity, SQLiteDatabase db) {
 		ContentValues values = entity.getContentValues();
-		if(db.insert(entity.getTableName(), null, values)==-1)
-		{
-			String whereClause = "id = "+values.getAsInteger("id");
-			values.remove("id");
-			db.update(entity.getTableName(), values, whereClause, null);
-		}
+		db.replace(entity.getTableName(), null, values);
 	}	
 	protected abstract ContentValues getContentValues();
 	protected abstract String getTableName();

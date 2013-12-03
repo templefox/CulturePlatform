@@ -118,18 +118,21 @@ public class ClassifyItemAdapter extends BaseAdapter {
 		ToggleButton toggleButton = (ToggleButton) convertView
 				.findViewById(R.id.item_cla_attention);
 		
-		convertView.setOnClickListener(new OnClickListener(){
 
+
+		final Activity currentActivity = activities.get(position);
+		
+		convertView.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Intent intent = new Intent(v.getContext(),DetailActivity.class);  
+				Intent intent = new Intent(v.getContext(),DetailActivity.class);
+				intent.putExtra("activity", currentActivity);
 				v.getContext().startActivity(intent);
 				return;
 			}
 		});
-
-		Activity currentActivity = activities.get(position);
+		
 		if (currentActivity.getisAttention() == 1) {
 			toggleButton.setOnCheckedChangeListener(null);
 			toggleButton.setChecked(true);
