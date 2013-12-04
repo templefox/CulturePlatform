@@ -134,9 +134,12 @@ public class ClassifyItemAdapter extends BaseAdapter {
 		});
 		
 		if (currentActivity.getisAttention() == 1) {
-			toggleButton.setOnCheckedChangeListener(null);
 			toggleButton.setChecked(true);
 			toggleButton.setEnabled(false);
+		}
+		else {
+			toggleButton.setChecked(false);
+			toggleButton.setEnabled(true);
 		}
 		toggleButton.setOnCheckedChangeListener(new onTakeAttentionListener(
 				currentActivity, null));

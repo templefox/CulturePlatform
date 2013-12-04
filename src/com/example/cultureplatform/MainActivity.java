@@ -237,5 +237,11 @@ public class MainActivity extends Activity{
 	public void setViewPagerInterceptable(boolean isIntercept){
 		viewPager.setInterceptable(isIntercept);
 	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+	}
 	
 }

@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ListView;
@@ -28,6 +29,8 @@ public class SearchActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setTheme(R.style.ActionBar);
 		setContentView(R.layout.activity_search);
+		
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		listView = (ListView)findViewById(R.id.list_search);
 	}
@@ -64,6 +67,20 @@ public class SearchActivity extends Activity {
 			}
 		});
 		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// TODO Auto-generated method stub
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			break;
+
+		default:
+			break;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 }

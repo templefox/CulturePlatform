@@ -64,14 +64,6 @@ public class RecommendFragment extends FragmentHelper {
 
 		listView.setAdapter(adapter);
 		
-		
-		if(firstIn()){
-			reLoad();
-			reDownload();
-		}else {
-			reLoad();
-		}
-		
 		return view;
 	}
 	
@@ -116,42 +108,10 @@ public class RecommendFragment extends FragmentHelper {
 			
 		};
 		
-		MessageAdapter attentionAdapter = new MessageAdapter() {
 
-			@Override
-			public void onRcvJSONArray(JSONArray array) {
-				Set<Attention> attentions = new HashSet<Attention>();
-				for (int i = 0; i < array.length(); i++) {
-					try {	
-						Attention attention = new Attention();					
-						JSONObject obj = array.getJSONObject(i);
-						attention.transJSON(obj);
-						attentions.add(attention);	
-					} catch (Exception e) {
-						// TODO: handle exception
-					}
-								
-				}
-				Entity.insertIntoSQLite(attentions, getActivity());
-			}
-
-			@Override
-			public void onFinish() {
-				// TODO Auto-generated method stub
-				DatabaseConnector connector = new DatabaseConnector();
-				connector.addParams(DatabaseConnector.METHOD, "GETACTIVITY");
-				connector.asyncConnect(activityAdapter);
-			}
-
-		};
-		
-		User user = ((ApplicationHelper)getActivity().getApplication()).getCurrentUser();
-		
 		DatabaseConnector connector = new DatabaseConnector();
-		connector.addParams(DatabaseConnector.METHOD, "GETATTENTION");
-		if(user !=null)
-			connector.addParams("userID", user.getId().toString());
-		connector.asyncConnect(attentionAdapter);
+		connector.addParams(DatabaseConnector.METHOD, "GETACTIVITY");
+		connector.asyncConnect(activityAdapter);
 	}
 
 
@@ -167,6 +127,15 @@ public class RecommendFragment extends FragmentHelper {
 		}
 		freshList(activities);
 		
+	}
+
+
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		reLoad();
+		reDownload();
 	}
 
 	

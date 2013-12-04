@@ -5,7 +5,6 @@ import android.util.AttributeSet;
 import android.widget.ImageView;
 
 public class AsyncImageView extends ImageView {
-
 	public AsyncImageView(Context context) {
 		super(context);
 		// TODO Auto-generated constructor stub
@@ -21,4 +20,7 @@ public class AsyncImageView extends ImageView {
 		// TODO Auto-generated constructor stub
 	}
 
+	
+	
+	
 }

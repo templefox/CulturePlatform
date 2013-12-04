@@ -114,11 +114,6 @@ public class ClassifyFragment extends FragmentHelper {
 				
 			}
 		});
-		if(firstIn()){
-			reLoad();
-			reDownload();
-		}
-		reLoad();
 		
 		return view;
 	}
@@ -154,6 +149,9 @@ public class ClassifyFragment extends FragmentHelper {
 	public void reDownload() {
 		// TODO Auto-generated method stub
 		optionor.removeAllString();
+		
+
+		
 		final MessageAdapter typeAdapter = new MessageAdapter() {
 			@Override
 			public void onRcvJSONArray(JSONArray array) {
@@ -177,10 +175,43 @@ public class ClassifyFragment extends FragmentHelper {
 				reLoad();
 			}
 		};
+		
+		MessageAdapter attentionAdapter = new MessageAdapter() {
 
+			@Override
+			public void onRcvJSONArray(JSONArray array) {
+				Set<Attention> attentions = new HashSet<Attention>();
+				for (int i = 0; i < array.length(); i++) {
+					try {	
+						Attention attention = new Attention();					
+						JSONObject obj = array.getJSONObject(i);
+						attention.transJSON(obj);
+						attentions.add(attention);	
+					} catch (Exception e) {
+						// TODO: handle exception
+					}
+								
+				}
+				Entity.insertIntoSQLite(attentions, getActivity());
+			}
+
+			@Override
+			public void onFinish() {
+				// TODO Auto-generated method stub
+				DatabaseConnector connector = new DatabaseConnector();
+				connector.addParams(DatabaseConnector.METHOD, "GETTYPE");
+				connector.asyncConnect(typeAdapter);
+			}
+
+		};
+	
+		User user = ((ApplicationHelper)getActivity().getApplication()).getCurrentUser();
+		
 		DatabaseConnector connector = new DatabaseConnector();
-		connector.addParams(DatabaseConnector.METHOD, "GETTYPE");
-		connector.asyncConnect(typeAdapter);
+		connector.addParams(DatabaseConnector.METHOD, "GETATTENTION");
+		if(user !=null)
+			connector.addParams("userID", user.getId().toString());
+		connector.asyncConnect(attentionAdapter);
 
 	}
 
@@ -200,6 +231,7 @@ public class ClassifyFragment extends FragmentHelper {
 	
 	public void reloadActivities(String type,String location){
 		List<Activity> activities = new ArrayList<Activity>();
+		currentUser = ((ApplicationHelper)getActivity().getApplication()).getCurrentUser();
 		
 		if(type.equals("È«²¿")){
 			type = "%";
@@ -208,12 +240,14 @@ public class ClassifyFragment extends FragmentHelper {
 		List<ContentValues> list = Entity.selectFromSQLite("activity", new String[]{"id","activity.name"}
 					,"type like ?",new String[]{type}, getActivity());
 		
-		List<ContentValues> attentionList = Entity.selectFromSQLite("attention", new String[]{"ActivityID"}, getActivity());
+		List<ContentValues> attentionList = Entity.selectFromSQLite("attention", new String[]{"ActivityID"}
+					,"UserID = ?",new String[]{(currentUser==null)?Integer.toString(-1):currentUser.getId().toString()}, getActivity());
 		
 		for(ContentValues contentValue: list){
 			Activity activity = new Activity();
 			activity.setId(contentValue.getAsInteger("id"));
 			activity.setName(contentValue.getAsString("name"));
+			activity.setisAttention(0);
 			for(ContentValues attentionCV : attentionList){
 				if(activity.getId()==attentionCV.getAsInteger("ActivityID")){
 					activity.setisAttention(1);
@@ -221,8 +255,17 @@ public class ClassifyFragment extends FragmentHelper {
 				}
 			}
 			activities.add(activity);
+			
 		}
 		freshList(activities);
+	}
+
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		reLoad();
+		reDownload();
 	}
 	
 }

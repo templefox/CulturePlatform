@@ -1,0 +1,66 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:rating="http://schemas.android.com/apk/res/com.example.cultureplatform"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_gravity="bottom"
+    android:gravity="bottom"
+    tools:context=".RatingActivity" >
+
+    <com.example.widget.TextRatingBar
+        android:id="@+id/rating_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        rating:title = "讲座内容"
+        android:layout_weight="0.1" >
+    </com.example.widget.TextRatingBar>
+
+    <com.example.widget.TextRatingBar
+        android:id="@+id/rating_reporter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        rating:title = "主持嘉宾"
+        android:layout_weight="0.1" >
+    </com.example.widget.TextRatingBar>
+
+    <com.example.widget.TextRatingBar
+        android:id="@+id/rating_staff"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        rating:title = "工作人员"
+        android:layout_weight="0.1" >
+    </com.example.widget.TextRatingBar>
+
+    <com.example.widget.TextRatingBar
+        android:id="@+id/rating_environment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        rating:title = "环境设备"
+        android:layout_weight="0.1" >
+    </com.example.widget.TextRatingBar>
+
+    <EditText
+        android:id="@+id/rating_edit"
+        style="@android:style/Widget.Holo.TextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:gravity="left|top"
+        android:inputType="textMultiLine"
+        android:lines="10"
+        android:singleLine="false"
+        android:layout_weight="0.1" >
+
+        <requestFocus />
+    </EditText>
+
+    <Button
+        android:id="@+id/rating_submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        android:layout_gravity="right|bottom"
+        android:layout_weight="0.1" />
+
+</LinearLayout>

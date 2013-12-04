@@ -50,6 +50,10 @@
             android:name="com.example.cultureplatform.DetailActivity"
             android:label="@string/title_activity_detail" >
         </activity>
+        <activity
+            android:name="com.example.cultureplatform.RatingActivity"
+            android:label="@string/title_activity_rating" >
+        </activity>
     </application>
 
     <instrumentation
