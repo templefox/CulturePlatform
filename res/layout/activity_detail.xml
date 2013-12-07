@@ -42,21 +42,23 @@
             android:layout_weight="0.7">
 
 			<EditText
-			    android:id="@+id/editText1"
+			    android:id="@+id/detail_comment_text"
 			    android:layout_width="wrap_content"
 			    android:layout_height="wrap_content"
 			    android:layout_alignParentLeft="true"
 			    android:layout_alignParentRight="true"
 			    android:layout_marginBottom="2dp"
+			    android:maxLines="5"
 			    android:ems="10" >
 	            
 	        </EditText>
 	        
 			<Button
+			    android:id="@+id/detail_button_clear"
 			    android:layout_width="wrap_content"
 			    android:layout_height="wrap_content"
-			    android:layout_alignBottom="@id/editText1"
-			    android:layout_alignRight="@id/editText1"
+			    android:layout_alignBottom="@id/detail_comment_text"
+			    android:layout_alignRight="@id/detail_comment_text"
 			    android:layout_margin="4dp" >
 			    
 			</Button>
@@ -66,7 +68,7 @@
         </RelativeLayout>
 
         <Button
-            android:id="@+id/button1"
+            android:id="@+id/detail_button_submit"
             android:layout_width="38dp"
             android:layout_height="match_parent"
             android:layout_marginBottom="2dp"

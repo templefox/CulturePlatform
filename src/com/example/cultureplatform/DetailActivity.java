@@ -15,6 +15,7 @@ import com.example.database.MessageAdapter;
 import com.example.database.data.Activity;
 import com.example.database.data.Comment;
 import com.example.database.data.Entity;
+import com.example.database.data.User;
 
 import android.app.ActionBar;
 import android.app.ExpandableListActivity;
@@ -22,21 +23,33 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.DataSetObserver;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class DetailActivity extends android.app.Activity {
 	private Activity currentActivity;
 	private LinearLayout area;
+	private EditText editText;
+	private Button clear;
+	private Button submit;
+	private User currentUser;
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -48,8 +61,54 @@ public class DetailActivity extends android.app.Activity {
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setTitle(currentActivity.getName());
 		
+		currentUser = ((ApplicationHelper)getApplication()).getCurrentUser();
 	
 		area = (LinearLayout) findViewById(R.id.area_comments);
+		clear = (Button) findViewById(R.id.detail_button_clear);
+		submit = (Button) findViewById(R.id.detail_button_submit);
+		editText = (EditText) findViewById(R.id.detail_comment_text);
+		
+		
+		clear.setVisibility(clear.INVISIBLE);
+		
+		editText.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				if(count!=0)
+					clear.setVisibility(clear.VISIBLE);
+				else {
+					clear.setVisibility(clear.INVISIBLE);
+				}
+			}
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+
+			}
+			@Override
+			public void afterTextChanged(Editable s) {
+			}
+		});
+		clear.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				v.setVisibility(View.INVISIBLE);
+				editText.setText("");
+			}
+		});
+		submit.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if(currentUser != null)
+					submit();
+				else {
+					Toast.makeText(DetailActivity.this, "您尚未登录", Toast.LENGTH_SHORT).show();
+				}
+				editText.clearFocus();
+				editText.setText("");
+			}
+		});
 	}
 
 	@Override
@@ -135,12 +194,36 @@ public class DetailActivity extends android.app.Activity {
 	}
 
 	private void addViews(List<Comment> comments){
+		area.removeAllViews();
 		for (Comment comment : comments) {
 			View view = LayoutInflater.from(this).inflate(R.layout.item_comment, area,false);	
 			TextView textView = (TextView) view.findViewById(R.id.item_comment_text);
 			textView.setText(comment.getContent());
 			area.addView(view);
 		}
+	}
+
+	private void submit(){
+		MessageAdapter adapter = new MessageAdapter() {
+
+			@Override
+			public void onDone(String ret) {
+				Toast.makeText(DetailActivity.this, "评论成功", Toast.LENGTH_SHORT).show();
+				reDownload();
+			}
+
+			@Override
+			public void onErrorOccur() {
+				Toast.makeText(DetailActivity.this, "评论失败，请联系管理员", Toast.LENGTH_SHORT).show();
+			}
+		};
+		
+		DatabaseConnector connector = new DatabaseConnector();
+		connector.addParams(DatabaseConnector.METHOD, "ADDCOMMENT");
+		connector.addParams("user_id", currentUser.getId().toString());
+		connector.addParams("activity_id", currentActivity.getId().toString());
+		connector.addParams("content", editText.getText().toString());
+		connector.asyncConnect(adapter);
 	}
 }
 
