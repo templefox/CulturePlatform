@@ -16,7 +16,7 @@ public class SQLiteManager extends SQLiteOpenHelper {
 	}
 
 	private static final String DATABASE_NAME = "CulturePlatform.db";
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 2;
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
@@ -65,7 +65,7 @@ public class SQLiteManager extends SQLiteOpenHelper {
 		db.execSQL(
 				"CREATE TABLE comment (" +
 				"id  INTEGER(11) NOT NULL," +
-				"Content  TEXT," +
+				"content  TEXT," +
 				"datetime  TEXT NOT NULL," +
 				"UserID  INTEGER(11)," +
 				"ActivityID  INTEGER(11)," +
@@ -163,7 +163,7 @@ public class SQLiteManager extends SQLiteOpenHelper {
 		db.execSQL(
 				"CREATE TABLE comment (" +
 				"id  INTEGER(11) NOT NULL," +
-				"Content  TEXT," +
+				"content  TEXT," +
 				"datetime  TEXT NOT NULL," +
 				"UserID  INTEGER(11)," +
 				"ActivityID  INTEGER(11)," +

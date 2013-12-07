@@ -57,6 +57,7 @@ public class MainActivity extends Activity{
 		
 		final ActionBar actionBar = getActionBar();
 		viewPager = (InterceptableViewPager) findViewById(R.id.pager);
+		viewPager.setOffscreenPageLimit(4);
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		fragmentPagerAdapter = new FragmentPagerAdapter(getFragmentManager()) {
 			@Override

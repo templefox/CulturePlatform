@@ -70,7 +70,15 @@ public class ClassifyFragment extends FragmentHelper {
 		optionor = (Optionor) view.findViewById(R.id.optionor1);	
 		optionor2 = (Optionor)view.findViewById(R.id.optionor2);
 		listView = (ListView)view.findViewById(R.id.list_classify);
-		currentUser = ((ApplicationHelper)getActivity().getApplication()).getCurrentUser();
+		ApplicationHelper application = ((ApplicationHelper)getActivity().getApplication());
+		currentUser = application.getCurrentUser();
+		application.setOnUserChanged(new ApplicationHelper.OnUserChanged() {
+			@Override
+			public void onUserChanged(User newUser) {
+				currentUser = newUser;
+				reDownload();
+			}
+		});
 		panel.setOnPanelListener(new OnPanelListener() {
 			
 			@Override
@@ -99,7 +107,12 @@ public class ClassifyFragment extends FragmentHelper {
 				RadioButton button = (RadioButton)group.findViewById(checkedId);
 				if(button!=null){
 					String type = button.getText().toString();
-					reloadActivities(type,null);
+					try {
+						reloadActivities(type,null);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 		});
@@ -163,7 +176,7 @@ public class ClassifyFragment extends FragmentHelper {
 						type.transJSON(obj);
 						types.add(type);	
 					} catch (Exception e) {
-						// TODO: handle exception
+						//如果程序退出时仍有网络通讯，此处可能会有异常，不用处理。
 					}
 								
 				}
@@ -229,9 +242,12 @@ public class ClassifyFragment extends FragmentHelper {
 		optionor2.addString("bbb");
 	}
 	
-	public void reloadActivities(String type,String location){
+	
+	public void reloadActivities(String type,String location) throws Exception{
 		List<Activity> activities = new ArrayList<Activity>();
-		currentUser = ((ApplicationHelper)getActivity().getApplication()).getCurrentUser();
+		
+			
+		currentUser = ((ApplicationHelper)getActivity().getApplication()).getCurrentUser();			
 		
 		if(type.equals("全部")){
 			type = "%";
@@ -265,7 +281,8 @@ public class ClassifyFragment extends FragmentHelper {
 		// TODO Auto-generated method stub
 		super.onResume();
 		reLoad();
-		reDownload();
+		if(firstIn())
+			reDownload();
 	}
 	
 }

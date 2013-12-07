@@ -89,8 +89,12 @@ public class Comment extends Entity implements java.io.Serializable {
 
 	@Override
 	protected ContentValues getContentValues() {
-		// TODO Auto-generated method stub
-		return null;
+		ContentValues contentValues = new ContentValues();
+		contentValues.put("id", id);
+		contentValues.put("content", content);
+		contentValues.put("datetime", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(datatime));
+		contentValues.put("picture_url", pictureUrl);
+		return contentValues;
 	}
 
 	@Override

@@ -109,10 +109,11 @@
         android:layout_height="wrap_content"
         android:text="TextView" />
 
-    <ListView
-        android:id="@+id/list_comments"
+    <LinearLayout
+        android:id="@+id/area_comments"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-    </ListView>
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+    </LinearLayout>
      
 </LinearLayout>

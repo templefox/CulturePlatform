@@ -11,6 +11,15 @@ import android.app.Application;
 public class ApplicationHelper extends Application {
 	private User currentUser = null;
 	private Set<Activity> activities = new HashSet<Activity>();
+	OnUserChanged onUserChanged;
+	
+	public void setOnUserChanged(OnUserChanged onUserChanged) {
+		this.onUserChanged = onUserChanged;
+	}
+
+	public static interface OnUserChanged{
+		public void onUserChanged(User newUser);
+	}
 	
 	public Set<Activity> getActivities() {
 		return activities;
@@ -21,7 +30,11 @@ public class ApplicationHelper extends Application {
 	}
 
 	public void setCurrentUser(User currentUser) {
-		this.currentUser = currentUser;
+		if(this.currentUser != currentUser){
+			this.currentUser = currentUser;	
+			if(onUserChanged != null)
+			onUserChanged.onUserChanged(currentUser);
+		}
 	}
 	
 	public boolean isUserLogin()

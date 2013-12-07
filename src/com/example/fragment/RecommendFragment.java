@@ -135,7 +135,8 @@ public class RecommendFragment extends FragmentHelper {
 		// TODO Auto-generated method stub
 		super.onResume();
 		reLoad();
-		reDownload();
+		if(firstIn())
+			reDownload();
 	}
 
 	
