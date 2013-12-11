@@ -1,11 +1,7 @@
 package com.example.database;
 
-import com.example.cultureplatform.R;
-
 import android.content.Context;
-import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class SQLiteManager extends SQLiteOpenHelper {

@@ -25,7 +25,6 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 
 
-import android.R.integer;
 import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;

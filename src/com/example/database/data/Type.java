@@ -2,19 +2,20 @@ package com.example.database.data;
 
 import java.io.Serializable;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 
 
 import android.content.ContentValues;
-import android.provider.SyncStateContract.Helpers;
 
 public class Type extends Entity implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6017693500517684612L;
 	private Integer id;
-	String name;
+	private String name;
 	public Type() {
 	}
 	public Integer getId() {

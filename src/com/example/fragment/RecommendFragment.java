@@ -1,7 +1,6 @@
 package com.example.fragment;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -11,29 +10,19 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.example.cultureplatform.ApplicationHelper;
 import com.example.cultureplatform.R;
 import com.example.database.DatabaseConnector;
 import com.example.database.MessageAdapter;
 import com.example.database.data.Activity;
-import com.example.database.data.Attention;
 import com.example.database.data.Entity;
-import com.example.database.data.User;
 import com.example.fragment.item.RecommendItemAdapter;
 
-import android.app.Fragment;
 import android.content.ContentValues;
-import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 
 /**
@@ -111,6 +100,8 @@ public class RecommendFragment extends FragmentHelper {
 
 		DatabaseConnector connector = new DatabaseConnector();
 		connector.addParams(DatabaseConnector.METHOD, "GETACTIVITY");
+		connector.addParams("limit", Integer.toString(10));
+		connector.addParams("offset", Integer.toString(0));
 		connector.asyncConnect(activityAdapter);
 	}
 

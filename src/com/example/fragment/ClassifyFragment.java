@@ -1,5 +1,6 @@
 package com.example.fragment;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -7,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.example.cultureplatform.ApplicationHelper;
@@ -24,7 +26,7 @@ import com.example.widget.Optionor;
 import com.example.widget.Panel;
 import com.example.widget.Panel.OnPanelListener;
 
-import android.app.Fragment;
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.os.Bundle;
@@ -33,30 +35,31 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.CompoundButton;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
-import android.widget.TextView;
-import android.widget.ToggleButton;
 
+@SuppressLint("SimpleDateFormat")
 public class ClassifyFragment extends FragmentHelper {
 	private Optionor optionor;
 	private Optionor optionor2;
 	private Panel panel;
 	private ClassifyItemAdapter adapter = new ClassifyItemAdapter(null);
 	private ListView listView;
-	private User currentUser;
-
+	private View footerView;
+	private final int MAX_ITEM_DOWNLOAD = 6;
+	private boolean onReload = false;
+	private String selectedType = null;
+	private String selectedLocation = null;
+	
 	public void freshList(List<Activity> activities) {
 		try {
 			adapter.setActivities(activities);
 			adapter.notifyDataSetChanged();
 		} catch (Exception e) {
-			String s = e.getMessage();
 		}
 	}
 
@@ -73,11 +76,10 @@ public class ClassifyFragment extends FragmentHelper {
 		listView = (ListView) view.findViewById(R.id.list_classify);
 		ApplicationHelper application = ((ApplicationHelper) getActivity()
 				.getApplication());
-		currentUser = application.getCurrentUser();
+		application.getCurrentUser();
 		application.setOnUserChanged(new ApplicationHelper.OnUserChanged() {
 			@Override
 			public void onUserChanged(User newUser) {
-				currentUser = newUser;
 				reDownload();
 			}
 		});
@@ -109,9 +111,9 @@ public class ClassifyFragment extends FragmentHelper {
 				RadioButton button = (RadioButton) group
 						.findViewById(checkedId);
 				if (button != null) {
-					String type = button.getText().toString();
+					selectedType = button.getText().toString();
 					try {
-						reloadActivities(type, null);
+						reloadActivities(selectedType, null);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -120,8 +122,7 @@ public class ClassifyFragment extends FragmentHelper {
 			}
 		});
 
-		listView.setAdapter(adapter);
-		
+		initListView();
 		view.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -131,8 +132,81 @@ public class ClassifyFragment extends FragmentHelper {
 
 			}
 		});
-
 		return view;
+	}
+
+	private void initListView() {
+		
+		footerView = LayoutInflater.from(getActivity()).inflate(R.layout.item_classify_footer, null);
+		
+		listView.addFooterView(footerView);
+		listView.setAdapter(adapter);
+		listView.removeFooterView(footerView);
+
+		listView.setOnScrollListener(new OnScrollListener() {
+			
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount) {
+				// TODO Auto-generated method stub
+				if(totalItemCount != 0 && view.getLastVisiblePosition()+1 == totalItemCount && !onReload)
+				{
+					onReload = true;
+					listView.addFooterView(footerView);
+					final MessageAdapter activityAdapter = new MessageAdapter() {
+						
+						@Override
+						public void onRcvJSONArray(JSONArray array) {	
+							Set<Activity> activities = new HashSet<Activity>();
+							for(int i=0 ; i<array.length();i++)
+							{
+								Activity activity = new Activity();
+								JSONObject obj;
+								try {
+									obj = array.getJSONObject(i);
+									activity.transJSON(obj);
+								} catch (JSONException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								} catch (ParseException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+								activities.add(activity);
+								
+							}
+							Entity.insertIntoSQLite(activities, getActivity());
+						}
+						@Override
+						public void onFinish() {
+							
+							try {
+								reloadActivities(selectedType, selectedLocation);
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							listView.removeFooterView(footerView);
+							onReload = false;
+						}
+						
+					};
+					
+
+					DatabaseConnector connector = new DatabaseConnector();
+					connector.addParams(DatabaseConnector.METHOD, "GETACTIVITY");
+					connector.addParams("limit", Integer.toString(MAX_ITEM_DOWNLOAD));
+					connector.addParams("offset", Integer.toString(totalItemCount));
+					connector.asyncConnect(activityAdapter);
+				}
+			}
+		});
 	}
 
 	@Override
@@ -246,7 +320,7 @@ public class ClassifyFragment extends FragmentHelper {
 	public void reloadActivities(String type, String location) throws Exception {
 		List<Activity> activities = new ArrayList<Activity>();
 
-		currentUser = ((ApplicationHelper) getActivity().getApplication())
+		((ApplicationHelper) getActivity().getApplication())
 				.getCurrentUser();
 
 		if (type.equals("È«²¿")) {
@@ -266,7 +340,12 @@ public class ClassifyFragment extends FragmentHelper {
 			activity.setId(contentValue.getAsInteger("id"));
 			activity.setName(contentValue.getAsString("name"));
 			activity.setAddress(contentValue.getAsString("address"));
-			activity.setDate(new SimpleDateFormat("yyyy-MM-dd").parse(contentValue.getAsString("date")));
+			try {
+				activity.setDate(new SimpleDateFormat("yyyy-MM-dd").parse(contentValue.getAsString("date")));
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			activity.setPictureUrl(contentValue.getAsString("picture_url"));
 			activity.setisAttention(0);
 			for (ContentValues attentionCV : attentionList) {

@@ -7,6 +7,7 @@ import android.view.MotionEvent;
 
 public class InterceptableViewPager extends ViewPager {
 	private boolean isIntercept = true;
+	@SuppressWarnings("unused")
 	private Context context;
 	
 	public InterceptableViewPager(Context context) {

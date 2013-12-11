@@ -1,33 +1,19 @@
 package com.example.fragment.item;
 
-import java.io.InputStream;
-import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
-
+import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 import com.example.cultureplatform.DetailActivity;
-import com.example.cultureplatform.HttpUtils;
 import com.example.cultureplatform.R;
 import com.example.database.DatabaseConnector;
 import com.example.database.MessageAdapter;
@@ -37,12 +23,10 @@ import com.example.database.data.Entity;
 import com.example.database.data.User;
 import com.example.widget.AsyncImageView;
 
+@SuppressLint("SimpleDateFormat")
 public class ClassifyItemAdapter extends BaseAdapter {
 	List<Activity> activities;
 	
-	
-	String pictureUrl = "http://c.hiphotos.baidu.com/image/w%3D2048/sign=cfe9bc1480cb39dbc1c06056e42e0824/b64543a98226cffc0c3a674cb8014a90f603ea38.jpg";
-
 	/**
 	 * 关注按钮的触发监听
 	 * 
@@ -136,10 +120,7 @@ public class ClassifyItemAdapter extends BaseAdapter {
 		String image_url = DatabaseConnector.target_url+currentActivity.getPictureUrl();
 
 		AsyncImageView asyImageView = (AsyncImageView)convertView.findViewById(R.id.item_cla_image);
-		
-		
-		asyImageView.asyncLoad(image_url,asyImageView);
-
+		asyImageView.asyncLoad(image_url);
 
 		TextView textViewTitle = (TextView) convertView
 				.findViewById(R.id.item_cla_title);

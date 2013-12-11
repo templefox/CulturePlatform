@@ -32,9 +32,9 @@ public class AsyncImageView extends ImageView {
 		// TODO Auto-generated constructor stub
 	}
 
-	public void asyncLoad(String image_url, ImageView imageView) {
+	public void asyncLoad(String image_url) {
 
-		new MyTask().execute(image_url, imageView);
+		new MyTask().execute(image_url, this);
 
 	}
 

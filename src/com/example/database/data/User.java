@@ -5,9 +5,6 @@ package com.example.database.data;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -16,6 +13,10 @@ import org.json.JSONObject;
  */
 public class User implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4497016747707135215L;
 	private Integer id;
 	private Location location;
 	private String name;
@@ -24,9 +25,6 @@ public class User implements java.io.Serializable {
 	private String EMail;
 	private int authority;
 	private String password;
-	private Set attentions = new HashSet(0);
-	private Set comments = new HashSet(0);
-	private Set activities = new HashSet(0);
 
 	public User() {
 	}
@@ -41,7 +39,7 @@ public class User implements java.io.Serializable {
 
 	public User(Location location, String nickname,
 			Date regTime, String phoneNum, String EMail, int authority,
-			String password, Set attentions, Set comments, Set activities) {
+			String password) {
 		this.location = location;
 		this.name = nickname;
 		this.regTime = regTime;
@@ -49,9 +47,6 @@ public class User implements java.io.Serializable {
 		this.EMail = EMail;
 		this.authority = authority;
 		this.password = password;
-		this.attentions = attentions;
-		this.comments = comments;
-		this.activities = activities;
 	}
 
 	public Integer getId() {
@@ -118,30 +113,6 @@ public class User implements java.io.Serializable {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public Set getAttentions() {
-		return this.attentions;
-	}
-
-	public void setAttentions(Set attentions) {
-		this.attentions = attentions;
-	}
-
-	public Set getComments() {
-		return this.comments;
-	}
-
-	public void setComments(Set comments) {
-		this.comments = comments;
-	}
-
-	public Set<Activity> getActivities() {
-		return this.activities;
-	}
-
-	public void setActivities(Set activities) {
-		this.activities = activities;
 	}
 
 	public User transJSON(JSONObject obj)

@@ -6,11 +6,7 @@ import java.util.List;
 import com.example.cultureplatform.ApplicationHelper;
 import com.example.cultureplatform.LoginActivity;
 import com.example.cultureplatform.R;
-import com.example.cultureplatform.UserActivity;
-import com.example.database.DatabaseConnector;
-import com.example.database.MessageAdapter;
 import com.example.database.data.Activity;
-import com.example.database.data.Attention;
 import com.example.database.data.Entity;
 import com.example.database.data.User;
 import com.example.fragment.item.UserItemAdapter;
@@ -22,12 +18,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.ToggleButton;
 
 public class UserFragment extends FragmentHelper {
 	private View noUser;

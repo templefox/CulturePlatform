@@ -14,6 +14,10 @@ import android.content.ContentValues;
  */
 public class Attention extends Entity implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6716713138451809345L;
 	private Integer id;
 	private Integer activityID;
 	private Integer userID;
@@ -145,4 +149,5 @@ public class Attention extends Entity implements java.io.Serializable {
 		
 		return this;
 	}
+
 }

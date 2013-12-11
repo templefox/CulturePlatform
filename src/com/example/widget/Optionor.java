@@ -7,12 +7,9 @@ import java.util.List;
 import com.example.cultureplatform.R;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.util.AttributeSet;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
@@ -22,6 +19,7 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 
 public class Optionor extends LinearLayout {
 	private RadioGroup group;
+	@SuppressWarnings("unused")
 	private HorizontalScrollView view;
 	
 	public Optionor(Context context) {

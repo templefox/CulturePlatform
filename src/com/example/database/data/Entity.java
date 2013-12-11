@@ -49,10 +49,17 @@ public abstract class Entity {
 		}
 	}
 	private static synchronized void insertOrUpdata(Entity entity, SQLiteDatabase db) {
-		ContentValues values = entity.getContentValues();
-		db.replace(entity.getTableName(), null, values);
+		try {
+				ContentValues values = entity.getContentValues();
+				db.replace(entity.getTableName(), null, values);
+		} catch (IllegalArgumentException e) {
+			// TODO: handle exception
+		} catch (NullPointerException e) {
+			// TODO: handle exception
+		}
+
 	}	
-	protected abstract ContentValues getContentValues();
+	protected abstract ContentValues getContentValues() throws IllegalArgumentException,NullPointerException;
 	protected abstract String getTableName();
 
 	//TODO ¼ÌÐø
@@ -107,5 +114,4 @@ public abstract class Entity {
 	
 	public abstract Entity transJSON(JSONObject obj) throws JSONException, ParseException;
 
-	
 }

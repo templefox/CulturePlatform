@@ -1,10 +1,7 @@
 package com.example.fragment;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
 import com.example.cultureplatform.ApplicationHelper;
 import com.example.cultureplatform.R;
 import com.example.database.data.Activity;
@@ -17,12 +14,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.CalendarView.OnDateChangeListener;
 import android.widget.ListView;
-import android.widget.TextView;
 
 public class CalendarFragment extends FragmentHelper {
 	private ListView listView;
