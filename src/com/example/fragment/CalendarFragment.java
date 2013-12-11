@@ -42,7 +42,6 @@ public class CalendarFragment extends FragmentHelper {
 		view_yes = view.findViewById(R.id.calendar_yes);
 		view_no = view.findViewById(R.id.calendar_no);
 		
-		
 		calendarView.setOnDateChangeListener(new OnDateChangeListener() {
 			
 			@Override

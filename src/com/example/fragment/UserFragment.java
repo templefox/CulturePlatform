@@ -44,7 +44,7 @@ public class UserFragment extends FragmentHelper {
 		noUser = view.findViewById(R.id.user_frag_no);
 		yesUser = view.findViewById(R.id.user_frag_yes);
 		listView = (ListView) view.findViewById(R.id.list_user_frag);
-		
+		listView.setAdapter(itemAdapter);
 		loginButton.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -105,7 +105,7 @@ public class UserFragment extends FragmentHelper {
 
 	private void freshList(List<Activity> activities) {
 		itemAdapter.setActivities(activities);
-		listView.setAdapter(itemAdapter);
+		itemAdapter.notifyDataSetChanged();
 	}
 
 

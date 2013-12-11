@@ -267,11 +267,12 @@ public class Activity extends Entity implements java.io.Serializable {
 		activity.setAddress(obj.getString("address"));
 		activity.setContent(obj.getString("content"));
 		activity.setTime(new SimpleDateFormat("HH:mm:ss").parse(obj.getString("time")));
+		activity.setDate(new SimpleDateFormat("yyyy-MM-dd").parse(obj.getString("date")));
 		activity.setName(obj.getString("name"));
 		activity.setLocation(obj.getInt("locationID"));
 		activity.setUser(obj.getInt("organiserID"));
 		activity.setType(obj.getString("type"));
-		activity.setIsRating(obj.getInt("isRating"));
+		activity.setPictureUrl(obj.getString("picture_url"));
 		activity.setisAttention(0);
 		return activity;
 	}
@@ -284,9 +285,11 @@ public class Activity extends Entity implements java.io.Serializable {
 		value.put("address", address);
 		value.put("content", content);
 		value.put("time", new SimpleDateFormat("HH:mm:ss").format(time));
+		value.put("date", new SimpleDateFormat("yyyy-MM-dd").format(date));
 		value.put("name", name);
 		value.put("locationID", location);
 		value.put("organiserID", user);
+		value.put("picture_url", pictureUrl);
 		value.put("type", type);
 		return value;
 	}

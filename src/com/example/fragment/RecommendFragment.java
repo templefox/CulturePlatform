@@ -48,7 +48,7 @@ public class RecommendFragment extends FragmentHelper {
  	public void freshList(List<Activity> activities) {
  		try {
 			adapter.setActivities(activities);
-			listView.setAdapter(adapter);
+			adapter.notifyDataSetChanged();
 		} catch (Exception e) {
 			String s = e.getMessage();
 			s.getBytes();

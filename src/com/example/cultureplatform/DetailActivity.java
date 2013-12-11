@@ -152,7 +152,8 @@ public class DetailActivity extends android.app.Activity {
 	}
 
 	private void reload(){
-		List<ContentValues> list = Entity.selectFromSQLite("comment", new String[]{"content"}, this);
+		List<ContentValues> list = Entity.selectFromSQLite("comment", new String[]{"content"},
+					"ActivityID = ?",new String[]{currentActivity.getId().toString()}, this);
 		List<Comment> comments = new ArrayList<Comment>();
 		for (ContentValues value : list) {
 			Comment comment = new Comment();

@@ -32,8 +32,8 @@ import android.util.Log;
 
 
 public class DatabaseConnector {
-	//static public String target_url = "http://templefox.xicp.net:998/";
-	static public String target_url = "http://192.168.1.104:998/";
+	static public String target_url = "http://templefox.xicp.net:998/";
+	//static public String target_url = "http://192.168.1.104:998/";
 	static public String METHOD = "METHOD";
 	static private int TIME_OUT = 3000;
 	private Map<String, String>	params = new HashMap<String, String>();

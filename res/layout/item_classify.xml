@@ -1,29 +1,92 @@
-<?xml version="1.0" encoding="utf-8"?><LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/list_selector"
+    android:orientation="horizontal"
+    android:padding="5dip" >
 
-    <Button
-        android:id="@+id/item_cla_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button" />
+	<!--  ListView最左边的缩略图 -->
+	<LinearLayout android:id="@+id/thumbnail" 
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:padding="3dip"		
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/image_bg" 
+	    android:layout_marginRight="5dip">
+        
+		
 
+		<com.example.widget.AsyncImageView
+		    android:id="@+id/item_cla_image"   
+	        android:layout_width="70dip"
+	        android:layout_height="75dip"
+	        android:src="@drawable/rihanna" />
+        
+	</LinearLayout>
+    
+	<!-- 主题-->
     <TextView
-        android:id="@+id/item_cla_name"
+        android:id="@+id/item_cla_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Medium Text"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:layout_alignTop="@+id/thumbnail"
+        android:layout_toRightOf="@+id/thumbnail"
+        android:text="Button"
+        android:textColor="#040404"
+        android:typeface="sans" 
+        android:textSize="20dip"
+        android:textStyle="bold"/>
+    
+    
 
-    <ToggleButton
+	<!-- 地点 -->
+    <TextView
+        android:id="@+id/item_cla_location"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/item_cla_title"
+        android:textColor="#343434"
+        android:textSize="15dip"
+        android:layout_marginTop="1dip"
+        android:layout_toRightOf="@+id/thumbnail"
+        android:text="Medium Text"
+        android:textAppearance="?android:attr/textAppearanceMedium" /> />
+
+	<!-- 日期 -->
+    <TextView
+        android:id="@+id/item_cla_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/item_cla_location"
+        android:text="5:45"
+        android:layout_marginTop="1dip"
+        android:layout_toRightOf="@+id/thumbnail"
+        android:textSize="15dip"
+        android:textColor="#10bcc9"
+        android:textStyle="bold"/>
+      
+    
+     <!-- 进入 -->    
+     <ImageView 
+        android:id="@+id/arrow" 
+        android:layout_width="wrap_content"
+     	android:layout_height="wrap_content"
+     	android:src="@drawable/arrow"
+     	android:layout_alignParentRight="true"
+     	android:layout_centerVertical="true"/>
+
+     
+     <ToggleButton
         android:id="@+id/item_cla_attention"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="30dip"
         android:textOn="已关注"
         android:textOff="关注"
-        android:paddingLeft="0dp" />
-
-
-
-</LinearLayout>
+        android:layout_alignParentRight="true"
+        android:gravity="right"
+        android:layout_below="@id/arrow"
+        android:layout_marginTop="50dip"
+        />
+    
+</RelativeLayout>
