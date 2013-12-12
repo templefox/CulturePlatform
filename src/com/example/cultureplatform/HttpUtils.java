@@ -1,14 +1,10 @@
 package com.example.cultureplatform;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
-
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
 public class HttpUtils {
 

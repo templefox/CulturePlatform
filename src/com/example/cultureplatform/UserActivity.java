@@ -1,7 +1,5 @@
 package com.example.cultureplatform;
 
-import java.util.ArrayList;
-
 import com.example.database.data.User;
 
 import android.os.Bundle;

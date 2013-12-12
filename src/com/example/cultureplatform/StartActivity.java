@@ -2,30 +2,20 @@ package com.example.cultureplatform;
 
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.example.database.DatabaseConnector;
 import com.example.database.MessageAdapter;
-import com.example.database.SQLiteManager;
-import com.example.database.data.Type;
 import com.example.database.data.User;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.drawable.Drawable;
 import android.view.Menu;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 public class StartActivity extends Activity {

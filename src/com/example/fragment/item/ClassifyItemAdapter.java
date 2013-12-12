@@ -110,29 +110,46 @@ public class ClassifyItemAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO 在此初始化每一个item内的内容，添加item的交互功能。
 
+		ViewHolder myViews;
+		
+		
 		if (convertView == null) {
+			
+			myViews = new ViewHolder();
 			convertView = LayoutInflater.from(parent.getContext()).inflate(
 					R.layout.item_classify, null);
+			myViews.asyImageView = (AsyncImageView)convertView.findViewById(R.id.item_cla_image);
+			myViews.textViewTitle = (TextView) convertView
+					.findViewById(R.id.item_cla_title);
+			myViews.textViewLocation =  (TextView) convertView
+					.findViewById(R.id.item_cla_location);
+			myViews.textViewDate = (TextView) convertView
+					.findViewById(R.id.item_cla_date);
+			myViews.toggleButton = (ToggleButton) convertView
+					.findViewById(R.id.item_cla_attention);
+			convertView.setTag(myViews);
+			
+			
+		}else {
+			myViews = (ViewHolder ) convertView.getTag();
+			
 		}
+		
+		if(! myViews.asyImageView.getDrawable().equals(R.drawable.rihanna)){
+			myViews.asyImageView.setImageResource(R.drawable.rihanna);
+		}
+		
+		
 		
 		final Activity currentActivity = activities.get(position);
 
 		String image_url = DatabaseConnector.target_url+currentActivity.getPictureUrl();
+		//String image_url = "http://i9.hexunimg.cn/2012-07-12/143481552.jpg";
 
-		AsyncImageView asyImageView = (AsyncImageView)convertView.findViewById(R.id.item_cla_image);
-		asyImageView.asyncLoad(image_url);
+		
+		myViews.asyImageView.asyncLoad(image_url);
 
-		TextView textViewTitle = (TextView) convertView
-				.findViewById(R.id.item_cla_title);
-
-		TextView textViewLocation = (TextView) convertView
-				.findViewById(R.id.item_cla_location);
-
-		TextView textViewDate = (TextView) convertView
-				.findViewById(R.id.item_cla_date);
-
-		ToggleButton toggleButton = (ToggleButton) convertView
-				.findViewById(R.id.item_cla_attention);
+		
 
 		convertView.setOnClickListener(new OnClickListener() {
 			@Override
@@ -146,17 +163,17 @@ public class ClassifyItemAdapter extends BaseAdapter {
 		});
 
 		if (currentActivity.getisAttention() == 1) {
-			toggleButton.setOnCheckedChangeListener(null);
-			toggleButton.setChecked(true);
-			toggleButton.setEnabled(false);
+			myViews.toggleButton.setOnCheckedChangeListener(null);
+			myViews.toggleButton.setChecked(true);
+			myViews.toggleButton.setEnabled(false);
 		}
-		toggleButton.setOnCheckedChangeListener(new onTakeAttentionListener(
+		myViews.toggleButton.setOnCheckedChangeListener(new onTakeAttentionListener(
 				currentActivity, null));
 
-		textViewTitle.setText(currentActivity.getName());
-		textViewLocation.setText(currentActivity.getAddress());
+		myViews.textViewTitle.setText(currentActivity.getName());
+		myViews.textViewLocation.setText(currentActivity.getAddress());
 		try {
-			textViewDate.setText(new SimpleDateFormat("yyyy-MM-dd").format(currentActivity.getDate()));
+			myViews.textViewDate.setText(new SimpleDateFormat("yyyy-MM-dd").format(currentActivity.getDate()));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

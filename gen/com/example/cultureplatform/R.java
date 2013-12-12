@@ -332,7 +332,7 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
           <p>This is a private symbol.
-          @attr name com.example.cultureplatform:animationDuration
+          @attr name android:animationDuration
         */
         public static final int Panel_animationDuration = 0;
         /**
@@ -346,7 +346,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 <p>May be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
 "<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
           <p>This is a private symbol.
-          @attr name com.example.cultureplatform:closedHandle
+          @attr name android:closedHandle
         */
         public static final int Panel_closedHandle = 7;
         /**
@@ -358,7 +358,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
           <p>This is a private symbol.
-          @attr name com.example.cultureplatform:content
+          @attr name android:content
         */
         public static final int Panel_content = 3;
         /**
@@ -370,7 +370,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
           <p>This is a private symbol.
-          @attr name com.example.cultureplatform:handle
+          @attr name android:handle
         */
         public static final int Panel_handle = 2;
         /**
@@ -386,7 +386,7 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
           <p>This is a private symbol.
-          @attr name com.example.cultureplatform:linearFlying
+          @attr name android:linearFlying
         */
         public static final int Panel_linearFlying = 4;
         /**
@@ -400,7 +400,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 <p>May be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
 "<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
           <p>This is a private symbol.
-          @attr name com.example.cultureplatform:openedHandle
+          @attr name android:openedHandle
         */
         public static final int Panel_openedHandle = 6;
         /**
@@ -421,7 +421,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 <tr><td><code>right</code></td><td>3</td><td> Panel placed at right of the screen. </td></tr>
 </table>
           <p>This is a private symbol.
-          @attr name com.example.cultureplatform:position
+          @attr name android:position
         */
         public static final int Panel_position = 1;
         /**
@@ -439,7 +439,7 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
           <p>This is a private symbol.
-          @attr name com.example.cultureplatform:weight
+          @attr name android:weight
         */
         public static final int Panel_weight = 5;
         /** Attributes that can be used with a TextRatingBar.
@@ -466,7 +466,7 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name com.example.cultureplatform:title
+          @attr name android:title
         */
         public static final int TextRatingBar_title = 0;
     };

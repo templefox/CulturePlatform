@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.zip.Inflater;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -18,26 +16,19 @@ import com.example.database.data.Entity;
 import com.example.database.data.User;
 
 import android.app.ActionBar;
-import android.app.ExpandableListActivity;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ExpandableListAdapter;
-import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -69,16 +60,16 @@ public class DetailActivity extends android.app.Activity {
 		editText = (EditText) findViewById(R.id.detail_comment_text);
 		
 		
-		clear.setVisibility(clear.INVISIBLE);
+		clear.setVisibility(View.INVISIBLE);
 		
 		editText.addTextChangedListener(new TextWatcher() {
 			
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
 				if(count!=0)
-					clear.setVisibility(clear.VISIBLE);
+					clear.setVisibility(View.VISIBLE);
 				else {
-					clear.setVisibility(clear.INVISIBLE);
+					clear.setVisibility(View.INVISIBLE);
 				}
 			}
 			@Override

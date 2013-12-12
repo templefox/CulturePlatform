@@ -2,6 +2,7 @@ package com.example.database.data;
 
 // Generated 2013-8-21 19:58:16 by Hibernate Tools 3.4.0.CR1
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -122,7 +123,7 @@ public class User implements java.io.Serializable {
 		user.setName(obj.getString("name"));
 		user.setEMail(obj.getString("E_mail"));
 		user.setPhoneNum(obj.getString("phone_num"));
-		user.setRegTime(SimpleDateFormat.getDateInstance().parse(obj.getString("reg_time")));
+		user.setRegTime(DateFormat.getDateInstance().parse(obj.getString("reg_time")));
 		user.setAuthority(obj.getInt("authority"));
 		return user;
 	}

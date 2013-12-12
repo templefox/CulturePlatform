@@ -1,9 +1,7 @@
 package com.example.cultureplatform;
 
-import com.example.database.data.User;
 import com.example.fragment.CalendarFragment;
 import com.example.fragment.ClassifyFragment;
-import com.example.fragment.FragmentHelper;
 import com.example.fragment.RecommendFragment;
 import com.example.fragment.TestFragment;
 import com.example.fragment.UserFragment;
@@ -20,14 +18,12 @@ import android.os.Bundle;
 
 
 import android.support.v13.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 
 //github test
 public class MainActivity extends Activity{

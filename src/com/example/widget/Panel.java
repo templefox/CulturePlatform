@@ -413,6 +413,7 @@ public class Panel extends LinearLayout
 	OnTouchListener touchListener = new OnTouchListener()
 	{
 		
+		@Override
 		public boolean onTouch(View v, MotionEvent event)
 		{
 			panelListener.onTouch(Panel.this);
@@ -823,6 +824,7 @@ public class Panel extends LinearLayout
 
 	private class SlidingHandler extends Handler
 	{
+		@Override
 		public void handleMessage(Message m)
 		{
 			switch (m.what)
