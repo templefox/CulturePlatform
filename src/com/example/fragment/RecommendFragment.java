@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 
@@ -31,13 +32,24 @@ import android.widget.ListView;
  *
  */
 public class RecommendFragment extends FragmentHelper {
-	private ListView listView;
 	private RecommendItemAdapter adapter = new RecommendItemAdapter(null);
-
+	private LinearLayout left;
+	private LinearLayout right;
+	
  	public void freshList(List<Activity> activities) {
  		try {
+ 			right.removeAllViews();
+ 			left.removeAllViews();
 			adapter.setActivities(activities);
-			adapter.notifyDataSetChanged();
+			for(int i=0;i<adapter.getCount();i++){
+				if(i%2==0){
+					right.addView(adapter.getView(i, null, right));
+					
+				}else
+				{
+					left.addView(adapter.getView(i, null, left));
+				}
+			}
 		} catch (Exception e) {
 			String s = e.getMessage();
 			s.getBytes();
@@ -49,10 +61,8 @@ public class RecommendFragment extends FragmentHelper {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.frag_recommend, container,false);
-		listView = (ListView) view.findViewById(R.id.list_recommend);
-
-		listView.setAdapter(adapter);
-		
+		left = (LinearLayout) view.findViewById(R.id.reco_left);
+		right = (LinearLayout) view.findViewById(R.id.reco_right);
 		return view;
 	}
 	
@@ -117,7 +127,6 @@ public class RecommendFragment extends FragmentHelper {
 			activities.add(activity);
 		}
 		freshList(activities);
-		
 	}
 
 

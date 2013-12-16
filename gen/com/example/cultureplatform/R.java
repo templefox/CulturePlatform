@@ -111,76 +111,77 @@ containing a value of this type.
         public static final int rihanna=0x7f02000c;
     }
     public static final class id {
-        public static final int action_bar_search=0x7f040056;
-        public static final int action_bar_user=0x7f040057;
-        public static final int action_forgot_password=0x7f040052;
-        public static final int action_search=0x7f040059;
-        public static final int action_settings=0x7f040058;
+        public static final int action_bar_search=0x7f040057;
+        public static final int action_bar_user=0x7f040058;
+        public static final int action_forgot_password=0x7f040053;
+        public static final int action_search=0x7f04005a;
+        public static final int action_settings=0x7f040059;
         public static final int area_comments=0x7f04002c;
-        public static final int arrow=0x7f040042;
+        public static final int arrow=0x7f040043;
         public static final int asdf=0x7f040018;
         public static final int asyncImageView1=0x7f040022;
         public static final int bottom=0x7f040001;
-        public static final int button1=0x7f040037;
+        public static final int button1=0x7f040038;
         public static final int button_log_in=0x7f04001e;
         public static final int button_log_out=0x7f04001c;
         public static final int calendar_button_login=0x7f040031;
         public static final int calendar_no=0x7f040030;
         public static final int calendar_yes=0x7f04002d;
         public static final int classify_panel=0x7f040033;
-        public static final int detail_attention=0x7f040050;
+        public static final int detail_attention=0x7f040051;
         public static final int detail_button_clear=0x7f040007;
         public static final int detail_button_submit=0x7f040008;
-        public static final int detail_comment=0x7f04004e;
+        public static final int detail_comment=0x7f04004f;
         public static final int detail_comment_text=0x7f040006;
         public static final int detail_input_layout=0x7f040005;
-        public static final int detail_setting=0x7f040051;
-        public static final int detail_share=0x7f04004f;
+        public static final int detail_setting=0x7f040052;
+        public static final int detail_share=0x7f040050;
         public static final int email=0x7f04000c;
         public static final int imageView1=0x7f04001a;
-        public static final int item_calendar_name=0x7f04003c;
-        public static final int item_cla_attention=0x7f040043;
-        public static final int item_cla_date=0x7f040041;
-        public static final int item_cla_image=0x7f04003e;
-        public static final int item_cla_location=0x7f040040;
-        public static final int item_cla_title=0x7f04003f;
-        public static final int item_comment_text=0x7f040045;
-        public static final int item_recommend_button=0x7f040047;
-        public static final int item_recommend_name=0x7f040046;
-        public static final int item_user_button=0x7f040048;
-        public static final int item_user_name=0x7f040049;
+        public static final int item_calendar_name=0x7f04003d;
+        public static final int item_cla_attention=0x7f040044;
+        public static final int item_cla_date=0x7f040042;
+        public static final int item_cla_image=0x7f04003f;
+        public static final int item_cla_location=0x7f040041;
+        public static final int item_cla_title=0x7f040040;
+        public static final int item_comment_text=0x7f040046;
+        public static final int item_recommend_button=0x7f040048;
+        public static final int item_recommend_name=0x7f040047;
+        public static final int item_user_button=0x7f040049;
+        public static final int item_user_name=0x7f04004a;
         public static final int left=0x7f040002;
         public static final int list_calendar=0x7f04002f;
         public static final int list_classify=0x7f040032;
-        public static final int list_recommend=0x7f040036;
         public static final int list_search=0x7f040017;
-        public static final int list_user_frag=0x7f040039;
+        public static final int list_user_frag=0x7f04003a;
         public static final int login=0x7f04000e;
         public static final int login_form=0x7f04000b;
         public static final int login_status=0x7f040009;
         public static final int login_status_message=0x7f04000a;
-        public static final int menu_account_user_manager=0x7f040054;
-        public static final int menu_nav=0x7f040053;
-        public static final int menu_search=0x7f040055;
+        public static final int menu_account_user_manager=0x7f040055;
+        public static final int menu_nav=0x7f040054;
+        public static final int menu_search=0x7f040056;
         public static final int my_calendar=0x7f04002e;
         public static final int no_user_view=0x7f04001d;
-        public static final int optionor=0x7f04004a;
+        public static final int optionor=0x7f04004b;
         public static final int optionor1=0x7f04001f;
         public static final int optionor2=0x7f040020;
-        public static final int optionor_radiogroup=0x7f04004b;
+        public static final int optionor_radiogroup=0x7f04004c;
         public static final int pager=0x7f040010;
         public static final int panelContent=0x7f040034;
         public static final int panelHandle=0x7f040035;
         public static final int password=0x7f04000d;
-        public static final int progressBar1=0x7f040044;
-        public static final int rating_bar=0x7f04004d;
+        public static final int progressBar1=0x7f040045;
+        public static final int rating_bar=0x7f04004e;
         public static final int rating_content=0x7f040011;
         public static final int rating_edit=0x7f040015;
         public static final int rating_environment=0x7f040014;
         public static final int rating_reporter=0x7f040012;
         public static final int rating_staff=0x7f040013;
         public static final int rating_submit=0x7f040016;
-        public static final int rating_text=0x7f04004c;
+        public static final int rating_text=0x7f04004d;
+        public static final int reco_left=0x7f040036;
+        public static final int reco_right=0x7f040037;
         public static final int right=0x7f040003;
         public static final int scrollView1=0x7f040004;
         public static final int sign_in_button=0x7f04000f;
@@ -194,11 +195,11 @@ containing a value of this type.
         public static final int textView7=0x7f040027;
         public static final int textView8=0x7f040028;
         public static final int textView9=0x7f040029;
-        public static final int thumbnail=0x7f04003d;
+        public static final int thumbnail=0x7f04003e;
         public static final int top=0x7f040000;
-        public static final int user_frag_button_log_in=0x7f04003b;
-        public static final int user_frag_no=0x7f04003a;
-        public static final int user_frag_yes=0x7f040038;
+        public static final int user_frag_button_log_in=0x7f04003c;
+        public static final int user_frag_no=0x7f04003b;
+        public static final int user_frag_yes=0x7f040039;
         public static final int user_name=0x7f04001b;
         public static final int user_view=0x7f040019;
     }
@@ -332,7 +333,7 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
           <p>This is a private symbol.
-          @attr name android:animationDuration
+          @attr name com.example.cultureplatform:animationDuration
         */
         public static final int Panel_animationDuration = 0;
         /**
@@ -346,7 +347,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 <p>May be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
 "<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
           <p>This is a private symbol.
-          @attr name android:closedHandle
+          @attr name com.example.cultureplatform:closedHandle
         */
         public static final int Panel_closedHandle = 7;
         /**
@@ -358,7 +359,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
           <p>This is a private symbol.
-          @attr name android:content
+          @attr name com.example.cultureplatform:content
         */
         public static final int Panel_content = 3;
         /**
@@ -370,7 +371,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
           <p>This is a private symbol.
-          @attr name android:handle
+          @attr name com.example.cultureplatform:handle
         */
         public static final int Panel_handle = 2;
         /**
@@ -386,7 +387,7 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
           <p>This is a private symbol.
-          @attr name android:linearFlying
+          @attr name com.example.cultureplatform:linearFlying
         */
         public static final int Panel_linearFlying = 4;
         /**
@@ -400,7 +401,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 <p>May be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
 "<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
           <p>This is a private symbol.
-          @attr name android:openedHandle
+          @attr name com.example.cultureplatform:openedHandle
         */
         public static final int Panel_openedHandle = 6;
         /**
@@ -421,7 +422,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 <tr><td><code>right</code></td><td>3</td><td> Panel placed at right of the screen. </td></tr>
 </table>
           <p>This is a private symbol.
-          @attr name android:position
+          @attr name com.example.cultureplatform:position
         */
         public static final int Panel_position = 1;
         /**
@@ -439,7 +440,7 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
           <p>This is a private symbol.
-          @attr name android:weight
+          @attr name com.example.cultureplatform:weight
         */
         public static final int Panel_weight = 5;
         /** Attributes that can be used with a TextRatingBar.
@@ -466,7 +467,7 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name android:title
+          @attr name com.example.cultureplatform:title
         */
         public static final int TextRatingBar_title = 0;
     };

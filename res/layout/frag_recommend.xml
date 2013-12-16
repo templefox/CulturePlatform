@@ -1,12 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <ListView
-        android:id="@+id/list_recommend"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-    </ListView>
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
 
-</FrameLayout>
+        <LinearLayout
+            android:id="@+id/reco_left"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.07"
+                android:text="Title"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/reco_right"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:orientation="vertical" >
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>
