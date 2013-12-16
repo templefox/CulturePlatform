@@ -51,7 +51,7 @@ public class AsyncImageView extends ImageView {
 		}
 
 		@Override
-		protected Bitmap doInBackground(Object... params) {
+		synchronized protected Bitmap doInBackground(Object... params) {
 			// TODO Auto-generated method stub
 
 			

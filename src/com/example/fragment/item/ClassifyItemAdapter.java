@@ -181,5 +181,14 @@ public class ClassifyItemAdapter extends BaseAdapter {
 
 		return convertView;
 	}
-
+	
+	private class ViewHolder {
+		TextView textViewTitle;
+		TextView textViewLocation;
+		TextView textViewDate;
+		ToggleButton toggleButton;
+		AsyncImageView asyImageView;
+		
+	}
+	
 }

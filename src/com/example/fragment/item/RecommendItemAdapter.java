@@ -3,7 +3,9 @@ package com.example.fragment.item;
 import java.util.List;
 
 import com.example.cultureplatform.R;
+import com.example.database.DatabaseConnector;
 import com.example.database.data.Activity;
+import com.example.widget.AsyncImageView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,20 +51,30 @@ public class RecommendItemAdapter extends BaseAdapter{
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
-		Button button = null;
-		TextView textView = null;
-		
+		ViewHolder viewHolder;
 		if(convertView == null){
-			convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recommend, null);
+			viewHolder = new ViewHolder();
+			convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recommend, parent,false);
+			viewHolder.imageView = (AsyncImageView) convertView.findViewById(R.id.item_recommend_image);
+			viewHolder.name = (TextView) convertView.findViewById(R.id.item_recommend_name);
+			convertView.setTag(viewHolder);
+		}else {
+			viewHolder = (ViewHolder) convertView.getTag();
 		}
 		
-		button = (Button) convertView.findViewById(R.id.item_recommend_button);
-		textView = (TextView) convertView.findViewById(R.id.item_recommend_name);
 		
-		button.setText(activities.get(position).getName());
-		textView.setText(activities.get(position).getName());
+		Activity activity = activities.get(position);
+		
+		String image_url = DatabaseConnector.target_url+activity.getPictureUrl();
+		viewHolder.imageView.asyncLoad(image_url);
+		//viewHolder.imageView.asyncLoad("http://i9.hexunimg.cn/2012-07-12/143481552.jpg");
+		viewHolder.name.setText(activity.getName());
 		
 		return convertView;
 	}
 	
+	private class ViewHolder{
+		AsyncImageView imageView;
+		TextView name;
+	}
 }

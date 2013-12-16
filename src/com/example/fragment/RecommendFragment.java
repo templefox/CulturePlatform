@@ -39,7 +39,7 @@ public class RecommendFragment extends FragmentHelper {
  	public void freshList(List<Activity> activities) {
  		try {
  			right.removeAllViews();
- 			left.removeAllViews();
+ 			left.removeViews(1, left.getChildCount()-1);
 			adapter.setActivities(activities);
 			for(int i=0;i<adapter.getCount();i++){
 				if(i%2==0){
@@ -119,11 +119,12 @@ public class RecommendFragment extends FragmentHelper {
 	@Override
 	public void reLoad() {
 		List<Activity> activities = new ArrayList<Activity>();
-		List<ContentValues> list = Entity.selectFromSQLite("activity", new String[]{"id","name"}, getActivity());
+		List<ContentValues> list = Entity.selectFromSQLite("activity", new String[]{"id","name","picture_url"}, getActivity());
 		for(ContentValues contentValue: list){
 			Activity activity = new Activity();
 			activity.setId(contentValue.getAsInteger("id"));
 			activity.setName(contentValue.getAsString("name"));
+			activity.setPictureUrl(contentValue.getAsString("picture_url"));
 			activities.add(activity);
 		}
 		freshList(activities);

@@ -145,8 +145,8 @@ containing a value of this type.
         public static final int item_cla_location=0x7f040041;
         public static final int item_cla_title=0x7f040040;
         public static final int item_comment_text=0x7f040046;
-        public static final int item_recommend_button=0x7f040048;
-        public static final int item_recommend_name=0x7f040047;
+        public static final int item_recommend_image=0x7f040047;
+        public static final int item_recommend_name=0x7f040048;
         public static final int item_user_button=0x7f040049;
         public static final int item_user_name=0x7f04004a;
         public static final int left=0x7f040002;
