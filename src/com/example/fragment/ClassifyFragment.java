@@ -50,7 +50,7 @@ public class ClassifyFragment extends FragmentHelper {
 	private ClassifyItemAdapter adapter = new ClassifyItemAdapter(null);
 	private ListView listView;
 	private View footerView;
-	private final int MAX_ITEM_DOWNLOAD = 6;
+	private final int MAX_ITEM_DOWNLOAD = 1;
 	private boolean onReload = false;
 	private String selectedType = null;
 	private String selectedLocation = null;
@@ -185,14 +185,19 @@ public class ClassifyFragment extends FragmentHelper {
 						}
 						@Override
 						public void onFinish() {
+							listView.postDelayed(new Runnable() {
+								@Override
+								public void run() {
+									listView.removeFooterView(footerView);
+									try {
+										reloadActivities(selectedType, selectedLocation);
+									} catch (Exception e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+								}
+							}, 1000);
 							
-							try {
-								reloadActivities(selectedType, selectedLocation);
-							} catch (Exception e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-							listView.removeFooterView(footerView);
 							onReload = false;
 						}
 						

@@ -16,7 +16,8 @@ import android.widget.ImageView;
 public class AsyncImageView extends ImageView {
 
 	MemoryCache memoryCache = new MemoryCache();
-
+	MyTask task;
+	
 	public AsyncImageView(Context context) {
 		super(context);
 		// TODO Auto-generated constructor stub
@@ -34,12 +35,16 @@ public class AsyncImageView extends ImageView {
 
 	public void asyncLoad(String image_url) {
 
-		new MyTask().execute(image_url, this);
-
+		task = new MyTask();
+		task.execute(image_url);
+		
 	}
 
+	public void cancelTask() {
+		task.cancel(true);
+	}
 	// “Ï≤Ω‘ÿ»ÎÕ¯¬ÁÕº∆¨
-	public class MyTask extends AsyncTask<Object, Void, Bitmap> {
+	public class MyTask extends AsyncTask<String, Void, Bitmap> {
 
 		private ImageView imageView;
 
@@ -51,36 +56,40 @@ public class AsyncImageView extends ImageView {
 		}
 
 		@Override
-		synchronized protected Bitmap doInBackground(Object... params) {
+		synchronized protected Bitmap doInBackground(String... params) {
 			// TODO Auto-generated method stub
 
-			
-			imageView = (ImageView) params[1];
-			
-			Bitmap bitmap = memoryCache.get((String) params[0]);
-			if (bitmap != null) {
-				return bitmap;
-			} else {
-
+			do{
+				imageView = AsyncImageView.this;
 				
-				HttpClient httpClient = new DefaultHttpClient();
-				HttpGet httpGet = new HttpGet((String) params[0]);
-				try {
-					HttpResponse httpResponse = httpClient.execute(httpGet);
-					if (httpResponse.getStatusLine().getStatusCode() == 200) {
-						HttpEntity httpEntity = httpResponse.getEntity();
-						byte[] data = EntityUtils.toByteArray(httpEntity);
-						bitmap = BitmapFactory.decodeByteArray(data, 0,
-								data.length);
-
+				Bitmap bitmap = memoryCache.get((String) params[0]);
+				if (bitmap != null) {
+					return bitmap;
+				} else {
+	
+					
+					HttpClient httpClient = new DefaultHttpClient();
+					HttpGet httpGet = new HttpGet((String) params[0]);
+					try {
+						HttpResponse httpResponse = httpClient.execute(httpGet);
+						if(isCancelled()) break;
+						if (httpResponse.getStatusLine().getStatusCode() == 200) {
+							HttpEntity httpEntity = httpResponse.getEntity();
+							if(isCancelled()) break;
+							byte[] data = EntityUtils.toByteArray(httpEntity);
+							if(isCancelled()) break;
+							bitmap = BitmapFactory.decodeByteArray(data, 0,
+									data.length);
+	
+						}
+					} catch (Exception e) {
+						// TODO: handle exception
 					}
-				} catch (Exception e) {
-					// TODO: handle exception
+					memoryCache.put((String) params[0], bitmap);
+					return bitmap;
 				}
-				memoryCache.put((String) params[0], bitmap);
-				return bitmap;
-			}
-
+			}while(false);
+			return null;
 		}
 
 		@Override
@@ -93,4 +102,6 @@ public class AsyncImageView extends ImageView {
 
 	}
 
+
+	
 }

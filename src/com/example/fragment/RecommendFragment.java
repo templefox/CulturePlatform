@@ -35,13 +35,14 @@ public class RecommendFragment extends FragmentHelper {
 	private RecommendItemAdapter adapter = new RecommendItemAdapter(null);
 	private LinearLayout left;
 	private LinearLayout right;
+	private final int MAX_COUNT = 8;
 	
  	public void freshList(List<Activity> activities) {
  		try {
  			right.removeAllViews();
  			left.removeViews(1, left.getChildCount()-1);
 			adapter.setActivities(activities);
-			for(int i=0;i<adapter.getCount();i++){
+			for(int i=0;i<adapter.getCount()&&i<MAX_COUNT;i++){
 				if(i%2==0){
 					right.addView(adapter.getView(i, null, right));
 					
@@ -110,7 +111,7 @@ public class RecommendFragment extends FragmentHelper {
 
 		DatabaseConnector connector = new DatabaseConnector();
 		connector.addParams(DatabaseConnector.METHOD, "GETACTIVITY");
-		connector.addParams("limit", Integer.toString(10));
+		connector.addParams("limit", Integer.toString(8));
 		connector.addParams("offset", Integer.toString(0));
 		connector.asyncConnect(activityAdapter);
 	}

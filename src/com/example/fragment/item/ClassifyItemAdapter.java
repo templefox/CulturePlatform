@@ -132,7 +132,7 @@ public class ClassifyItemAdapter extends BaseAdapter {
 			
 		}else {
 			myViews = (ViewHolder ) convertView.getTag();
-			
+			myViews.asyImageView.cancelTask();
 		}
 		
 		if(! myViews.asyImageView.getDrawable().equals(R.drawable.rihanna)){
