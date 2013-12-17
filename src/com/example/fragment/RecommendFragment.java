@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 
@@ -31,13 +32,25 @@ import android.widget.ListView;
  *
  */
 public class RecommendFragment extends FragmentHelper {
-	private ListView listView;
 	private RecommendItemAdapter adapter = new RecommendItemAdapter(null);
-
+	private LinearLayout left;
+	private LinearLayout right;
+	private final int MAX_COUNT = 8;
+	
  	public void freshList(List<Activity> activities) {
  		try {
+ 			right.removeAllViews();
+ 			left.removeViews(1, left.getChildCount()-1);
 			adapter.setActivities(activities);
-			adapter.notifyDataSetChanged();
+			for(int i=0;i<adapter.getCount()&&i<MAX_COUNT;i++){
+				if(i%2==0){
+					right.addView(adapter.getView(i, null, right));
+					
+				}else
+				{
+					left.addView(adapter.getView(i, null, left));
+				}
+			}
 		} catch (Exception e) {
 			String s = e.getMessage();
 			s.getBytes();
@@ -49,10 +62,8 @@ public class RecommendFragment extends FragmentHelper {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.frag_recommend, container,false);
-		listView = (ListView) view.findViewById(R.id.list_recommend);
-
-		listView.setAdapter(adapter);
-		
+		left = (LinearLayout) view.findViewById(R.id.reco_left);
+		right = (LinearLayout) view.findViewById(R.id.reco_right);
 		return view;
 	}
 	
@@ -100,7 +111,7 @@ public class RecommendFragment extends FragmentHelper {
 
 		DatabaseConnector connector = new DatabaseConnector();
 		connector.addParams(DatabaseConnector.METHOD, "GETACTIVITY");
-		connector.addParams("limit", Integer.toString(10));
+		connector.addParams("limit", Integer.toString(8));
 		connector.addParams("offset", Integer.toString(0));
 		connector.asyncConnect(activityAdapter);
 	}
@@ -109,15 +120,15 @@ public class RecommendFragment extends FragmentHelper {
 	@Override
 	public void reLoad() {
 		List<Activity> activities = new ArrayList<Activity>();
-		List<ContentValues> list = Entity.selectFromSQLite("activity", new String[]{"id","name"}, getActivity());
+		List<ContentValues> list = Entity.selectFromSQLite("activity", new String[]{"id","name","picture_url"}, getActivity());
 		for(ContentValues contentValue: list){
 			Activity activity = new Activity();
 			activity.setId(contentValue.getAsInteger("id"));
 			activity.setName(contentValue.getAsString("name"));
+			activity.setPictureUrl(contentValue.getAsString("picture_url"));
 			activities.add(activity);
 		}
 		freshList(activities);
-		
 	}
 
 
