@@ -1,6 +1,7 @@
 package com.example.cultureplatform;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -14,7 +15,9 @@ import com.example.database.data.Activity;
 import com.example.database.data.Comment;
 import com.example.database.data.Entity;
 import com.example.database.data.User;
+import com.example.widget.AsyncImageView;
 
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -32,6 +35,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+@SuppressLint("SimpleDateFormat")
 public class DetailActivity extends android.app.Activity {
 	private Activity currentActivity;
 	private LinearLayout area;
@@ -39,6 +43,17 @@ public class DetailActivity extends android.app.Activity {
 	private Button clear;
 	private Button submit;
 	private User currentUser;
+	
+	private TextView titleTextView;
+	private TextView dateTextView;
+	private TextView locatTextView;
+	private TextView typeTextView;
+	private TextView themeTextView;
+	private TextView reporterTextView;
+	private TextView temperatureTextView;
+	
+	private AsyncImageView imageView;
+	String image_url = "http://i9.hexunimg.cn/2012-07-12/143481552.jpg";
 	
 	
 	@Override
@@ -100,7 +115,43 @@ public class DetailActivity extends android.app.Activity {
 				editText.setText("");
 			}
 		});
+		
+		titleTextView = (TextView) findViewById(R.id.title);
+		dateTextView = (TextView) findViewById(R.id.date);
+		locatTextView = (TextView) findViewById(R.id.address);
+		typeTextView = (TextView) findViewById(R.id.type);
+		themeTextView = (TextView) findViewById(R.id.theme);
+		reporterTextView = (TextView) findViewById(R.id.reporter);
+		temperatureTextView = (TextView) findViewById(R.id.temperature);
+		imageView = (AsyncImageView) findViewById(R.id.image);
+		
+		imageView.asyncLoad(image_url);
+		
+		
+		titleTextView.setText(currentActivity.getName());
+		
+		try {
+			dateTextView.setText(new SimpleDateFormat("yyyy-MM-dd")
+					.format(currentActivity.getDate()));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		locatTextView.setText(currentActivity.getAddress());
+		//typeTextView.setText(currentActivity.getType());
+	    //themeTextView.setText(currentActivity.getTheme());
+	    //reporterTextView.setText(currentActivity.getReporterInfo());
+	   // temperatureTextView.setText(currentActivity.getTemperature());		
+		
+		
+		
 	}
+	
+	
+
+	
+	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
