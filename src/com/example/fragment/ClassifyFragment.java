@@ -30,6 +30,7 @@ import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +41,7 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 
 @SuppressLint("SimpleDateFormat")
@@ -52,6 +54,7 @@ public class ClassifyFragment extends FragmentHelper {
 	private View footerView;
 	private final int MAX_ITEM_DOWNLOAD = 1;
 	private boolean onReload = false;
+	private boolean moreData = true;
 	private String selectedType = null;
 	private String selectedLocation = null;
 	
@@ -141,24 +144,34 @@ public class ClassifyFragment extends FragmentHelper {
 		
 		listView.addFooterView(footerView);
 		listView.setAdapter(adapter);
-		listView.removeFooterView(footerView);
+		footerView.setVisibility(View.INVISIBLE);
 
 		listView.setOnScrollListener(new OnScrollListener() {
 			
 			@Override
 			public void onScrollStateChanged(AbsListView view, int scrollState) {
 				// TODO Auto-generated method stub
-				
+				Log.v("MonScroll", "state "+scrollState);
 			}
 			
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem,
 					int visibleItemCount, int totalItemCount) {
 				// TODO Auto-generated method stub
-				if(totalItemCount != 0 && view.getLastVisiblePosition()+1 == totalItemCount && !onReload)
+				Log.v("MonScroll", "first "+firstVisibleItem);
+				Log.v("MonScroll", "visible "+visibleItemCount);
+				Log.v("MonScroll", "totalItemCount "+totalItemCount);
+				
+				if(totalItemCount != 0+listView.getFooterViewsCount() && view.getLastVisiblePosition()+1 != totalItemCount && !moreData)
+				{
+					moreData = true;
+					listView.addFooterView(footerView);
+				}
+				
+				if(totalItemCount != 0 && view.getLastVisiblePosition()+1 == totalItemCount && !onReload && moreData)
 				{
 					onReload = true;
-					listView.addFooterView(footerView);
+					footerView.setVisibility(View.VISIBLE);
 					final MessageAdapter activityAdapter = new MessageAdapter() {
 						
 						@Override
@@ -184,13 +197,24 @@ public class ClassifyFragment extends FragmentHelper {
 							Entity.insertIntoSQLite(activities, getActivity());
 						}
 						@Override
+						public void onEmptyReceived() {
+							// TODO Auto-generated method stub
+							moreData = false;
+							listView.removeFooterView(footerView);
+							Toast.makeText(getActivity(), "没有更多的数据了", Toast.LENGTH_SHORT).show();
+						}
+						@Override
 						public void onFinish() {
 							listView.postDelayed(new Runnable() {
 								@Override
 								public void run() {
-									listView.removeFooterView(footerView);
 									try {
-										reloadActivities(selectedType, selectedLocation);
+										if(moreData)
+										{
+											footerView.setVisibility(View.INVISIBLE);
+											reloadActivities(selectedType, selectedLocation);
+										}
+										onReload = false;
 									} catch (Exception e) {
 										// TODO Auto-generated catch block
 										e.printStackTrace();
@@ -198,7 +222,6 @@ public class ClassifyFragment extends FragmentHelper {
 								}
 							}, 1000);
 							
-							onReload = false;
 						}
 						
 					};
