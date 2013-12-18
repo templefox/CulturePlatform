@@ -32,6 +32,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ShareActionProvider;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,12 +55,14 @@ public class DetailActivity extends android.app.Activity {
 	
 	private AsyncImageView imageView;
 	String image_url = "http://i9.hexunimg.cn/2012-07-12/143481552.jpg";
+	private ShareActionProvider shareActionProvider;
 	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		currentActivity = (Activity) getIntent().getSerializableExtra("activity");
+		
 		
 		setTheme(R.style.ActionBar);
 		setContentView(R.layout.activity_detail);
@@ -153,15 +156,26 @@ public class DetailActivity extends android.app.Activity {
 	
 	
 
+	@SuppressLint("NewApi")
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.detail, menu);
-		
-		
+		MenuItem item = menu.findItem(R.id.detail_share);  
+		shareActionProvider = (ShareActionProvider) item.getActionProvider();
+		setShareIntent();
 		return true;
 	}
-
+	
+	@SuppressLint("NewApi")
+	private void setShareIntent(){
+		Intent myIntent = new Intent();
+		myIntent.setAction(Intent.ACTION_SEND);
+		myIntent.putExtra(Intent.EXTRA_TEXT, currentActivity.getName());
+		myIntent.setType("text/plain");
+		shareActionProvider.setShareIntent(myIntent);
+	}
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -223,6 +237,11 @@ public class DetailActivity extends android.app.Activity {
 				}
 				Entity.insertIntoSQLite(comments, DetailActivity.this);
 			}
+			
+			@Override
+			public void onTimeout() {
+				Toast.makeText(getApplicationContext(), "连接超时", Toast.LENGTH_SHORT).show();
+			}
 
 			@Override
 			public void onFinish() {
@@ -253,6 +272,11 @@ public class DetailActivity extends android.app.Activity {
 			public void onDone(String ret) {
 				Toast.makeText(DetailActivity.this, "评论成功", Toast.LENGTH_SHORT).show();
 				reDownload();
+			}
+			
+			@Override
+			public void onTimeout() {
+				Toast.makeText(getApplicationContext(), "连接超时", Toast.LENGTH_SHORT).show();
 			}
 
 			@Override

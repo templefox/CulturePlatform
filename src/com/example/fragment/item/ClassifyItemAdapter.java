@@ -12,8 +12,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 import com.example.cultureplatform.DetailActivity;
+import com.example.cultureplatform.LoginActivity;
 import com.example.cultureplatform.R;
 import com.example.database.DatabaseConnector;
 import com.example.database.MessageAdapter;
@@ -66,7 +68,7 @@ public class ClassifyItemAdapter extends BaseAdapter {
 					Entity.insertIntoSQLite(attention, buttonView.getContext());
 					buttonView.setEnabled(false);
 				}
-
+				
 				@Override
 				public void onErrorOccur() {
 					// TODO Auto-generated method stub
@@ -166,9 +168,13 @@ public class ClassifyItemAdapter extends BaseAdapter {
 			myViews.toggleButton.setOnCheckedChangeListener(null);
 			myViews.toggleButton.setChecked(true);
 			myViews.toggleButton.setEnabled(false);
-		}
-		myViews.toggleButton.setOnCheckedChangeListener(new onTakeAttentionListener(
+		}else {
+			myViews.toggleButton.setOnCheckedChangeListener(new onTakeAttentionListener(
 				currentActivity, null));
+			myViews.toggleButton.setChecked(false);
+			myViews.toggleButton.setEnabled(true);
+		}
+
 
 		myViews.textViewTitle.setText(currentActivity.getName());
 		myViews.textViewLocation.setText(currentActivity.getAddress());

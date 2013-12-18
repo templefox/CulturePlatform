@@ -79,6 +79,10 @@ public class RatingActivity extends android.app.Activity {
 					
 				}
 				
+				@Override
+				public void onTimeout() {
+					Toast.makeText(getApplicationContext(), "Á¬½Ó³¬Ê±", Toast.LENGTH_SHORT).show();
+				}
 				
 			});
 		}};

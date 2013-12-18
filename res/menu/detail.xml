@@ -4,13 +4,15 @@
         android:id="@+id/detail_comment"
         android:orderInCategory="1"
         android:showAsAction="ifRoom|withText"
-        android:title="comment"/>
+        android:title="comment" 
+        android:icon="@drawable/ic_action_half_important"/>
 
 	<item
         android:id="@+id/detail_share"
         android:orderInCategory="2"
         android:showAsAction="ifRoom|withText"
-        android:title="share"/>
+        android:icon="@drawable/ic_action_share"
+        android:actionProviderClass="android.widget.ShareActionProvider"/>
         
 	<item
         android:id="@+id/detail_attention"

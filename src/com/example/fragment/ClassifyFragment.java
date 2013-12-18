@@ -150,18 +150,12 @@ public class ClassifyFragment extends FragmentHelper {
 			
 			@Override
 			public void onScrollStateChanged(AbsListView view, int scrollState) {
-				// TODO Auto-generated method stub
-				Log.v("MonScroll", "state "+scrollState);
 			}
 			
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem,
 					int visibleItemCount, int totalItemCount) {
-				// TODO Auto-generated method stub
-				Log.v("MonScroll", "first "+firstVisibleItem);
-				Log.v("MonScroll", "visible "+visibleItemCount);
-				Log.v("MonScroll", "totalItemCount "+totalItemCount);
-				
+				// TODO Auto-generated method stub				
 				if(totalItemCount != 0+listView.getFooterViewsCount() && view.getLastVisiblePosition()+1 != totalItemCount && !moreData)
 				{
 					moreData = true;
@@ -202,6 +196,13 @@ public class ClassifyFragment extends FragmentHelper {
 							moreData = false;
 							listView.removeFooterView(footerView);
 							Toast.makeText(getActivity(), "没有更多的数据了", Toast.LENGTH_SHORT).show();
+						}
+						
+						@Override
+						public void onTimeout() {							
+							moreData = false;
+							listView.removeFooterView(footerView);
+							Toast.makeText(getActivity(), "连接超时", Toast.LENGTH_SHORT).show();
 						}
 						@Override
 						public void onFinish() {
@@ -284,6 +285,11 @@ public class ClassifyFragment extends FragmentHelper {
 				Entity.insertIntoSQLite(types, getActivity());
 			}
 
+			@Override
+			public void onTimeout() {
+				Toast.makeText(getActivity(), "连接超时", Toast.LENGTH_SHORT).show();
+			}
+			
 			@Override
 			public void onFinish() {
 				reLoad();

@@ -18,7 +18,9 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
-    <style name="ActionBar" parent="android:Theme.Holo.Light"></style>
+    <style name="ActionBar" parent="android:Theme.Holo.Light">
+        
+    </style>
 
     <style name="TheLight" parent="@android:style/Theme.Light"></style>
     

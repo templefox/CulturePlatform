@@ -52,6 +52,10 @@ public class MessageHandler extends Handler {
 			messageAdapter.onDone(get.substring(4));
 			
 		}
+		else if (get.equals("timeout")) {
+			messageAdapter.onTimeout();
+		}
+		
 		else {
 			//收到其他消息 以json格式
 			try {

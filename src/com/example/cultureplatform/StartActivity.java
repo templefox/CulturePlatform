@@ -136,7 +136,10 @@ public class StartActivity extends Activity {
 						
 					}
 					
-					
+					@Override
+					public void onTimeout() {
+						Toast.makeText(getApplicationContext(), "Á¬½Ó³¬Ê±", Toast.LENGTH_SHORT).show();
+					}
 					
 					
 					
