@@ -42,4 +42,10 @@ public class ApplicationHelper extends Application {
 		return !(currentUser == null);
 	}
 	
+	public int getUserAuthority()
+	{
+		if(currentUser == null)
+			return -1;
+		else return currentUser.getAuthority();
+	}
 }

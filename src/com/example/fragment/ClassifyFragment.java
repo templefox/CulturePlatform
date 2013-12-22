@@ -241,7 +241,7 @@ public class ClassifyFragment extends FragmentHelper {
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		return "分类";
+		return "分类检索";
 	}
 
 	public void switchPanel() {

@@ -14,6 +14,8 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+
+import com.example.cultureplatform.ApplicationHelper;
 import com.example.cultureplatform.DetailActivity;
 import com.example.cultureplatform.LoginActivity;
 import com.example.cultureplatform.R;
@@ -51,6 +53,13 @@ public class ClassifyItemAdapter extends BaseAdapter {
 				boolean isChecked) {
 
 			if (user == null) {
+				buttonView.setChecked(false);
+				Toast.makeText(buttonView.getContext(), "登录后可进行关注", Toast.LENGTH_SHORT).show();
+				return;
+			}
+			if(user.getAuthority()==User.AUTHORITY_UNCHECK){
+				buttonView.setChecked(false);
+				Toast.makeText(buttonView.getContext(), "您的账户尚未确认", Toast.LENGTH_SHORT).show();
 				return;
 			}
 			DatabaseConnector connector = new DatabaseConnector();
@@ -170,7 +179,9 @@ public class ClassifyItemAdapter extends BaseAdapter {
 			myViews.toggleButton.setEnabled(false);
 		}else {
 			myViews.toggleButton.setOnCheckedChangeListener(new onTakeAttentionListener(
-				currentActivity, null));
+				currentActivity, 
+				((ApplicationHelper)parent.getContext().getApplicationContext()).getCurrentUser()
+				));
 			myViews.toggleButton.setChecked(false);
 			myViews.toggleButton.setEnabled(true);
 		}

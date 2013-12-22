@@ -9,6 +9,7 @@ import com.example.cultureplatform.R;
 import com.example.database.data.Activity;
 import com.example.database.data.Entity;
 import com.example.database.data.User;
+import com.example.fragment.item.ClassifyItemAdapter;
 import com.example.fragment.item.UserItemAdapter;
 
 import android.content.ContentValues;
@@ -26,7 +27,9 @@ public class UserFragment extends FragmentHelper {
 	private View yesUser;
 	private User currentUser;
 	private ListView listView;
-	private UserItemAdapter itemAdapter = new UserItemAdapter(null);
+	//private UserItemAdapter itemAdapter = new UserItemAdapter(null);
+	private ClassifyItemAdapter itemAdapter = new ClassifyItemAdapter(null);
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {

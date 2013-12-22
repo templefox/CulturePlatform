@@ -33,7 +33,7 @@ public class CommentActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				 CharSequence[] items = {"相册", "相机"};    
+				 CharSequence[] items = {"从相册选择", "拍摄新图片"};    
 				   new AlertDialog.Builder(CommentActivity.this)  
 				    .setTitle("选择图片来源")  
 				    .setItems(items, new DialogInterface.OnClickListener() {  

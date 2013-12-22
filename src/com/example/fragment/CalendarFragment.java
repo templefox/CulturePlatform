@@ -8,6 +8,7 @@ import com.example.database.data.Activity;
 import com.example.database.data.Entity;
 import com.example.database.data.User;
 import com.example.fragment.item.CalendarItemAdapter;
+import com.example.fragment.item.ClassifyItemAdapter;
 
 import android.content.ContentValues;
 import android.os.Bundle;
@@ -20,7 +21,8 @@ import android.widget.ListView;
 
 public class CalendarFragment extends FragmentHelper {
 	private ListView listView;
-	private CalendarItemAdapter adapter = new CalendarItemAdapter(null);
+	//private CalendarItemAdapter adapter = new CalendarItemAdapter(null);
+	private ClassifyItemAdapter adapter = new ClassifyItemAdapter(null);
 	private CalendarView calendarView;
 	private View view_yes;
 	private View view_no;

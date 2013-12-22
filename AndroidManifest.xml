@@ -58,6 +58,10 @@
             android:name="com.example.cultureplatform.CommentActivity"
             android:label="@string/title_activity_comment" >
         </activity>
+        <activity
+            android:name="com.example.cultureplatform.AddActActivity"
+            android:label="@string/title_activity_add_act" >
+        </activity>
     </application>
 
     <instrumentation

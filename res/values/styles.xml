@@ -19,15 +19,20 @@
     </style>
 
     <style name="ActionBar" parent="android:Theme.Holo.Light">
-        
+        <item name="android:actionBarTabStyle">@style/MyActionBarTabStyle</item>
     </style>
 
     <style name="TheLight" parent="@android:style/Theme.Light"></style>
-    
+
     <style name="LoginFormContainer">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:padding">16dp</item>
+    </style>
+
+    <style name="MyActionBarTabStyle" >
+        <item name="android:background">@drawable/actionbar_tab_selector</item>
+
     </style>
 
 </resources>

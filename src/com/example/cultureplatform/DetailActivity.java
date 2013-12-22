@@ -44,7 +44,7 @@ public class DetailActivity extends android.app.Activity {
 	private Button clear;
 	private Button submit;
 	private User currentUser;
-	
+
 	private TextView titleTextView;
 	private TextView dateTextView;
 	private TextView locatTextView;
@@ -52,48 +52,50 @@ public class DetailActivity extends android.app.Activity {
 	private TextView themeTextView;
 	private TextView reporterTextView;
 	private TextView temperatureTextView;
-	
+
 	private AsyncImageView imageView;
 	String image_url = "http://i9.hexunimg.cn/2012-07-12/143481552.jpg";
 	private ShareActionProvider shareActionProvider;
-	
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		currentActivity = (Activity) getIntent().getSerializableExtra("activity");
-		
-		
+		currentActivity = (Activity) getIntent().getSerializableExtra(
+				"activity");
+
 		setTheme(R.style.ActionBar);
 		setContentView(R.layout.activity_detail);
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setTitle(currentActivity.getName());
-		
-		currentUser = ((ApplicationHelper)getApplication()).getCurrentUser();
-	
+
+		currentUser = ((ApplicationHelper) getApplication()).getCurrentUser();
+
 		area = (LinearLayout) findViewById(R.id.area_comments);
 		clear = (Button) findViewById(R.id.detail_button_clear);
 		submit = (Button) findViewById(R.id.detail_button_submit);
 		editText = (EditText) findViewById(R.id.detail_comment_text);
-		
+
 		clear.setVisibility(View.INVISIBLE);
-		
+
 		editText.addTextChangedListener(new TextWatcher() {
-			
+
 			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				if(count!=0)
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				if (count != 0)
 					clear.setVisibility(View.VISIBLE);
 				else {
 					clear.setVisibility(View.INVISIBLE);
 				}
 			}
+
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count,
 					int after) {
 
 			}
+
 			@Override
 			public void afterTextChanged(Editable s) {
 			}
@@ -108,16 +110,18 @@ public class DetailActivity extends android.app.Activity {
 		submit.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(currentUser != null)
+				if (currentUser == null)
+					hintUserUnLogin();
+				else if (currentUser.getAuthority() == User.AUTHORITY_UNCHECK)
+					hintUserUnCheck();
+				else
 					submit();
-				else {
-					Toast.makeText(DetailActivity.this, "您尚未登录", Toast.LENGTH_SHORT).show();
-				}
 				editText.clearFocus();
 				editText.setText("");
 			}
+
 		});
-		
+
 		titleTextView = (TextView) findViewById(R.id.title);
 		dateTextView = (TextView) findViewById(R.id.date);
 		locatTextView = (TextView) findViewById(R.id.address);
@@ -126,12 +130,11 @@ public class DetailActivity extends android.app.Activity {
 		reporterTextView = (TextView) findViewById(R.id.reporter);
 		temperatureTextView = (TextView) findViewById(R.id.temperature);
 		imageView = (AsyncImageView) findViewById(R.id.image);
-		
+
 		imageView.asyncLoad(image_url);
-		
-		
+
 		titleTextView.setText(currentActivity.getName());
-		
+
 		try {
 			dateTextView.setText(new SimpleDateFormat("yyyy-MM-dd")
 					.format(currentActivity.getDate()));
@@ -139,62 +142,76 @@ public class DetailActivity extends android.app.Activity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		locatTextView.setText(currentActivity.getAddress());
-		//typeTextView.setText(currentActivity.getType());
-	    //themeTextView.setText(currentActivity.getTheme());
-	    //reporterTextView.setText(currentActivity.getReporterInfo());
-	   // temperatureTextView.setText(currentActivity.getTemperature());		
-		
-		
-		
-	}
-	
-	
 
-	
-	
+		locatTextView.setText(currentActivity.getAddress());
+		// typeTextView.setText(currentActivity.getType());
+		// themeTextView.setText(currentActivity.getTheme());
+		// reporterTextView.setText(currentActivity.getReporterInfo());
+		// temperatureTextView.setText(currentActivity.getTemperature());
+
+	}
+
+	private void hintUserUnLogin() {
+		Toast.makeText(DetailActivity.this, "您尚未登录", Toast.LENGTH_SHORT).show();
+	}
+
+	private void hintUserUnCheck() {
+		Toast.makeText(DetailActivity.this, "您的账户尚未确认", Toast.LENGTH_SHORT)
+				.show();
+	}
 
 	@SuppressLint("NewApi")
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.detail, menu);
-		MenuItem item = menu.findItem(R.id.detail_share);  
+		MenuItem item = menu.findItem(R.id.detail_share);
 		shareActionProvider = (ShareActionProvider) item.getActionProvider();
 		setShareIntent();
 		return true;
 	}
-	
+
 	@SuppressLint("NewApi")
-	private void setShareIntent(){
+	private void setShareIntent() {
 		Intent myIntent = new Intent();
 		myIntent.setAction(Intent.ACTION_SEND);
 		myIntent.putExtra(Intent.EXTRA_TEXT, currentActivity.getName());
 		myIntent.setType("text/plain");
 		shareActionProvider.setShareIntent(myIntent);
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.detail_comment:
-			Intent intent = new Intent(this, CommentActivity.class);
-			intent.putExtra("activity", currentActivity);
-			startActivity(intent);
+			if (currentUser == null)
+				hintUserUnLogin();
+			else if (currentUser.getAuthority() == User.AUTHORITY_UNCHECK)
+				hintUserUnCheck();
+			else {
+				Intent intent = new Intent(this, CommentActivity.class);
+				intent.putExtra("activity", currentActivity);
+				startActivity(intent);
+			}
 			break;
 		case R.id.detail_rating:
-			Intent intent1 = new Intent(this, RatingActivity.class);
-			intent1.putExtra("activity", currentActivity);
-			startActivity(intent1);
+			if (currentUser == null)
+				hintUserUnLogin();
+			else if (currentUser.getAuthority() == User.AUTHORITY_UNCHECK)
+				hintUserUnCheck();
+			else {
+				Intent intent1 = new Intent(this, RatingActivity.class);
+				intent1.putExtra("activity", currentActivity);
+				startActivity(intent1);
+			}
 			break;
 		case R.id.detail_setting:
 			break;
 		case R.id.detail_share:
 			break;
 		case android.R.id.home:
-            finish();
-            return true; 
+			finish();
+			return true;
 		default:
 			break;
 		}
@@ -206,12 +223,13 @@ public class DetailActivity extends android.app.Activity {
 		super.onResume();
 		reload();
 		reDownload();
-		
+
 	}
 
-	private void reload(){
-		List<ContentValues> list = Entity.selectFromSQLite("comment", new String[]{"content"},
-					"ActivityID = ?",new String[]{currentActivity.getId().toString()}, this);
+	private void reload() {
+		List<ContentValues> list = Entity.selectFromSQLite("comment",
+				new String[] { "content" }, "ActivityID = ?",
+				new String[] { currentActivity.getId().toString() }, this);
 		List<Comment> comments = new ArrayList<Comment>();
 		for (ContentValues value : list) {
 			Comment comment = new Comment();
@@ -220,13 +238,13 @@ public class DetailActivity extends android.app.Activity {
 		}
 		addViews(comments);
 	}
-	
-	private void reDownload(){
+
+	private void reDownload() {
 		MessageAdapter adapter = new MessageAdapter() {
 			@Override
 			public void onRcvJSONArray(JSONArray array) {
 				Set<Comment> comments = new HashSet<Comment>();
-				for (int i = 0; i < array.length(); i++) {					
+				for (int i = 0; i < array.length(); i++) {
 					try {
 						Comment comment = new Comment();
 						comment.transJSON(array.getJSONObject(i));
@@ -239,10 +257,11 @@ public class DetailActivity extends android.app.Activity {
 				}
 				Entity.insertIntoSQLite(comments, DetailActivity.this);
 			}
-			
+
 			@Override
 			public void onTimeout() {
-				Toast.makeText(getApplicationContext(), "连接超时", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), "连接超时",
+						Toast.LENGTH_SHORT).show();
 			}
 
 			@Override
@@ -250,43 +269,48 @@ public class DetailActivity extends android.app.Activity {
 				reload();
 			}
 		};
-		
+
 		DatabaseConnector connector = new DatabaseConnector();
 		connector.addParams(DatabaseConnector.METHOD, "GETCOMMENT");
 		connector.addParams("activity_id", currentActivity.getId().toString());
 		connector.asyncConnect(adapter);
 	}
 
-	private void addViews(List<Comment> comments){
+	private void addViews(List<Comment> comments) {
 		area.removeAllViews();
 		for (Comment comment : comments) {
-			View view = LayoutInflater.from(this).inflate(R.layout.item_comment, area,false);	
-			TextView textView = (TextView) view.findViewById(R.id.item_comment_text);
+			View view = LayoutInflater.from(this).inflate(
+					R.layout.item_comment, area, false);
+			TextView textView = (TextView) view
+					.findViewById(R.id.item_comment_text);
 			textView.setText(comment.getContent());
 			area.addView(view);
 		}
 	}
 
-	private void submit(){
+	private void submit() {
 		MessageAdapter adapter = new MessageAdapter() {
 
 			@Override
 			public void onDone(String ret) {
-				Toast.makeText(DetailActivity.this, "评论成功", Toast.LENGTH_SHORT).show();
+				Toast.makeText(DetailActivity.this, "评论成功", Toast.LENGTH_SHORT)
+						.show();
 				reDownload();
 			}
-			
+
 			@Override
 			public void onTimeout() {
-				Toast.makeText(getApplicationContext(), "连接超时", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), "连接超时",
+						Toast.LENGTH_SHORT).show();
 			}
 
 			@Override
 			public void onErrorOccur() {
-				Toast.makeText(DetailActivity.this, "评论失败，请联系管理员", Toast.LENGTH_SHORT).show();
+				Toast.makeText(DetailActivity.this, "评论失败，请联系管理员",
+						Toast.LENGTH_SHORT).show();
 			}
 		};
-		
+
 		DatabaseConnector connector = new DatabaseConnector();
 		connector.addParams(DatabaseConnector.METHOD, "ADDCOMMENT");
 		connector.addParams("user_id", currentUser.getId().toString());
@@ -295,4 +319,3 @@ public class DetailActivity extends android.app.Activity {
 		connector.asyncConnect(adapter);
 	}
 }
-
