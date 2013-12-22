@@ -77,7 +77,6 @@ public class DetailActivity extends android.app.Activity {
 		submit = (Button) findViewById(R.id.detail_button_submit);
 		editText = (EditText) findViewById(R.id.detail_comment_text);
 		
-		
 		clear.setVisibility(View.INVISIBLE);
 		
 		editText.addTextChangedListener(new TextWatcher() {
@@ -179,12 +178,15 @@ public class DetailActivity extends android.app.Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.detail_attention:
-			break;
 		case R.id.detail_comment:
-			Intent intent = new Intent(this, RatingActivity.class);
+			Intent intent = new Intent(this, CommentActivity.class);
 			intent.putExtra("activity", currentActivity);
 			startActivity(intent);
+			break;
+		case R.id.detail_rating:
+			Intent intent1 = new Intent(this, RatingActivity.class);
+			intent1.putExtra("activity", currentActivity);
+			startActivity(intent1);
 			break;
 		case R.id.detail_setting:
 			break;

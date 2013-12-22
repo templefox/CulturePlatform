@@ -119,7 +119,7 @@ public class ClassifyItemAdapter extends BaseAdapter {
 			
 			myViews = new ViewHolder();
 			convertView = LayoutInflater.from(parent.getContext()).inflate(
-					R.layout.item_classify, null);
+					R.layout.item_classify, parent,false);
 			myViews.asyImageView = (AsyncImageView)convertView.findViewById(R.id.item_cla_image);
 			myViews.textViewTitle = (TextView) convertView
 					.findViewById(R.id.item_cla_title);

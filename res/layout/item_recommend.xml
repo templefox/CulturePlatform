@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="200dp"
+    android:layout_margin="3dp"
+    android:background="@drawable/list_selector"
     android:orientation="vertical" >
 
     <com.example.widget.AsyncImageView
         android:id="@+id/item_recommend_image"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="160dp"
         android:layout_gravity="center_horizontal|top"
-        android:src="@drawable/rihanna" />
+        android:src="@drawable/rihanna"/>
 
     <TextView
         android:id="@+id/item_recommend_name"

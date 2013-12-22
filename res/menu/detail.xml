@@ -1,10 +1,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/detail_comment"
+        android:id="@+id/detail_rating"
         android:orderInCategory="1"
         android:showAsAction="ifRoom|withText"
-        android:title="comment" 
+        android:title="rating" 
         android:icon="@drawable/ic_action_half_important"/>
 
 	<item
@@ -15,10 +15,10 @@
         android:actionProviderClass="android.widget.ShareActionProvider"/>
         
 	<item
-        android:id="@+id/detail_attention"
+        android:id="@+id/detail_comment"
         android:orderInCategory="3"
         android:showAsAction="ifRoom|withText"
-        android:title="attention"/>
+        android:title="comment"/>
             	
 	<item
         android:id="@+id/detail_setting"

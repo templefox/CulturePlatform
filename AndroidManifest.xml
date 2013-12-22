@@ -54,6 +54,10 @@
             android:name="com.example.cultureplatform.RatingActivity"
             android:label="@string/title_activity_rating" >
         </activity>
+        <activity
+            android:name="com.example.cultureplatform.CommentActivity"
+            android:label="@string/title_activity_comment" >
+        </activity>
     </application>
 
     <instrumentation

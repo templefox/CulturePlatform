@@ -2,14 +2,17 @@ package com.example.fragment.item;
 
 import java.util.List;
 
+import com.example.cultureplatform.DetailActivity;
 import com.example.cultureplatform.R;
 import com.example.database.DatabaseConnector;
 import com.example.database.data.Activity;
 import com.example.widget.AsyncImageView;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
@@ -63,7 +66,18 @@ public class RecommendItemAdapter extends BaseAdapter{
 		}
 		
 		
-		Activity activity = activities.get(position);
+		final Activity activity = activities.get(position);
+		
+		convertView.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(v.getContext(), DetailActivity.class);
+				intent.putExtra("activity", activity);
+				v.getContext().startActivity(intent);
+				return;
+			}
+		});
 		
 		String image_url = DatabaseConnector.target_url+activity.getPictureUrl();
 		viewHolder.imageView.asyncLoad(image_url);
