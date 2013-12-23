@@ -8,5 +8,10 @@
     <style name="AppBaseTheme" parent="android:Theme.Holo.Light.DarkActionBar">
         <!-- API 14 theme customizations can go here. -->
     </style>
-
+    
+    <style name="MyActionBarTabStyle" parent="@android:style/Widget.Holo.Light.ActionBar.TabBar">
+        <item name="android:background">@drawable/actionbar_tab_selector</item>
+        <item name="android:paddingLeft">16dp</item>
+    	<item name="android:paddingRight">16dp</item>
+    </style>
 </resources>

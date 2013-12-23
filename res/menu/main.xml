@@ -4,12 +4,13 @@
         android:showAsAction="always|withText"
         android:orderInCategory="2">
         <menu>
-            <item android:id="@+id/menu_account_user_manager" 
+            <item android:id="@+id/action_bar_add_activity" 
                 android:showAsAction="ifRoom"
                 
-                android:title="功能2"/>
+                android:title="添加活动"/>
 
-            <item android:id="@+id/menu_search" android:showAsAction="ifRoom"
+            <item android:id="@+id/menu_search"                
+                android:showAsAction="ifRoom"
                 android:title="功能3"/>
 
          </menu>
@@ -20,7 +21,7 @@
         android:orderInCategory="1"
         android:showAsAction="ifRoom"
         android:title="搜索"
-        android:icon="@+drawable/ic_action_search"/>
+        android:icon="@drawable/ic_action_search"/>
 
 <item android:id="@+id/action_bar_user" 
     android:title="用户" 

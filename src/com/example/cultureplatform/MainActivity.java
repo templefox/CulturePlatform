@@ -1,5 +1,6 @@
 package com.example.cultureplatform;
 
+import com.example.database.data.User;
 import com.example.fragment.CalendarFragment;
 import com.example.fragment.ClassifyFragment;
 import com.example.fragment.RecommendFragment;
@@ -24,6 +25,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 //github test
 public class MainActivity extends Activity{
@@ -44,12 +46,13 @@ public class MainActivity extends Activity{
 		setTheme(R.style.ActionBar);
 		setContentView(R.layout.activity_main);
 		
-/*		为了测验模拟登录
+/*		为了测验模拟登录*/
 		User user = new User();
 		user.setId(1);
 		user.setName("test@test");
+		user.setAuthority(User.AUTHORITY_AUTHORIZED);
 		((ApplicationHelper)this.getApplication()).setCurrentUser(user);
-		测验结束*/
+/*		测验结束*/
 		
 		final ActionBar actionBar = getActionBar();
 		viewPager = (InterceptableViewPager) findViewById(R.id.pager);
@@ -82,19 +85,6 @@ public class MainActivity extends Activity{
 					}
 				}
 				return fragment;
-				/*switch (arg0) {
-				case 0:
-					fragment = new RecommendFragment();
-					break;
-				case 1:
-					fragment = new ClassifyFragment();
-					break;
-				default:
-					fragment = new TestFragment();
-					((TestFragment)fragment).setA(arg0);
-					break;
-				}
-				return fragment;*/
 			}
 
 			@Override
@@ -183,14 +173,14 @@ public class MainActivity extends Activity{
 		switch (item.getItemId()) {
 		case R.id.action_bar_user:
 			return intent2(UserActivity.class);
-		case R.id.menu_account_user_manager:
-		{
-			
-			Fragment classifyFragment = 
-					(Fragment) fragmentPagerAdapter.instantiateItem(viewPager, getActionBar().getSelectedNavigationIndex());
-			if(classifyFragment instanceof ClassifyFragment)	
-				((ClassifyFragment)classifyFragment).switchPanel();
-		}
+		case R.id.action_bar_add_activity:
+			if(((ApplicationHelper)this.getApplication()).getUserAuthority() == User.AUTHORITY_AUTHORIZED
+			|| ((ApplicationHelper)this.getApplication()).getUserAuthority() == User.AUTHORITY_ULTIMATED)
+				return intent2(AddActActivity.class);
+			else {
+				Toast.makeText(this, "没有足够的权限", Toast.LENGTH_SHORT).show();
+				return super.onOptionsItemSelected(item);
+			}
 		case R.id.action_bar_search:
 			return intent2(SearchActivity.class);
 		default:

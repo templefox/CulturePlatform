@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 
 /**
@@ -101,6 +102,12 @@ public class RecommendFragment extends FragmentHelper {
 				}
 				Entity.insertIntoSQLite(activities, getActivity());
 			}
+			
+			@Override
+			public void onTimeout() {
+				Toast.makeText(getActivity(), "Á¬½Ó³¬Ê±", Toast.LENGTH_SHORT).show();
+			}
+			
 			@Override
 			public void onFinish() {
 				reLoad();

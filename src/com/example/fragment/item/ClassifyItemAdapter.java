@@ -12,8 +12,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
+
+import com.example.cultureplatform.ApplicationHelper;
 import com.example.cultureplatform.DetailActivity;
+import com.example.cultureplatform.LoginActivity;
 import com.example.cultureplatform.R;
 import com.example.database.DatabaseConnector;
 import com.example.database.MessageAdapter;
@@ -49,6 +53,13 @@ public class ClassifyItemAdapter extends BaseAdapter {
 				boolean isChecked) {
 
 			if (user == null) {
+				buttonView.setChecked(false);
+				Toast.makeText(buttonView.getContext(), "登录后可进行关注", Toast.LENGTH_SHORT).show();
+				return;
+			}
+			if(user.getAuthority()==User.AUTHORITY_UNCHECK){
+				buttonView.setChecked(false);
+				Toast.makeText(buttonView.getContext(), "您的账户尚未确认", Toast.LENGTH_SHORT).show();
 				return;
 			}
 			DatabaseConnector connector = new DatabaseConnector();
@@ -66,7 +77,7 @@ public class ClassifyItemAdapter extends BaseAdapter {
 					Entity.insertIntoSQLite(attention, buttonView.getContext());
 					buttonView.setEnabled(false);
 				}
-
+				
 				@Override
 				public void onErrorOccur() {
 					// TODO Auto-generated method stub
@@ -117,7 +128,7 @@ public class ClassifyItemAdapter extends BaseAdapter {
 			
 			myViews = new ViewHolder();
 			convertView = LayoutInflater.from(parent.getContext()).inflate(
-					R.layout.item_classify, null);
+					R.layout.item_classify, parent,false);
 			myViews.asyImageView = (AsyncImageView)convertView.findViewById(R.id.item_cla_image);
 			myViews.textViewTitle = (TextView) convertView
 					.findViewById(R.id.item_cla_title);
@@ -166,9 +177,15 @@ public class ClassifyItemAdapter extends BaseAdapter {
 			myViews.toggleButton.setOnCheckedChangeListener(null);
 			myViews.toggleButton.setChecked(true);
 			myViews.toggleButton.setEnabled(false);
+		}else {
+			myViews.toggleButton.setOnCheckedChangeListener(new onTakeAttentionListener(
+				currentActivity, 
+				((ApplicationHelper)parent.getContext().getApplicationContext()).getCurrentUser()
+				));
+			myViews.toggleButton.setChecked(false);
+			myViews.toggleButton.setEnabled(true);
 		}
-		myViews.toggleButton.setOnCheckedChangeListener(new onTakeAttentionListener(
-				currentActivity, null));
+
 
 		myViews.textViewTitle.setText(currentActivity.getName());
 		myViews.textViewLocation.setText(currentActivity.getAddress());

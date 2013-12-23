@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +18,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
@@ -32,7 +34,7 @@ import android.util.Log;
 
 public class DatabaseConnector {
 	static public String target_url = "http://templefox.xicp.net:998/";
-	//static public String target_url = "http://192.168.1.104:998/";
+	//static public String target_url = "http://192.168.1.115:998/";
 	static public String METHOD = "METHOD";
 	static private int TIME_OUT = 3000;
 	private Map<String, String>	params = new HashMap<String, String>();
@@ -63,7 +65,7 @@ public class DatabaseConnector {
 		{
 			HttpParams param = new BasicHttpParams();
 			HttpConnectionParams.setConnectionTimeout(param, TIME_OUT);
-			//HttpConnectionParams.setSoTimeout(param, 4000);
+			HttpConnectionParams.setSoTimeout(param, TIME_OUT);
 			
 			HttpClient client = new DefaultHttpClient(param);
 			
@@ -84,7 +86,7 @@ public class DatabaseConnector {
 				json = sb.toString();
 			}
 			Message msg = new Message();
-	        Bundle b = new Bundle();// 存放数据
+	        Bundle b = new Bundle();
 	        b.putString(null, json);
 	        msg.setData(b);
 			handler.sendMessage(msg);
@@ -92,14 +94,21 @@ public class DatabaseConnector {
 		} catch (ClientProtocolException e)
 		{
 			Log.e("HttpConnectionUtil", e.getMessage(), e);
-		} catch (IOException e)
+		} catch (UnknownHostException e)
 		{
 			Message msg = new Message();
-	        Bundle b = new Bundle();// 存放数据
+	        Bundle b = new Bundle();
 	        b.putString(null, "timeout");
 	        msg.setData(b);
 			handler.sendMessage(msg);
-		} catch(Exception e)
+		}catch (ConnectTimeoutException e) {
+			Message msg = new Message();
+	        Bundle b = new Bundle();
+	        b.putString(null, "timeout");
+	        msg.setData(b);
+			handler.sendMessage(msg);
+		}
+		catch(Exception e)
 		{
 			Log.e("HttpConnectionUtil", e.getMessage(), e);
 		} 

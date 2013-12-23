@@ -259,6 +259,11 @@ public class LoginActivity extends Activity {
 		}
 		
 		@Override
+		public void onTimeout() {
+			Toast.makeText(LoginActivity.this, "连接超时", Toast.LENGTH_SHORT).show();
+		}
+
+		@Override
 		public void onEmptyReceived() {
 			final EditText editText = new EditText(LoginActivity.this);
 			editText.setHint("请再次输入密码");
@@ -309,6 +314,11 @@ public class LoginActivity extends Activity {
 			helper.getCurrentUser().setName(ret);
 			setAutoLogin();
 			finish();
+		}
+		
+		@Override
+		public void onTimeout() {
+			Toast.makeText(getApplicationContext(), "连接超时", Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
