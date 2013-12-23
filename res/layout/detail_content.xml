@@ -15,21 +15,22 @@
             android:layout_alignParentTop="true"
             android:layout_marginTop="10dp"
             android:text="Medium Text"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textColor="#FF6600"
+            android:textSize="25dp" />
 
         <com.example.widget.AsyncImageView
             android:id="@+id/image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxHeight="200dp" 
-            android:maxWidth="160dp" 
-            android:adjustViewBounds="true"
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/title"
             android:layout_marginTop="10dp"
+            android:adjustViewBounds="true"
+            android:maxHeight="200dp"
+            android:maxWidth="160dp"
             android:src="@drawable/init" />
 
-        <TextView
+        <com.example.widget.ImageTextView
             android:id="@+id/date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -37,69 +38,65 @@
             android:layout_marginLeft="20dp"
             android:layout_marginTop="5dp"
             android:layout_toRightOf="@+id/image"
+            android:gravity="center_vertical"
             android:text="Small Text"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textIsSelectable="true" />
+            android:textIsSelectable="true"
+            android:textSize="16dp" />
 
-        <TextView
+        <com.example.widget.ImageTextView
             android:id="@+id/address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/date"
             android:layout_below="@+id/date"
             android:layout_marginTop="5dp"
+            android:gravity="center_vertical"
             android:text="Small Text"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:textSize="16dp" />
 
-        <TextView
+        <com.example.widget.ImageTextView
             android:id="@+id/type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/address"
             android:layout_below="@+id/address"
             android:layout_marginTop="5dp"
+            android:gravity="center_vertical"
             android:text="Small Text"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:textSize="16dp" />
 
-        <TextView
+        <com.example.widget.ImageTextView
             android:id="@+id/theme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/type"
             android:layout_below="@+id/type"
             android:layout_marginTop="5dp"
+            android:gravity="center_vertical"
             android:text="Small Text"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:textSize="16dp" />
 
-        <TextView
+        <com.example.widget.ImageTextView
             android:id="@+id/reporter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/theme"
             android:layout_below="@+id/theme"
             android:layout_marginTop="5dp"
+            android:gravity="center_vertical"
             android:text="Small Text"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:textSize="16dp" />
 
-        <TextView
+        <com.example.widget.ImageTextView
             android:id="@+id/temperature"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignRight="@+id/reporter"
+            android:layout_alignLeft="@+id/reporter"
             android:layout_below="@+id/reporter"
             android:layout_marginTop="5dp"
+            android:gravity="center_vertical"
             android:text="Small Text"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-
-        <TextView
-            android:id="@+id/textView9"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/temperature"
-            android:layout_below="@+id/temperature"
-            android:layout_marginTop="5dp"
-            android:text="Small Text"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:textSize="16dp" />
     </RelativeLayout>
 
     <View
@@ -109,10 +106,20 @@
         android:background="?android:attr/listDivider" />
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/detail_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:text="活动详情"
+        android:textColor="#FF6600"
+        android:textSize="22dp" />
+
+    <TextView
+        android:id="@+id/detail_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="活动详情"
+        android:textSize="16dp" 
+        android:textColor="#0066FF"/>
 
     <View
         android:layout_width="fill_parent"
@@ -121,10 +128,20 @@
         android:background="?android:attr/listDivider" />
 
     <TextView
-        android:id="@+id/textView10"
+        android:id="@+id/procedure_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:text="活动流程"
+        android:textColor="#FF6600"
+        android:textSize="22dp" />
+
+    <TextView
+        android:id="@+id/procedure"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="活动流程"
+        android:textSize="16dp" 
+        android:textColor="#0066FF"/>
 
     <View
         android:layout_width="fill_parent"

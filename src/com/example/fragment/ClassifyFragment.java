@@ -356,9 +356,9 @@ public class ClassifyFragment extends FragmentHelper {
 		}
 
 		List<ContentValues> list = Entity.selectFromSQLite("activity",
-				new String[] { "id", "name", "address","picture_url","date",
-						"activity.date" }, "type like ?",
-				new String[] { type }, getActivity());
+				new String[] { "id", "name", "address", "picture_url", "date",
+						"type", "theme", "temperature", "reporter_info","content","procedure" },
+				"type like ?", new String[] { type }, getActivity());
 
 		List<ContentValues> attentionList = Entity.selectFromSQLite(
 				"attention", new String[] { "ActivityID" }, getActivity());
@@ -370,11 +370,27 @@ public class ClassifyFragment extends FragmentHelper {
 			activity.setAddress(contentValue.getAsString("address"));
 			try {
 				activity.setDate(new SimpleDateFormat("yyyy-MM-dd").parse(contentValue.getAsString("date")));
+				
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			try {
+				activity.setTime(new SimpleDateFormat("HH:mm:ss").parse(contentValue.getAsString("time")));
+				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 			activity.setPictureUrl(contentValue.getAsString("picture_url"));
+			activity.setReporterInfo(contentValue.getAsString("reporter_info"));
+			activity.setTheme(contentValue.getAsString("theme"));
+			activity.setType(contentValue.getAsString("type"));
+			activity.setTemperature(Integer.parseInt(contentValue.getAsString("temperature")));
+			activity.setContent(contentValue.getAsString("content"));
+			activity.setProcedure(contentValue.getAsString("procedure"));
+			
 			activity.setisAttention(0);
 			for (ContentValues attentionCV : attentionList) {
 				if (activity.getId() == attentionCV.getAsInteger("ActivityID")) {

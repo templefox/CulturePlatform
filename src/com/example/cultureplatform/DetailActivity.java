@@ -16,11 +16,12 @@ import com.example.database.data.Comment;
 import com.example.database.data.Entity;
 import com.example.database.data.User;
 import com.example.widget.AsyncImageView;
-
+import com.example.widget.ImageTextView;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -45,16 +46,18 @@ public class DetailActivity extends android.app.Activity {
 	private User currentUser;
 	
 	private TextView titleTextView;
-	private TextView dateTextView;
-	private TextView locatTextView;
-	private TextView typeTextView;
-	private TextView themeTextView;
-	private TextView reporterTextView;
-	private TextView temperatureTextView;
+	private ImageTextView dateTextView;
+	private ImageTextView locatTextView;
+	private ImageTextView typeTextView;
+	private ImageTextView themeTextView;
+	private ImageTextView reporterTextView;
+	private ImageTextView temperatureTextView;
+	private TextView contentTextView;
+	private TextView procedureTextView;
 	
 	private AsyncImageView imageView;
-	String image_url = "http://i9.hexunimg.cn/2012-07-12/143481552.jpg";
-	
+	//String image_url = "http://i9.hexunimg.cn/2012-07-12/143481552.jpg";
+     String image_url = "";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -115,14 +118,16 @@ public class DetailActivity extends android.app.Activity {
 				editText.setText("");
 			}
 		});
-		
+		image_url = DatabaseConnector.target_url+currentActivity.getPictureUrl();
 		titleTextView = (TextView) findViewById(R.id.title);
-		dateTextView = (TextView) findViewById(R.id.date);
-		locatTextView = (TextView) findViewById(R.id.address);
-		typeTextView = (TextView) findViewById(R.id.type);
-		themeTextView = (TextView) findViewById(R.id.theme);
-		reporterTextView = (TextView) findViewById(R.id.reporter);
-		temperatureTextView = (TextView) findViewById(R.id.temperature);
+		dateTextView = (ImageTextView) findViewById(R.id.date);
+		locatTextView = (ImageTextView) findViewById(R.id.address);
+		typeTextView = (ImageTextView) findViewById(R.id.type);
+		themeTextView = (ImageTextView) findViewById(R.id.theme);
+		reporterTextView = (ImageTextView) findViewById(R.id.reporter);
+		temperatureTextView = (ImageTextView) findViewById(R.id.temperature);
+		contentTextView = (TextView) findViewById(R.id.detail_content);
+		procedureTextView = (TextView) findViewById(R.id.procedure);
 		imageView = (AsyncImageView) findViewById(R.id.image);
 		
 		imageView.asyncLoad(image_url);
@@ -131,19 +136,29 @@ public class DetailActivity extends android.app.Activity {
 		titleTextView.setText(currentActivity.getName());
 		
 		try {
-			dateTextView.setText(new SimpleDateFormat("yyyy-MM-dd")
-					.format(currentActivity.getDate()));
+			//dateTextView.setText(new SimpleDateFormat("yyyy-MM-dd")
+				//	.format(currentActivity.getDate()));
+			dateTextView.setValue("<img src='calendar'/> " + new SimpleDateFormat("yyyy-MM-dd")
+					.format(currentActivity.getDate()) + new SimpleDateFormat("HH:mm:ss").format(currentActivity.getTime()));		
+					
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		locatTextView.setText(currentActivity.getAddress());
-		//typeTextView.setText(currentActivity.getType());
-	    //themeTextView.setText(currentActivity.getTheme());
-	    //reporterTextView.setText(currentActivity.getReporterInfo());
-	   // temperatureTextView.setText(currentActivity.getTemperature());		
+		//System.out.println("Ö÷ÌâÊÇ£º " + currentActivity.getTheme());
 		
+		
+		locatTextView.setValue("<img src='home'/> "+ currentActivity.getAddress() );
+		typeTextView.setValue("<img src='tag' /> " + currentActivity.getType());
+	    themeTextView.setValue("<img src='favorite' /> " + currentActivity.getTheme());
+	    reporterTextView.setValue("<img src='user' /> " + currentActivity.getReporterInfo());
+	    temperatureTextView.setValue("<img src='heart' /> " + Integer.toString(currentActivity.getTemperature()) + "¡æ");	
+	    temperatureTextView.setTextColor(Color.RED);
+	    contentTextView.setText(currentActivity.getContent());
+	    procedureTextView.setText(currentActivity.getProcedure());
+	    
+	
 		
 		
 	}

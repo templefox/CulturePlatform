@@ -252,6 +252,11 @@ public class Activity extends Entity implements java.io.Serializable {
 		activity.setName(obj.getString("name"));
 		activity.setType(obj.getString("type"));
 		activity.setPictureUrl(obj.getString("picture_url"));
+		activity.setTheme(obj.getString("theme"));
+		activity.setReporterInfo(obj.getString("reporter_info"));
+		activity.setTemperature(obj.getInt("temperature"));
+		activity.setProcedure(obj.getString("procedure"));
+		
 		activity.setisAttention(0);
 		try {
 			activity.setTime(new SimpleDateFormat("HH:mm:ss").parse(obj.getString("time")));
@@ -277,6 +282,11 @@ public class Activity extends Entity implements java.io.Serializable {
 		value.put("locationID", location);
 		value.put("organiserID", user);
 		value.put("picture_url", pictureUrl);
+		value.put("theme", theme);
+		value.put("reporter_info", reporterInfo);
+		value.put("temperature", temperature);
+		value.put("procedure", procedure);
+		
 		try {
 			value.put("time", new SimpleDateFormat("HH:mm:ss").format(time));
 			value.put("date", new SimpleDateFormat("yyyy-MM-dd").format(date));
