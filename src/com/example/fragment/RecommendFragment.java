@@ -1,6 +1,7 @@
 package com.example.fragment;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -17,6 +18,7 @@ import com.example.database.data.Activity;
 import com.example.database.data.Entity;
 import com.example.fragment.item.RecommendItemAdapter;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -124,15 +126,40 @@ public class RecommendFragment extends FragmentHelper {
 	}
 
 
+	@SuppressLint("SimpleDateFormat")
 	@Override
 	public void reLoad() {
 		List<Activity> activities = new ArrayList<Activity>();
-		List<ContentValues> list = Entity.selectFromSQLite("activity", new String[]{"id","name","picture_url"}, getActivity());
-		for(ContentValues contentValue: list){
+		List<ContentValues> list = Entity.selectFromSQLite("activity", 
+				new String[] { "id", "name", "address", "picture_url", "date",
+				"type", "theme", "temperature", "reporter_info","content","procedure" }, getActivity());
+		for (ContentValues contentValue : list) {
 			Activity activity = new Activity();
 			activity.setId(contentValue.getAsInteger("id"));
 			activity.setName(contentValue.getAsString("name"));
+			activity.setAddress(contentValue.getAsString("address"));
+			try {
+				activity.setDate(new SimpleDateFormat("yyyy-MM-dd").parse(contentValue.getAsString("date")));
+				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				activity.setTime(new SimpleDateFormat("HH:mm:ss").parse(contentValue.getAsString("time")));
+				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 			activity.setPictureUrl(contentValue.getAsString("picture_url"));
+			activity.setReporterInfo(contentValue.getAsString("reporter_info"));
+			activity.setTheme(contentValue.getAsString("theme"));
+			activity.setType(contentValue.getAsString("type"));
+			activity.setTemperature(Integer.parseInt(contentValue.getAsString("temperature")));
+			activity.setContent(contentValue.getAsString("content"));
+			activity.setProcedure(contentValue.getAsString("procedure"));
 			activities.add(activity);
 		}
 		freshList(activities);

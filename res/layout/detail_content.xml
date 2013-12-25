@@ -20,14 +20,17 @@
 
         <com.example.widget.AsyncImageView
             android:id="@+id/image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="200dp"
+            android:layout_height="160dp"
             android:layout_alignParentLeft="true"
+            android:scaleType="centerInside"
             android:layout_below="@+id/title"
             android:layout_marginTop="10dp"
             android:adjustViewBounds="true"
             android:maxHeight="200dp"
             android:maxWidth="160dp"
+            android:minHeight="200dp"
+            android:minWidth="160dp"
             android:src="@drawable/init" />
 
         <com.example.widget.ImageTextView

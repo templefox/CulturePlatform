@@ -51,7 +51,8 @@ public class ClassifyItemAdapter extends BaseAdapter {
 		@Override
 		public void onCheckedChanged(final CompoundButton buttonView,
 				boolean isChecked) {
-
+			if(isChecked == false) return;
+			
 			if (user == null) {
 				buttonView.setChecked(false);
 				Toast.makeText(buttonView.getContext(), "登录后可进行关注", Toast.LENGTH_SHORT).show();
