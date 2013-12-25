@@ -14,7 +14,7 @@ public abstract class MessageAdapter {
 	
 	
 	public void onDone(String ret) {}
-	public void onErrorOccur() {}
+	public void onErrorOccur(String ret) {}
 	public void onFinish() {}
 	public void onTimeout() {}
 }

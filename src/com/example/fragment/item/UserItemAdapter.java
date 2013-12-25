@@ -1,16 +1,24 @@
 package com.example.fragment.item;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
+import com.example.cultureplatform.ApplicationHelper;
+import com.example.cultureplatform.DetailActivity;
 import com.example.cultureplatform.R;
+import com.example.database.DatabaseConnector;
 import com.example.database.data.Activity;
+import com.example.widget.AsyncImageView;
 
 public class UserItemAdapter extends BaseAdapter{
 	List<Activity> activities;
@@ -50,22 +58,85 @@ public class UserItemAdapter extends BaseAdapter{
 		return position;
 	}
 
+
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO 在此初始化每一个item内的内容，添加item的交互功能。
 
-		if(convertView == null){
-			convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_user_frag, null);
+		ViewHolder myViews;
+		
+		
+		if (convertView == null) {
+			
+			myViews = new ViewHolder();
+			convertView = LayoutInflater.from(parent.getContext()).inflate(
+					R.layout.item_classify, parent,false);
+			myViews.asyImageView = (AsyncImageView)convertView.findViewById(R.id.item_cla_image);
+			myViews.textViewTitle = (TextView) convertView
+					.findViewById(R.id.item_cla_title);
+			myViews.textViewLocation =  (TextView) convertView
+					.findViewById(R.id.item_cla_location);
+			myViews.textViewDate = (TextView) convertView
+					.findViewById(R.id.item_cla_date);
+			myViews.toggleButton = (ToggleButton) convertView
+					.findViewById(R.id.item_cla_attention);
+			convertView.setTag(myViews);
+			
+			
+		}else {
+			myViews = (ViewHolder ) convertView.getTag();
+			myViews.asyImageView.cancelTask();
 		}
 		
-		Button button = (Button) convertView.findViewById(R.id.item_user_button);
-		TextView textView = (TextView) convertView.findViewById(R.id.item_user_name);
-					
-		Activity currentActivity = activities.get(position);
-				
-		button.setText(currentActivity.getName());
-		textView.setText(currentActivity.getName());
+		if(! myViews.asyImageView.getDrawable().equals(R.drawable.rihanna)){
+			myViews.asyImageView.setImageResource(R.drawable.rihanna);
+		}
 		
+		
+		
+		final Activity currentActivity = activities.get(position);
+
+		String image_url = DatabaseConnector.target_url+currentActivity.getPictureUrl();
+		//String image_url = "http://i9.hexunimg.cn/2012-07-12/143481552.jpg";
+
+		
+		myViews.asyImageView.asyncLoad(image_url);
+
+		
+
+		convertView.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(v.getContext(), DetailActivity.class);
+				intent.putExtra("activity", currentActivity);
+				v.getContext().startActivity(intent);
+				return;
+			}
+		});
+
+
+		myViews.toggleButton.setVisibility(View.GONE);
+
+
+		myViews.textViewTitle.setText(currentActivity.getName());
+		myViews.textViewLocation.setText(currentActivity.getAddress());
+		try {
+			myViews.textViewDate.setText(new SimpleDateFormat("yyyy-MM-dd").format(currentActivity.getDate()));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		return convertView;
+	}
+	
+	private class ViewHolder {
+		TextView textViewTitle;
+		TextView textViewLocation;
+		TextView textViewDate;
+		ToggleButton toggleButton;
+		AsyncImageView asyImageView;
+		
 	}
 }

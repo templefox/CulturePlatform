@@ -79,9 +79,9 @@ public class ClassifyItemAdapter extends BaseAdapter {
 				}
 				
 				@Override
-				public void onErrorOccur() {
+				public void onErrorOccur(String ret) {
 					// TODO Auto-generated method stub
-					super.onErrorOccur();
+					super.onErrorOccur(ret);
 				}
 			});
 		}

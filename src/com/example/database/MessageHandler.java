@@ -42,10 +42,10 @@ public class MessageHandler extends Handler {
 			//数据库连接错误
 			Toast.makeText(activity.getApplicationContext(), "连接错误，请检查网络连接和服务器状态", Toast.LENGTH_SHORT).show();
 		}
-		else if(get.equals("ERROR")) 
+		else if(get.startsWith("ERROR")) 
 		{
 			//数据库操作错误
-			messageAdapter.onErrorOccur();
+			messageAdapter.onErrorOccur(get.substring(5));
 		}
 		else if(get.startsWith("DONE")) {
 			//数据库操作成功

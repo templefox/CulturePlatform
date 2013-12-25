@@ -2,33 +2,89 @@ package com.example.cultureplatform;
 
 import java.io.FileNotFoundException;
 
+import com.example.database.DatabaseConnector;
+import com.example.database.MessageAdapter;
+import com.example.database.data.User;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 public class CommentActivity extends Activity {
 	private ImageView imageView;
 	private String imagePath;
+	private Button submit;
+	private EditText content;
+	private com.example.database.data.Activity currentActivity;
+	private User currentUser;
+	private ProgressDialog progressDialog;
+	
+	private OnClickListener onSubmit = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			MessageAdapter adapter = new MessageAdapter() {
+
+				@Override
+				public void onDone(String ret) {
+					progressDialog.dismiss();
+					Toast.makeText(getApplicationContext(), "提交成功", Toast.LENGTH_LONG).show();
+					finish();
+				}
+
+				@Override
+				public void onErrorOccur(String ret) {
+					// TODO Auto-generated method stub
+					super.onErrorOccur(ret);
+				}
+
+				@Override
+				public void onTimeout() {
+					// TODO Auto-generated method stub
+					super.onTimeout();
+				}
+			};
+			DatabaseConnector connector = new DatabaseConnector();
+			connector.addParams(DatabaseConnector.UPLOAD, "SETCOMMENT");
+			connector.addParams("user_id", currentUser.getId().toString());
+			connector.addParams("activity_id", currentActivity.getId().toString());
+			connector.addParams("content", content.getText().toString());
+			connector.asyncUpload(BitmapFactory.decodeFile(imagePath), adapter);
+			progressDialog = ProgressDialog.show(CommentActivity.this, "表单提交", "上传中，请稍后...");
+		}
+	};
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setTheme(R.style.ActionBar);
 		setContentView(R.layout.activity_comment);
 		
+		currentActivity = (com.example.database.data.Activity) getIntent().getSerializableExtra(
+				"activity");
+		currentUser = ((ApplicationHelper)getApplication()).getCurrentUser();
+		
+		content = (EditText) findViewById(R.id.comment_editText);
 		imageView = (ImageView) findViewById(R.id.comment_imageView);
+		submit = (Button) findViewById(R.id.comment_submit);
+		submit.setOnClickListener(onSubmit);
 		imageView.setOnClickListener(new OnClickListener(){
 
 			@Override
@@ -45,7 +101,7 @@ public class CommentActivity extends Activity {
 				                startActivityForResult(Intent.createChooser(intent, "选择图片"), 0);   
 				            }else{  
 				                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);    
-				                startActivityForResult(intent, 1);    
+				                startActivityForResult(intent, 1);
 				            }  
 				        }  
 				    })  
@@ -53,6 +109,7 @@ public class CommentActivity extends Activity {
 			}
 			
 		});
+		
 	}
 
 	@Override

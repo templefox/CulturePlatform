@@ -327,7 +327,7 @@ private ShareActionProvider shareActionProvider;
 			}
 
 			@Override
-			public void onErrorOccur() {
+			public void onErrorOccur(String ret) {
 				Toast.makeText(DetailActivity.this, "评论失败，请联系管理员",
 						Toast.LENGTH_SHORT).show();
 			}

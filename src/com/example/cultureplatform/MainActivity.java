@@ -1,5 +1,7 @@
 package com.example.cultureplatform;
 
+import com.example.database.DatabaseConnector;
+import com.example.database.MessageAdapter;
 import com.example.database.data.User;
 import com.example.fragment.CalendarFragment;
 import com.example.fragment.ClassifyFragment;
@@ -15,6 +17,8 @@ import android.app.FragmentTransaction;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 
@@ -46,13 +50,29 @@ public class MainActivity extends Activity{
 		setTheme(R.style.ActionBar);
 		setContentView(R.layout.activity_main);
 		
-/*		为了测验模拟登录*/
+/*		为了测验模拟登录
 		User user = new User();
 		user.setId(1);
 		user.setName("test@test");
 		user.setAuthority(User.AUTHORITY_AUTHORIZED);
 		((ApplicationHelper)this.getApplication()).setCurrentUser(user);
-/*		测验结束*/
+		测验结束*/
+		
+		
+		//test
+		/*Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.init);
+		MessageAdapter callback = new MessageAdapter(){
+
+			@Override
+			public void onDone(String ret) {
+				// TODO Auto-generated method stub
+				Toast.makeText(getApplicationContext(), "Done", Toast.LENGTH_SHORT).show();
+			}
+			
+		};
+		DatabaseConnector databaseConnector = new DatabaseConnector();
+		databaseConnector.asyncUpload(bitmap, callback);*/
+		
 		
 		final ActionBar actionBar = getActionBar();
 		viewPager = (InterceptableViewPager) findViewById(R.id.pager);

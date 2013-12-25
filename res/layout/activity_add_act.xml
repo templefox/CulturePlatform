@@ -14,7 +14,7 @@
         tools:context=".AddActActivity" >
 
         <EditText
-            android:id="@+id/editText1"
+            android:id="@+id/add_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -41,7 +41,7 @@
             android:inputType="textWebEditText" />
 
         <EditText
-            android:id="@+id/editText6"
+            android:id="@+id/add_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -56,7 +56,15 @@
             android:hint="类别" />
 
         <EditText
-            android:id="@+id/editText3"
+            android:id="@+id/add_reporter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="演讲人"
+            android:inputType="textWebEditText" />
+        
+        <EditText
+            android:id="@+id/add_theme"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -64,7 +72,7 @@
             android:inputType="textWebEditText" />
 
         <EditText
-            android:id="@+id/editText5"
+            android:id="@+id/add_intro"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -72,7 +80,7 @@
             android:inputType="textMultiLine" />
 
         <EditText
-            android:id="@+id/editText4"
+            android:id="@+id/add_rout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -80,7 +88,7 @@
             android:inputType="textMultiLine" />
 
         <Button
-            android:id="@+id/button1"
+            android:id="@+id/add_submit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"

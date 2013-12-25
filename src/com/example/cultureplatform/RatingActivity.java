@@ -75,7 +75,7 @@ public class RatingActivity extends android.app.Activity {
 				}
 
 				@Override
-				public void onErrorOccur() {
+				public void onErrorOccur(String ret) {
 					
 				}
 				

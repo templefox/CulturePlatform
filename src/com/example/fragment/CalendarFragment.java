@@ -27,6 +27,7 @@ public class CalendarFragment extends FragmentHelper {
 	private View view_yes;
 	private View view_no;
 	private User currentUser;
+	private boolean lock = false;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -68,18 +69,7 @@ public class CalendarFragment extends FragmentHelper {
 	
 	@Override
 	public void onStart() {
-		currentUser = ((ApplicationHelper)this.getActivity().getApplication()).getCurrentUser();
-		
-		if(currentUser == null){
-			view_yes.setVisibility(View.GONE);
-			view_no.setVisibility(View.VISIBLE);
-		}
-		else{
-			view_yes.setVisibility(View.VISIBLE);
-			view_no.setVisibility(View.GONE);
-			if(firstIn()){}		
-			reLoad();
-		}
+		initUserView();
 		
 		
 		super.onStart();
@@ -103,6 +93,31 @@ public class CalendarFragment extends FragmentHelper {
 			activities.add(activity);
 		}
 		freshList(activities);
+	}
+
+	@Override
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+		// TODO Auto-generated method stub
+		if(isVisibleToUser&&!lock)
+		{
+			initUserView();
+			lock = true;
+		}
+	}
+
+	private void initUserView() {
+		currentUser = ((ApplicationHelper)this.getActivity().getApplication()).getCurrentUser();
+		
+		if(currentUser == null){
+			view_yes.setVisibility(View.GONE);
+			view_no.setVisibility(View.VISIBLE);
+		}
+		else{
+			view_yes.setVisibility(View.VISIBLE);
+			view_no.setVisibility(View.GONE);
+			if(firstIn()){}		
+			reLoad();
+		}
 	}
 
 	@Override

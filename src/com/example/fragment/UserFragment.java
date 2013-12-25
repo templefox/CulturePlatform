@@ -27,8 +27,9 @@ public class UserFragment extends FragmentHelper {
 	private View yesUser;
 	private User currentUser;
 	private ListView listView;
+	private boolean lock = false;
 	//private UserItemAdapter itemAdapter = new UserItemAdapter(null);
-	private ClassifyItemAdapter itemAdapter = new ClassifyItemAdapter(null);
+	private UserItemAdapter itemAdapter = new UserItemAdapter(null);
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,6 +57,16 @@ public class UserFragment extends FragmentHelper {
 
 	@Override
 	public void onStart() {
+		initUserView();
+		
+		
+		
+		super.onStart();
+	}
+
+
+
+	private void initUserView() {
 		currentUser = ((ApplicationHelper)getActivity().getApplication()).getCurrentUser();
 		
 		if(currentUser == null){
@@ -66,10 +77,6 @@ public class UserFragment extends FragmentHelper {
 			yesUser.setVisibility(View.VISIBLE);
 			reLoad();
 		}
-		
-		
-		
-		super.onStart();
 	}
 
 
@@ -101,6 +108,18 @@ public class UserFragment extends FragmentHelper {
 	private void freshList(List<Activity> activities) {
 		itemAdapter.setActivities(activities);
 		itemAdapter.notifyDataSetChanged();
+	}
+
+
+
+	@Override
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+		// TODO Auto-generated method stub
+		if(isVisibleToUser&&!lock)
+		{
+			initUserView();
+			lock = true;
+		}
 	}
 
 

@@ -3,6 +3,8 @@ package com.example.cultureplatform;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.database.DatabaseConnector;
+import com.example.database.MessageAdapter;
 import com.example.database.data.Entity;
 
 import android.net.Uri;
@@ -11,6 +13,7 @@ import android.provider.MediaStore;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
@@ -21,27 +24,37 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 public class AddActActivity extends Activity {
 	private ImageView picture;
 	private EditText time;
 	private String picture_path;
 	private EditText type;
+	private EditText name;
+	private EditText intro;
+	private EditText rout;
+	private EditText address;
+	private EditText theme;
+	private EditText reporter;
+	private Button submit;
 	private int year = 2014;
 	private int month = 0;
 	private int day = 1;
 	private int hour = 18;
 	private int minute = 30;
-	private int second = 0;
-
+	private Bitmap pictureBitmap;
+	private ProgressDialog progressDialog;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -51,7 +64,14 @@ public class AddActActivity extends Activity {
 		time = (EditText) findViewById(R.id.add_time);
 		picture = (ImageView) findViewById(R.id.add_picture);
 		type = (EditText) findViewById(R.id.add_type);
-
+		name = (EditText) findViewById(R.id.add_name);
+		intro = (EditText) findViewById(R.id.add_intro);
+		rout = (EditText) findViewById(R.id.add_rout);
+		address = (EditText) findViewById(R.id.add_address);
+		theme = (EditText) findViewById(R.id.add_theme);
+		submit = (Button) findViewById(R.id.add_submit);
+		reporter = (EditText) findViewById(R.id.add_reporter);
+		
 		time.setInputType(InputType.TYPE_NULL);
 		time.setOnClickListener(new OnClickListener() {
 			@Override
@@ -123,7 +143,8 @@ public class AddActActivity extends Activity {
 
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
-				v.performClick();
+				if(hasFocus)
+					v.performClick();
 			}
 
 		});
@@ -153,6 +174,59 @@ public class AddActActivity extends Activity {
 			}
 
 		});
+		submit.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				MessageAdapter adapter = new MessageAdapter() {
+
+					@Override
+					public void onDone(String ret) {
+						// TODO Auto-generated method stub
+						Log.v("a", ret);
+						progressDialog.dismiss();
+						Toast.makeText(getApplicationContext(), "上传成功", Toast.LENGTH_LONG).show();
+						finish();
+					}
+
+					@Override
+					public void onErrorOccur(String ret) {
+						// TODO Auto-generated method stub
+						Log.e("a", ret);
+						Toast.makeText(getApplicationContext(), "上传失败", Toast.LENGTH_LONG).show();
+					}
+
+					@Override
+					public void onTimeout() {
+						Log.e("handler", "timeout");
+						Toast.makeText(getApplicationContext(), "上传失败,超时", Toast.LENGTH_LONG).show();
+					}
+
+					@Override
+					public void onFinish() {
+						progressDialog.dismiss();
+						finish();
+						pictureBitmap.recycle();
+					}
+				};
+				
+				String datetime = time.getText().toString();
+				DatabaseConnector connector = new DatabaseConnector();
+				progressDialog = ProgressDialog.show(AddActActivity.this, "上传中", "图片文件较大，请耐心等待");
+				connector.addParams(DatabaseConnector.UPLOAD, "SETACTIVITY");
+				connector.addParams("name", name.getText().toString());
+				connector.addParams("address", address.getText().toString());
+				connector.addParams("content", intro.getText().toString());
+				connector.addParams("type", type.getText().toString());
+				connector.addParams("theme", theme.getText().toString());
+				connector.addParams("date", datetime.substring(0, datetime.indexOf(' ')));
+				connector.addParams("time", datetime.substring(datetime.indexOf(' ')+1));
+				connector.addParams("procedure", rout.getText().toString());
+				connector.addParams("reporter_info", reporter.getText().toString());
+				connector.asyncUpload(pictureBitmap, adapter);
+				
+			}
+		});
 	}
 
 	@Override
@@ -180,7 +254,18 @@ public class AddActActivity extends Activity {
 			picture_path = cursor.getString(columnIndex);
 			cursor.close();
 
-			picture.setImageBitmap(BitmapFactory.decodeFile(picture_path));
+			if(pictureBitmap!=null)
+				pictureBitmap.recycle();
+			pictureBitmap =BitmapFactory.decodeFile(picture_path);
+			if(pictureBitmap.getWidth()<512&&pictureBitmap.getHeight()<512)
+			{
+				picture.setImageBitmap(pictureBitmap);
+			}
+			else
+			{
+				pictureBitmap.recycle();
+				Toast.makeText(AddActActivity.this, "图片不能超过512*512大小", Toast.LENGTH_LONG).show();
+			}
 		}
 	}
 

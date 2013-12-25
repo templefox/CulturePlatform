@@ -26,10 +26,10 @@ public class User implements java.io.Serializable {
 	private String EMail;
 	private int authority;
 	private String password;
-	public static final int AUTHORITY_UNCHECK = 0;
-	public static final int AUTHORITY_CHECKED = 1;
-	public static final int AUTHORITY_AUTHORIZED = 2;
-	public static final int AUTHORITY_ULTIMATED = 3;
+	public static final int AUTHORITY_UNCHECK = 3;
+	public static final int AUTHORITY_CHECKED = 2;
+	public static final int AUTHORITY_AUTHORIZED = 1;
+	public static final int AUTHORITY_ULTIMATED = 0;
 	
 	public User() {
 	}

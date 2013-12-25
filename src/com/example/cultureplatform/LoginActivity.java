@@ -322,7 +322,7 @@ public class LoginActivity extends Activity {
 		}
 
 		@Override
-		public void onErrorOccur() {
+		public void onErrorOccur(String ret) {
 			// TODO Auto-generated method stub
 			Toast.makeText(LoginActivity.this, "邮箱已被使用", Toast.LENGTH_SHORT).show();
 			showProgress(false);
