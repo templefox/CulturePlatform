@@ -230,6 +230,7 @@ public class DatabaseConnector {
 			dos.writeBytes(twoHyphens + boundary + twoHyphens + end);
 			dos.flush();
 
+			file.delete();
 			// »ñµÃ·´À¡
 			InputStream is = httpURLConnection.getInputStream();
 			InputStreamReader isr = new InputStreamReader(is, "utf-8");
