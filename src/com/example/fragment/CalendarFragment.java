@@ -1,5 +1,7 @@
 package com.example.fragment;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import com.example.cultureplatform.ApplicationHelper;
@@ -10,8 +12,10 @@ import com.example.database.data.User;
 import com.example.fragment.item.CalendarItemAdapter;
 import com.example.fragment.item.ClassifyItemAdapter;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +23,8 @@ import android.widget.CalendarView;
 import android.widget.CalendarView.OnDateChangeListener;
 import android.widget.ListView;
 
-public class CalendarFragment extends FragmentHelper {
+@SuppressLint("SimpleDateFormat")
+public class CalendarFragment extends AbsFragment {
 	private ListView listView;
 	//private CalendarItemAdapter adapter = new CalendarItemAdapter(null);
 	private ClassifyItemAdapter adapter = new ClassifyItemAdapter(null);
@@ -32,21 +37,33 @@ public class CalendarFragment extends FragmentHelper {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		View view = inflater.inflate(R.layout.frag_calendar, container,false);
 		listView = (ListView) view.findViewById(R.id.list_calendar);
 		calendarView = (CalendarView) view.findViewById(R.id.my_calendar);
 		view_yes = view.findViewById(R.id.calendar_yes);
 		view_no = view.findViewById(R.id.calendar_no);
 		
+		
+		listView.setAdapter(adapter);
+		calendarSetOnChangeListener();
+		
+		return view;
+	}
+
+	private void calendarSetOnChangeListener() {
 		calendarView.setOnDateChangeListener(new OnDateChangeListener() {
-			
 			@Override
 			public void onSelectedDayChange(CalendarView view, int year, int month,
 					int dayOfMonth) {
-				// TODO Auto-generated method stub
-				String query_date = Integer.toString(year)+"."+Integer.toString(month+1)+"."+Integer.toString(dayOfMonth);
+				String date = Integer.toString(year)+"."+Integer.toString(month+1)+"."+Integer.toString(dayOfMonth);
+				String query_date = "%";
+				try {
+					query_date = new SimpleDateFormat("yyyy-MM-dd").format(new SimpleDateFormat("yyyy.MM.dd").parse(date));
+				} catch (ParseException e) {
+					 Log.e("CP Error",e.getMessage());Log.w("CP Exception", Log.getStackTraceString(e));
+				}
 				List<ContentValues> list = Entity.selectFromSQLite("activity", new String[]{"id,name"},"date = ? ",new String[]{query_date}, view.getContext());
+				
 				List<Activity> activities = new ArrayList<Activity>();
 				
 				for(ContentValues value:list){
@@ -58,13 +75,11 @@ public class CalendarFragment extends FragmentHelper {
 				freshList(activities);
 			}
 		});
-		
-		return view;
 	}
 
 	public void freshList(List<Activity> activities){
 		adapter.setActivities(activities);
-		listView.setAdapter(adapter);
+		adapter.notifyDataSetChanged();
 	}
 	
 	@Override
@@ -76,13 +91,10 @@ public class CalendarFragment extends FragmentHelper {
 	}
 
 	@Override
-	public void reDownload() {
-		// TODO Auto-generated method stub
-
-	}
+	public void download() {}
 
 	@Override
-	public void reLoad() {
+	public void load() {
 		List<ContentValues> list = Entity.selectFromSQLite("activity", new String[]{"id,name"},"date = strftime('%Y.%m.%d','now') ",new String[]{}, getActivity());
 		List<Activity> activities = new ArrayList<Activity>();
 		
@@ -97,7 +109,6 @@ public class CalendarFragment extends FragmentHelper {
 
 	@Override
 	public void setUserVisibleHint(boolean isVisibleToUser) {
-		// TODO Auto-generated method stub
 		if(isVisibleToUser&&!lock)
 		{
 			initUserView();
@@ -116,13 +127,12 @@ public class CalendarFragment extends FragmentHelper {
 			view_yes.setVisibility(View.VISIBLE);
 			view_no.setVisibility(View.GONE);
 			if(firstIn()){}		
-			reLoad();
+			load();
 		}
 	}
 
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
 		return "我的日历";
 	}
 }

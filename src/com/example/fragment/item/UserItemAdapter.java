@@ -3,7 +3,9 @@ package com.example.fragment.item;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +22,7 @@ import com.example.database.DatabaseConnector;
 import com.example.database.data.Activity;
 import com.example.widget.AsyncImageView;
 
+@SuppressLint("SimpleDateFormat")
 public class UserItemAdapter extends BaseAdapter{
 	List<Activity> activities;
 	
@@ -88,8 +91,8 @@ public class UserItemAdapter extends BaseAdapter{
 			myViews.asyImageView.cancelTask();
 		}
 		
-		if(! myViews.asyImageView.getDrawable().equals(R.drawable.rihanna)){
-			myViews.asyImageView.setImageResource(R.drawable.rihanna);
+		if(! myViews.asyImageView.getDrawable().equals(R.drawable.default_pic)){
+			myViews.asyImageView.setImageResource(R.drawable.default_pic);
 		}
 		
 		
@@ -123,9 +126,12 @@ public class UserItemAdapter extends BaseAdapter{
 		myViews.textViewLocation.setText(currentActivity.getAddress());
 		try {
 			myViews.textViewDate.setText(new SimpleDateFormat("yyyy-MM-dd").format(currentActivity.getDate()));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (NullPointerException e) {
+			Log.e("CP Error", e.getMessage());
+			Log.w("CP Exception", Log.getStackTraceString(e));
+		} catch (IllegalArgumentException e) {
+			Log.e("CP Error", e.getMessage());
+			Log.w("CP Exception", Log.getStackTraceString(e));
 		}
 
 		return convertView;

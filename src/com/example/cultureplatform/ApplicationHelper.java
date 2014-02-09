@@ -11,13 +11,13 @@ import android.app.Application;
 public class ApplicationHelper extends Application {
 	private User currentUser = null;
 	private Set<Activity> activities = new HashSet<Activity>();
-	OnUserChanged onUserChanged;
+	OnUserChangedListener onUserChanged;
 	
-	public void setOnUserChanged(OnUserChanged onUserChanged) {
+	public void setOnUserChangedListener(OnUserChangedListener onUserChanged) {
 		this.onUserChanged = onUserChanged;
 	}
 
-	public static interface OnUserChanged{
+	public static interface OnUserChangedListener{
 		public void onUserChanged(User newUser);
 	}
 	

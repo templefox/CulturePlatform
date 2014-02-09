@@ -8,15 +8,13 @@ public class SQLiteManager extends SQLiteOpenHelper {
 	
 	public SQLiteManager(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
-		// TODO Auto-generated constructor stub
 	}
 
 	private static final String DATABASE_NAME = "CulturePlatform.db";
-	private static final int DATABASE_VERSION = 2;
+	private static final int DATABASE_VERSION = 5;
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		// TODO Auto-generated method stub
 		//db.execSQL("SET FOREIGN_KEY_CHECKS=0;");
 		db.execSQL(
 				"CREATE TABLE activity (" +
@@ -25,6 +23,7 @@ public class SQLiteManager extends SQLiteOpenHelper {
 				"address  TEXT(255) ," +
 				"content  TEXT," +
 				"type  TEXT(45) ," +
+				"location TEXT(45) ,"+
 				"theme  TEXT(45)," +
 				"date  TEXT," +
 				"time  TEXT," +
@@ -32,7 +31,7 @@ public class SQLiteManager extends SQLiteOpenHelper {
 				"picture_url  TEXT(45)," +
 				"reporter_info  TEXT," +
 				"organiserID  INTEGER(11)," +
-				"locationID  INTEGER(11)," +
+				//"locationID  INTEGER(11)," +
 				"temperature  INTEGER(11) NOT NULL DEFAULT 0," +
 				"reporterRating  REAL NOT NULL DEFAULT 0," +
 				"staffRating  REAL NOT NULL DEFAULT 0," +
@@ -77,7 +76,7 @@ public class SQLiteManager extends SQLiteOpenHelper {
 				"name  TEXT(45) NOT NULL," +
 				"detail  TEXT," +
 				"picture_url  TEXT(45)," +
-				"address  TEXT(255) NOT NULL," +
+				"address  TEXT(255)," +
 				"PRIMARY KEY (id)" +
 				")" +
 				"" +
@@ -124,6 +123,7 @@ public class SQLiteManager extends SQLiteOpenHelper {
 				"address  TEXT(255) ," +
 				"content  TEXT," +
 				"type  TEXT(45) ," +
+				"location TEXT(45) ,"+
 				"theme  TEXT(45)," +
 				"date  TEXT," +
 				"time  TEXT," +
@@ -131,12 +131,13 @@ public class SQLiteManager extends SQLiteOpenHelper {
 				"picture_url  TEXT(45)," +
 				"reporter_info  TEXT," +
 				"organiserID  INTEGER(11)," +
-				"locationID  INTEGER(11)," +
+				//"locationID  INTEGER(11)," +
 				"temperature  INTEGER(11) NOT NULL DEFAULT 0," +
 				"reporterRating  REAL NOT NULL DEFAULT 0," +
 				"staffRating  REAL NOT NULL DEFAULT 0," +
 				"contentRating  REAL NOT NULL DEFAULT 0," +
 				"environmentRating  REAL NOT NULL DEFAULT 0," +
+				"isAttention INTEGER(1) NOT NULL DEFAULT 0,"+
 				"PRIMARY KEY (id));");
 		
 		db.execSQL(
@@ -175,7 +176,7 @@ public class SQLiteManager extends SQLiteOpenHelper {
 				"name  TEXT(45) NOT NULL," +
 				"detail  TEXT," +
 				"picture_url  TEXT(45)," +
-				"address  TEXT(255) NOT NULL," +
+				"address  TEXT(255)," +
 				"PRIMARY KEY (id)" +
 				")" +
 				"" +

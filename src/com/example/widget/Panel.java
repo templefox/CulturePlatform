@@ -64,7 +64,6 @@ public class Panel extends LinearLayout
 		 */
 		public void onPanelOpened(Panel panel);
 		
-		public void onTouch(Panel panel);
 	}
 	
 	private boolean mIsShrinking;
@@ -416,11 +415,10 @@ public class Panel extends LinearLayout
 		@Override
 		public boolean onTouch(View v, MotionEvent event)
 		{
-			panelListener.onTouch(Panel.this);
 			if (mAnimating)
 			{
 				// we are animating
-				return true;// 鍔ㄧ敾涓笉鍝嶅簲onTouch浜嬩欢
+				return true;//
 			}
 
 			int action = event.getAction();

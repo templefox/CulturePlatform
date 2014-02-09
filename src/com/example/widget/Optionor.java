@@ -24,12 +24,10 @@ public class Optionor extends LinearLayout {
 	
 	public Optionor(Context context) {
 		super(context);
-		// TODO Auto-generated constructor stub
 	}
 
 	public Optionor(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		// TODO Auto-generated constructor stub
 		if (isInEditMode()) { return; }
 		
 		LayoutInflater.from(context).inflate(R.layout.optionor, this,true);

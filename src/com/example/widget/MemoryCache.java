@@ -10,9 +10,7 @@ import android.graphics.Bitmap;
 import android.util.Log;
 
 /**
- * 内存缓存类
- * @author ASUS
- *
+ * 内存缓存
  */
 
 public class MemoryCache {
@@ -29,7 +27,7 @@ public class MemoryCache {
 	private long size = 0; // current allocated size
 
 	// 缓存能占用的最大堆内存
-	private long limit = 1000000; // max memory in bytes
+	private long limit = 1048575; // max memory in bytes
 
 	public MemoryCache() {
 		// use 25% of available heap size
@@ -43,36 +41,20 @@ public class MemoryCache {
 	}
 
 	public Bitmap get(String id) {
-		try {
-			if (!cache.containsKey(id)) {
-				return null;
-			}
-
-			return cache.get(id);
-		} catch (Exception e) {
-			// TODO: handle exception
-
+		if (!cache.containsKey(id)) {
 			return null;
 		}
+		return cache.get(id);
 	}
 
 	public void put(String id, Bitmap bitmap) {
-		try {
-			if (cache.containsKey(id)) {
-
-				size -= getSizeInBytes(cache.get(id));
-
+		if (cache.containsKey(id)) {
+			size -= getSizeInBytes(cache.get(id));
 			}
 
-			cache.put(id, bitmap);
-			size += getSizeInBytes(bitmap);
-			checkSize();  //每放入一个新图就检查一下内存使用情况，如果超了限制就删
-		} catch (Throwable th) {
-			// TODO: handle exception
-			th.printStackTrace();
-
-		}
-
+		cache.put(id, bitmap);
+		size += getSizeInBytes(bitmap);
+		checkSize(); // 每放入一个新图就检查一下内存使用情况，如果超了限制就删
 	}
 
 	/**
@@ -111,7 +93,7 @@ public class MemoryCache {
 
 		return bitmap.getRowBytes() * bitmap.getHeight();
 	}
-	
+
 	public void clear() {
 		cache.clear();
 	}

@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,7 +18,6 @@ import android.widget.ToggleButton;
 
 import com.example.cultureplatform.ApplicationHelper;
 import com.example.cultureplatform.DetailActivity;
-import com.example.cultureplatform.LoginActivity;
 import com.example.cultureplatform.R;
 import com.example.database.DatabaseConnector;
 import com.example.database.MessageAdapter;
@@ -32,10 +32,7 @@ public class ClassifyItemAdapter extends BaseAdapter {
 	List<Activity> activities;
 	
 	/**
-	 * 关注按钮的触发监听
-	 * 
-	 * @author Administrator
-	 * 
+	 * 关注按钮的触发监听类
 	 */
 	private class onTakeAttentionListener implements
 			CompoundButton.OnCheckedChangeListener {
@@ -81,8 +78,7 @@ public class ClassifyItemAdapter extends BaseAdapter {
 				
 				@Override
 				public void onErrorOccur(String ret) {
-					// TODO Auto-generated method stub
-					super.onErrorOccur(ret);
+					Toast.makeText(buttonView.getContext(), "关注失败，请检查网络", Toast.LENGTH_SHORT).show();
 				}
 			});
 		}
@@ -94,13 +90,11 @@ public class ClassifyItemAdapter extends BaseAdapter {
 
 	public ClassifyItemAdapter(List<Activity> activities) {
 		super();
-		// TODO Auto-generated constructor stub
 		this.activities = activities;
 	}
 
 	@Override
 	public int getCount() {
-		// TODO Auto-generated method stub
 		if (activities == null)
 			return 0;
 		return activities.size();
@@ -108,29 +102,23 @@ public class ClassifyItemAdapter extends BaseAdapter {
 
 	@Override
 	public Object getItem(int position) {
-		// TODO Auto-generated method stub
 		return activities.get(position);
 	}
 
 	@Override
 	public long getItemId(int position) {
-		// TODO Auto-generated method stub
 		return position;
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		// TODO 在此初始化每一个item内的内容，添加item的交互功能。
-
 		ViewHolder myViews;
-		
-		
+
 		if (convertView == null) {
-			
 			myViews = new ViewHolder();
 			convertView = LayoutInflater.from(parent.getContext()).inflate(
 					R.layout.item_classify, parent,false);
-			myViews.asyImageView = (AsyncImageView)convertView.findViewById(R.id.item_cla_image);
+			myViews.asyncImageView = (AsyncImageView)convertView.findViewById(R.id.item_cla_image);
 			myViews.textViewTitle = (TextView) convertView
 					.findViewById(R.id.item_cla_title);
 			myViews.textViewLocation =  (TextView) convertView
@@ -139,16 +127,14 @@ public class ClassifyItemAdapter extends BaseAdapter {
 					.findViewById(R.id.item_cla_date);
 			myViews.toggleButton = (ToggleButton) convertView
 					.findViewById(R.id.item_cla_attention);
-			convertView.setTag(myViews);
-			
-			
+			convertView.setTag(myViews);			
 		}else {
 			myViews = (ViewHolder ) convertView.getTag();
-			myViews.asyImageView.cancelTask();
+			myViews.asyncImageView.cancelTask();
 		}
 		
-		if(! myViews.asyImageView.getDrawable().equals(R.drawable.rihanna)){
-			myViews.asyImageView.setImageResource(R.drawable.rihanna);
+		if(! myViews.asyncImageView.getDrawable().equals(R.drawable.default_pic)){
+			myViews.asyncImageView.setImageResource(R.drawable.default_pic);
 		}
 		
 		
@@ -159,14 +145,13 @@ public class ClassifyItemAdapter extends BaseAdapter {
 		//String image_url = "http://i9.hexunimg.cn/2012-07-12/143481552.jpg";
 
 		
-		myViews.asyImageView.asyncLoad(image_url);
+		myViews.asyncImageView.asyncLoad(image_url);
 
 		
 
 		convertView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				Intent intent = new Intent(v.getContext(), DetailActivity.class);
 				intent.putExtra("activity", currentActivity);
 				v.getContext().startActivity(intent);
@@ -191,12 +176,13 @@ public class ClassifyItemAdapter extends BaseAdapter {
 		myViews.textViewTitle.setText(currentActivity.getName());
 		myViews.textViewLocation.setText(currentActivity.getAddress());
 		try {
-			myViews.textViewDate.setText(new SimpleDateFormat("yyyy-MM-dd").format(currentActivity.getDate()));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			myViews.textViewDate.setText(new SimpleDateFormat("yyyy-MM-dd")
+					.format(currentActivity.getDate()));
+		} catch (NullPointerException e) {
+			 Log.e("CP Error",e.getMessage());Log.w("CP Exception", Log.getStackTraceString(e));
+		} catch (IllegalArgumentException e) {
+			 Log.e("CP Error",e.getMessage());Log.w("CP Exception", Log.getStackTraceString(e));
 		}
-
 		return convertView;
 	}
 	
@@ -205,8 +191,6 @@ public class ClassifyItemAdapter extends BaseAdapter {
 		TextView textViewLocation;
 		TextView textViewDate;
 		ToggleButton toggleButton;
-		AsyncImageView asyImageView;
-		
+		AsyncImageView asyncImageView;
 	}
-	
 }

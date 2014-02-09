@@ -194,13 +194,13 @@ public class AddActActivity extends Activity {
 					@Override
 					public void onErrorOccur(String ret) {
 						// TODO Auto-generated method stub
-						Log.e("a", ret);
+						Log.w("a", ret);
 						Toast.makeText(getApplicationContext(), "上传失败", Toast.LENGTH_LONG).show();
 					}
 
 					@Override
 					public void onTimeout() {
-						Log.e("handler", "timeout");
+						Log.w("handler", "timeout");
 						Toast.makeText(getApplicationContext(), "上传失败,超时", Toast.LENGTH_LONG).show();
 					}
 

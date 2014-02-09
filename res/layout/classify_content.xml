@@ -12,13 +12,13 @@
 
 
         <com.example.widget.Optionor
-            android:id="@+id/optionor1"
+            android:id="@+id/optionor_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" >
         </com.example.widget.Optionor>
 
         <com.example.widget.Optionor
-            android:id="@+id/optionor2"
+            android:id="@+id/optionor_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" >
         </com.example.widget.Optionor>

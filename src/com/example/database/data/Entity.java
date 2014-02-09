@@ -12,6 +12,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.example.database.SQLiteManager;
 
@@ -53,9 +54,11 @@ public abstract class Entity {
 				ContentValues values = entity.getContentValues();
 				db.replace(entity.getTableName(), null, values);
 		} catch (IllegalArgumentException e) {
-			// TODO: handle exception
+			Log.e("CP Error", e.getMessage());
+			Log.w("CP Exception", Log.getStackTraceString(e));
 		} catch (NullPointerException e) {
-			// TODO: handle exception
+			Log.e("CP Error", e.getMessage());
+			Log.w("CP Exception", Log.getStackTraceString(e));
 		}
 
 	}	
@@ -64,30 +67,18 @@ public abstract class Entity {
 
 	//TODO ¼ÌÐø
 	public static List<ContentValues> selectFromSQLite(String table,String[] columns,Context context) {
-		List<ContentValues> list = new ArrayList<ContentValues>();
-		
-		
-		SQLiteManager manager = new SQLiteManager(context);
-		SQLiteDatabase db = manager.getReadableDatabase();
-		
+		return selectFromSQLite(table, columns, context, null);
+	}
 	
-		Cursor cursor = db.query(table, columns, null, null, null, null, null);
-		
-		while (cursor.moveToNext()) {
-			ContentValues contentValues = new ContentValues();
-			for (String columnName : cursor.getColumnNames()) {
-				String value = cursor.getString(cursor.getColumnIndex(columnName));
-				contentValues.put(columnName, value);
-			}
-			list.add(contentValues);
-		}
-		
-		manager.close();
-		
-		return list;
+	public static List<ContentValues> selectFromSQLite(String table,String[] columns,Context context,String orderBy) {
+		return selectFromSQLite(table, columns, null, null, context, orderBy);
 	}
 	
 	public static List<ContentValues> selectFromSQLite(String table,String[] columns,String where,String[] whereArgs,Context context) {
+		return selectFromSQLite(table, columns, where, whereArgs, context,null);
+	}
+	
+	public static List<ContentValues> selectFromSQLite(String table,String[] columns,String where,String[] whereArgs,Context context,String orderBy) {
 		List<ContentValues> list = new ArrayList<ContentValues>();
 		
 		
@@ -95,7 +86,7 @@ public abstract class Entity {
 		SQLiteDatabase db = manager.getReadableDatabase();
 		
 	
-		Cursor cursor = db.query(table, columns, where, whereArgs, null, null, null);
+		Cursor cursor = db.query(table, columns, where, whereArgs, null, null, orderBy);
 		
 		while (cursor.moveToNext()) {
 			ContentValues contentValues = new ContentValues();
@@ -110,7 +101,6 @@ public abstract class Entity {
 		
 		return list;
 	}
-	
 	
 	public abstract Entity transJSON(JSONObject obj) throws JSONException, ParseException;
 

@@ -23,7 +23,7 @@ public class Activity extends Entity implements java.io.Serializable {
 	private static final long serialVersionUID = -3286174095424688071L;
 	private Integer id;
 	private Integer user;
-	private Integer location;
+	private String location;
 	private String name;
 	private String address;
 	private String content;
@@ -52,7 +52,7 @@ public class Activity extends Entity implements java.io.Serializable {
 		this.temperature = temperature;
 	}
 
-	public Activity(int user, Integer location, String name, String address,
+	public Activity(int user, String location, String name, String address,
 			String content, String type, String theme, Date data, Date time,
 			String procedure, String pictureUrl, String reporterInfo,
 			int temperature) {
@@ -87,11 +87,11 @@ public class Activity extends Entity implements java.io.Serializable {
 		this.user = user;
 	}
 
-	public Integer getLocation() {
+	public String getLocation() {
 		return this.location;
 	}
 
-	public void setLocation(Integer location) {
+	public void setLocation(String location) {
 		this.location = location;
 	}
 
@@ -251,6 +251,7 @@ public class Activity extends Entity implements java.io.Serializable {
 		activity.setContent(obj.getString("content"));
 		activity.setName(obj.getString("name"));
 		activity.setType(obj.getString("type"));
+		activity.setLocation(obj.getString("location"));
 		activity.setPictureUrl(obj.getString("picture_url"));
 		activity.setTheme(obj.getString("theme"));
 		activity.setReporterInfo(obj.getString("reporter_info"));
@@ -261,7 +262,7 @@ public class Activity extends Entity implements java.io.Serializable {
 		try {
 			activity.setTime(new SimpleDateFormat("HH:mm:ss").parse(obj.getString("time")));
 			activity.setDate(new SimpleDateFormat("yyyy-MM-dd").parse(obj.getString("date")));
-			activity.setLocation(obj.getInt("locationID"));
+			
 			activity.setUser(obj.getInt("organiserID"));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -279,7 +280,6 @@ public class Activity extends Entity implements java.io.Serializable {
 		value.put("content", content);
 		value.put("type", type);
 		value.put("name", name);
-		value.put("locationID", location);
 		value.put("organiserID", user);
 		value.put("picture_url", pictureUrl);
 		value.put("theme", theme);

@@ -22,7 +22,7 @@
             android:id="@+id/item_cla_image"
             android:layout_width="70dip"
             android:layout_height="75dip"
-            android:src="@drawable/rihanna" />
+            android:src="@drawable/default_pic" />
     </LinearLayout>
 
     <ImageView

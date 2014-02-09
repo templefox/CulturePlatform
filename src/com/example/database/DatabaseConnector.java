@@ -20,6 +20,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -45,12 +48,14 @@ import android.os.Message;
 import android.util.Log;
 
 public class DatabaseConnector {
-	static public String target_url = "http://templefox.xicp.net:998/";
-	static public String upload_url = "http://templefox.xicp.net:998/upload_picture.php";
+	//static public String target_url = "http://templefox.xicp.net:998/";
+	static public String target_url = "http://192.168.1.103:998/";
+	static public String upload_url = target_url+"upload_picture.php";
 	// static public String target_url = "http://192.168.1.115:998/";
 	static final public String METHOD = "METHOD";
 	static final public String UPLOAD = "UPLOAD";
 	static final private int TIME_OUT = 3000;
+	static private ExecutorService threadPool = Executors.newCachedThreadPool();
 	private Map<String, String> params = new HashMap<String, String>();
 
 	public DatabaseConnector addParams(String key, String value) {
@@ -60,13 +65,13 @@ public class DatabaseConnector {
 
 	public void asyncConnect(final MessageAdapter callback) {
 		final MessageHandler handler = new MessageHandler();
-		new Thread() {
+		threadPool.execute(new Runnable() {		
 			@Override
 			public void run() {
 				handler.setMessageAdapter(callback);
 				syncConnect(target_url, params, handler);
 			}
-		}.start();
+		});
 	}
 
 	private void syncConnect(final String url,
@@ -103,21 +108,30 @@ public class DatabaseConnector {
 			handler.sendMessage(msg);
 
 		} catch (ClientProtocolException e) {
-			Log.e("HttpConnectionUtil", e.getMessage(), e);
+			Log.e("CP Error", e.getMessage());
+			Log.w("CP Exception", Log.getStackTraceString(e));
 		} catch (UnknownHostException e) {
+			Log.e("CP Error", e.getMessage());
+			Log.w("CP Exception", Log.getStackTraceString(e));
 			Message msg = new Message();
 			Bundle b = new Bundle();
 			b.putString(null, "timeout");
 			msg.setData(b);
 			handler.sendMessage(msg);
 		} catch (ConnectTimeoutException e) {
+			Log.e("CP Error", e.getMessage());
+			Log.w("CP Exception", Log.getStackTraceString(e));
 			Message msg = new Message();
 			Bundle b = new Bundle();
 			b.putString(null, "timeout");
 			msg.setData(b);
 			handler.sendMessage(msg);
-		} catch (Exception e) {
-			Log.e("HttpConnectionUtil", e.getMessage(), e);
+		} catch (IllegalStateException e) {
+			Log.e("CP Error", e.getMessage());
+			Log.w("CP Exception", Log.getStackTraceString(e));
+		} catch (IOException e) {
+			Log.e("CP Error", e.getMessage());
+			Log.w("CP Exception", Log.getStackTraceString(e));
 		} finally {
 			try {
 
@@ -125,7 +139,8 @@ public class DatabaseConnector {
 					reader.close();
 				}
 			} catch (IOException e) {
-				// ignore me
+				Log.e("CP Error", e.getMessage());
+				Log.w("CP Exception", Log.getStackTraceString(e));
 			}
 		}
 
@@ -154,13 +169,14 @@ public class DatabaseConnector {
 
 	public void asyncUpload(final Bitmap bitmap , final MessageAdapter callback) {
 		final MessageHandler handler = new MessageHandler();
-		new Thread() {
+		threadPool.execute(new Runnable() {
+			
 			@Override
 			public void run() {
 				handler.setMessageAdapter(callback);
 				syncUpload(bitmap, handler);
 			}
-		}.start();
+		});
 	}
 
 	private void syncUpload(Bitmap bitmap, final MessageHandler handler) {
@@ -245,25 +261,32 @@ public class DatabaseConnector {
 			dos.close();
 			is.close();
 		} catch (SocketTimeoutException e){
+			Log.e("CP Error", e.getMessage());
+			Log.w("CP Exception", Log.getStackTraceString(e));
 			Message msg = new Message();
 			Bundle b = new Bundle();
 			b.putString(null, "timeout");
 			msg.setData(b);
 			handler.sendMessage(msg);
 		}catch (UnknownHostException e){
+			Log.e("CP Error", e.getMessage());
+			Log.w("CP Exception", Log.getStackTraceString(e));
 			Message msg = new Message();
 			Bundle b = new Bundle();
 			b.putString(null, "CONERROR");
 			msg.setData(b);
 			handler.sendMessage(msg);
 		}catch (ConnectException e) {
+			Log.e("CP Error", e.getMessage());
+			Log.w("CP Exception", Log.getStackTraceString(e));
 			Message msg = new Message();
 			Bundle b = new Bundle();
 			b.putString(null, "timeout");
 			msg.setData(b);
 			handler.sendMessage(msg);
-		}catch (Exception e) {
-			e.getMessage();
+		} catch (IOException e) {
+			Log.e("CP Error", e.getMessage());
+			Log.w("CP Exception", Log.getStackTraceString(e));
 		}
 	}
 }

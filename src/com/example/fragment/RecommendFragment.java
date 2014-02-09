@@ -21,102 +21,85 @@ import com.example.fragment.item.RecommendItemAdapter;
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.Toast;
 
-
 /**
- * 默认的第一屏，在此第一次载入当前所有活动
- * @author Administrator
- *
+ * First screen of the application. Download first part of activities.
  */
-public class RecommendFragment extends FragmentHelper {
+public class RecommendFragment extends AbsFragment {
 	private RecommendItemAdapter adapter = new RecommendItemAdapter(null);
 	private LinearLayout left;
 	private LinearLayout right;
 	private final int MAX_COUNT = 8;
-	
- 	public void freshList(List<Activity> activities) {
- 		try {
- 			right.removeAllViews();
- 			left.removeViews(1, left.getChildCount()-1);
-			adapter.setActivities(activities);
-			for(int i=0;i<adapter.getCount()&&i<MAX_COUNT;i++){
-				if(i%2==0){
-					right.addView(adapter.getView(i, null, right));
-					
-				}else
-				{
-					left.addView(adapter.getView(i, null, left));
-				}
+
+	public void freshList(List<Activity> activities) {
+		right.removeAllViews();
+		left.removeViews(1, left.getChildCount() - 1);
+		adapter.setActivities(activities);
+		for (int i = 0; i < adapter.getCount() && i < MAX_COUNT; i++) {
+			if (i % 2 == 0) {
+				right.addView(adapter.getView(i, null, right));
+			} else {
+				left.addView(adapter.getView(i, null, left));
 			}
-		} catch (Exception e) {
-			String s = e.getMessage();
-			s.getBytes();
 		}
 	}
-
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.frag_recommend, container,false);
+		View view = inflater.inflate(R.layout.frag_recommend, container, false);
 		left = (LinearLayout) view.findViewById(R.id.reco_left);
 		right = (LinearLayout) view.findViewById(R.id.reco_right);
 		return view;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "推荐活动";
 	}
 
-
-
-	
 	@Override
-	public void reDownload() {
+	public void download() {
 		final MessageAdapter activityAdapter = new MessageAdapter() {
-			
+
 			@Override
-			public void onRcvJSONArray(JSONArray array) {	
+			public void onRcvJSONArray(JSONArray array) {
 				Set<Activity> activities = new HashSet<Activity>();
-				for(int i=0 ; i<array.length();i++)
-				{
+				for (int i = 0; i < array.length(); i++) {
 					Activity activity = new Activity();
 					JSONObject obj;
 					try {
 						obj = array.getJSONObject(i);
 						activity.transJSON(obj);
 					} catch (JSONException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						 Log.e("CP Error",e.getMessage());Log.w("CP Exception", Log.getStackTraceString(e));
 					} catch (ParseException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						 Log.e("CP Error",e.getMessage());Log.w("CP Exception", Log.getStackTraceString(e));
 					}
 					activities.add(activity);
-					
+
 				}
 				Entity.insertIntoSQLite(activities, getActivity());
 			}
-			
+
 			@Override
 			public void onTimeout() {
-				Toast.makeText(getActivity(), "连接超时", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getActivity(), "连接超时", Toast.LENGTH_SHORT)
+						.show();
 			}
-			
+
 			@Override
 			public void onFinish() {
-				reLoad();
+				load();
 			}
-			
+
 		};
-		
 
 		DatabaseConnector connector = new DatabaseConnector();
 		connector.addParams(DatabaseConnector.METHOD, "GETACTIVITY");
@@ -125,39 +108,48 @@ public class RecommendFragment extends FragmentHelper {
 		connector.asyncConnect(activityAdapter);
 	}
 
-
 	@SuppressLint("SimpleDateFormat")
 	@Override
-	public void reLoad() {
+	public void load() {
 		List<Activity> activities = new ArrayList<Activity>();
-		List<ContentValues> list = Entity.selectFromSQLite("activity", 
+		List<ContentValues> list = Entity.selectFromSQLite("activity",
 				new String[] { "id", "name", "address", "picture_url", "date",
-				"type", "theme", "temperature", "reporter_info","content","procedure" }, getActivity());
+						"type", "theme", "temperature", "reporter_info",
+						"content", "procedure","time" }, getActivity(), "date desc");
 		for (ContentValues contentValue : list) {
 			Activity activity = new Activity();
 			activity.setId(contentValue.getAsInteger("id"));
 			activity.setName(contentValue.getAsString("name"));
 			activity.setAddress(contentValue.getAsString("address"));
 			try {
-				activity.setDate(new SimpleDateFormat("yyyy-MM-dd").parse(contentValue.getAsString("date")));
-				
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				activity.setDate(new SimpleDateFormat("yyyy-MM-dd")
+						.parse(contentValue.getAsString("date")));
+
+			} catch (ParseException e) {
+				 Log.e("CP Error",e.getMessage());Log.w("CP Exception", Log.getStackTraceString(e));
+			} catch (NullPointerException e) {
+				 Log.e("CP Error",e.getMessage());Log.w("CP Exception", Log.getStackTraceString(e));
+			} catch (IllegalArgumentException e) {
+				 Log.e("CP Error",e.getMessage());Log.w("CP Exception", Log.getStackTraceString(e));
 			}
 			try {
-				activity.setTime(new SimpleDateFormat("HH:mm:ss").parse(contentValue.getAsString("time")));
-				
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				activity.setTime(new SimpleDateFormat("HH:mm:ss")
+						.parse(contentValue.getAsString("time")));
+
+			} catch (ParseException e) {
+				 Log.e("CP Error",e.getMessage());Log.w("CP Exception", Log.getStackTraceString(e));
+			} catch (NullPointerException e) {
+				 Log.e("CP Error",e.getMessage());Log.w("CP Exception", Log.getStackTraceString(e));
+			} catch (IllegalArgumentException e) {
+				 Log.e("CP Error",e.getMessage());Log.w("CP Exception", Log.getStackTraceString(e));
 			}
-			
+
 			activity.setPictureUrl(contentValue.getAsString("picture_url"));
 			activity.setReporterInfo(contentValue.getAsString("reporter_info"));
 			activity.setTheme(contentValue.getAsString("theme"));
 			activity.setType(contentValue.getAsString("type"));
-			activity.setTemperature(Integer.parseInt(contentValue.getAsString("temperature")));
+			activity.setTemperature(Integer.parseInt(contentValue
+					.getAsString("temperature")));
 			activity.setContent(contentValue.getAsString("content"));
 			activity.setProcedure(contentValue.getAsString("procedure"));
 			activities.add(activity);
@@ -165,15 +157,12 @@ public class RecommendFragment extends FragmentHelper {
 		freshList(activities);
 	}
 
-
 	@Override
 	public void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
-		reLoad();
-		if(firstIn())
-			reDownload();
+		load();
+		if (firstIn())
+			download();
 	}
 
-	
 }
