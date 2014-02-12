@@ -64,7 +64,7 @@ public class ClassifyItemAdapter extends BaseAdapter {
 			connector.addParams(DatabaseConnector.METHOD, "SETATTENTION");
 			connector.addParams("user_id", user.getId().toString());
 			connector.addParams("activity_id", activity.getId().toString());
-			connector.asyncConnect(new MessageAdapter() {
+			connector.executeConnector(new MessageAdapter() {
 
 				@Override
 				public void onDone(String ret) {

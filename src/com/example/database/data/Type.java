@@ -30,25 +30,25 @@ public class Type extends Entity implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
 	@Override
 	protected ContentValues getContentValues() {
-		// TODO Auto-generated method stub
 		ContentValues value = new ContentValues();
 		value.put("name", name);
 		value.put("id", id);
 		return value;
 	}
+	
 	@Override
 	protected String getTableName() {
-		// TODO Auto-generated method stub
 		return "type";
 	}
+	
 	@Override
 	public Entity transJSON(JSONObject obj) throws JSONException,
 			ParseException {
-		Type type = this;
-		type.setId(obj.getInt("id"));
-		type.setName(obj.getString("name"));
-		return type;
+		this.setId(obj.getInt("id"));
+		this.setName(obj.getString("name"));
+		return this;
 	}
 }

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.example.database.DatabaseConnector;
 import com.example.database.MessageAdapter;
+import com.example.database.MessageHandler;
 import com.example.database.data.Entity;
 
 import android.net.Uri;
@@ -200,7 +201,7 @@ public class AddActActivity extends Activity {
 
 					@Override
 					public void onTimeout() {
-						Log.w("handler", "timeout");
+						Log.w("handler", MessageHandler.TIME_OUT_STR);
 						Toast.makeText(getApplicationContext(), "ÉÏ´«Ê§°Ü,³¬Ê±", Toast.LENGTH_LONG).show();
 					}
 

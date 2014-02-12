@@ -4,7 +4,6 @@ package com.example.database.data;
 
 import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,9 +13,6 @@ import org.json.JSONObject;
  */
 public class User implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -4497016747707135215L;
 	private Integer id;
 	private Location location;
@@ -69,8 +65,6 @@ public class User implements java.io.Serializable {
 	public void setLocation(Location location) {
 		this.location = location;
 	}
-
-
 
 	public String getName() {
 		return this.name;

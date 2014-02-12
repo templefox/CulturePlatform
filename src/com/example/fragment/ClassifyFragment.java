@@ -215,7 +215,7 @@ public class ClassifyFragment extends AbsFragment {
 							Integer.toString(MAX_ITEM_DOWNLOAD));
 					connector.addParams("offset",
 							Integer.toString(totalItemCount));
-					connector.asyncConnect(activityAdapter);
+					connector.executeConnector(activityAdapter);
 				}
 			}
 
@@ -353,17 +353,17 @@ public class ClassifyFragment extends AbsFragment {
 				.getCurrentUser();
 		DatabaseConnector connector = new DatabaseConnector();
 		connector.addParams(DatabaseConnector.METHOD, "GETTYPE");
-		connector.asyncConnect(typeAdapter);
+		connector.executeConnector(typeAdapter);
 
 		DatabaseConnector connector3 = new DatabaseConnector();
 		connector3.addParams(DatabaseConnector.METHOD, "GETLOCATION");
-		connector3.asyncConnect(locationAdapter);
+		connector3.executeConnector(locationAdapter);
 
 		DatabaseConnector connector2 = new DatabaseConnector();
 		connector2.addParams(DatabaseConnector.METHOD, "GETATTENTION");
 		if (user != null)
 			connector2.addParams("userID", user.getId().toString());
-		connector2.asyncConnect(attentionAdapter);
+		connector2.executeConnector(attentionAdapter);
 		
 	}
 

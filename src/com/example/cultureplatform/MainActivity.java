@@ -54,12 +54,14 @@ public class MainActivity extends Activity {
 		setTheme(R.style.ActionBar);
 		setContentView(R.layout.activity_main);
 
+
+		//connector.testConnect(new MessageAdapter() {});
 		// 为了测验模拟登录
-		User user = new User();
-		user.setId(1);
-		user.setName("test@test");
-		user.setAuthority(User.AUTHORITY_AUTHORIZED);
-		((ApplicationHelper) this.getApplication()).setCurrentUser(user);
+		//User user = new User();
+		//user.setId(1);
+		//user.setName("test@test");
+		//user.setAuthority(User.AUTHORITY_AUTHORIZED);
+		//((ApplicationHelper) this.getApplication()).setCurrentUser(user);
 		// 测验结束
 
 		// test

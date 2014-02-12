@@ -105,7 +105,7 @@ public class RecommendFragment extends AbsFragment {
 		connector.addParams(DatabaseConnector.METHOD, "GETACTIVITY");
 		connector.addParams("limit", Integer.toString(8));
 		connector.addParams("offset", Integer.toString(0));
-		connector.asyncConnect(activityAdapter);
+		connector.executeConnector(activityAdapter);
 	}
 
 	@SuppressLint("SimpleDateFormat")

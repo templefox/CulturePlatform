@@ -20,19 +20,25 @@ import com.example.widget.ImageTextView;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,20 +52,20 @@ public class DetailActivity extends android.app.Activity {
 	private Button submit;
 	private User currentUser;
 
-	private TextView titleTextView;
 	private ImageTextView dateTextView;
 	private ImageTextView locatTextView;
 	private ImageTextView typeTextView;
 	private ImageTextView themeTextView;
 	private ImageTextView reporterTextView;
 	private ImageTextView temperatureTextView;
+	private ImageTextView clockTextView;
 	private TextView contentTextView;
 	private TextView procedureTextView;
+	private ScrollView scrollView;
 
 	private AsyncImageView imageView;
-	//String image_url = "http://i9.hexunimg.cn/2012-07-12/143481552.jpg";
-     String image_url = "";
-private ShareActionProvider shareActionProvider;
+	String image_url = "";
+	private ShareActionProvider shareActionProvider;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +103,6 @@ private ShareActionProvider shareActionProvider;
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count,
 					int after) {
-
 			}
 
 			@Override
@@ -120,56 +125,80 @@ private ShareActionProvider shareActionProvider;
 					hintUserUnCheck();
 				else
 					submit();
-			
+
 				editText.clearFocus();
 				editText.setText("");
 			}
 
 		});
-		image_url = DatabaseConnector.target_url+currentActivity.getPictureUrl();
-		titleTextView = (TextView) findViewById(R.id.title);
+		image_url = DatabaseConnector.target_url
+				+ currentActivity.getPictureUrl();
 		dateTextView = (ImageTextView) findViewById(R.id.date);
 		locatTextView = (ImageTextView) findViewById(R.id.address);
 		typeTextView = (ImageTextView) findViewById(R.id.type);
 		themeTextView = (ImageTextView) findViewById(R.id.theme);
 		reporterTextView = (ImageTextView) findViewById(R.id.reporter);
+		clockTextView = (ImageTextView) findViewById(R.id.clock);
 		temperatureTextView = (ImageTextView) findViewById(R.id.temperature);
 		contentTextView = (TextView) findViewById(R.id.detail_content);
 		procedureTextView = (TextView) findViewById(R.id.procedure);
 		imageView = (AsyncImageView) findViewById(R.id.image);
+		scrollView = (ScrollView) findViewById(R.id.detail_scroll_view);
 
 		imageView.asyncLoad(image_url);
 
-		
-		
-		titleTextView.setText(currentActivity.getName());
-
 		try {
-			//dateTextView.setText(new SimpleDateFormat("yyyy-MM-dd")
-				//	.format(currentActivity.getDate()));
-			dateTextView.setValue("<img src='calendar'/> " + new SimpleDateFormat("yyyy-MM-dd")
-					.format(currentActivity.getDate()) + new SimpleDateFormat("HH:mm:ss").format(currentActivity.getTime()));		
-					
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			dateTextView.setValue("<img src='calendar'/> "
+					+ new SimpleDateFormat("yyyy-MM-dd").format(currentActivity
+							.getDate()));
+		} catch (NullPointerException e) {
+			Log.e("CP Error", e.getMessage());
+			Log.w("CP Exception", Log.getStackTraceString(e));
+		} catch (IllegalArgumentException e) {
+			Log.e("CP Error", e.getMessage());
+			Log.w("CP Exception", Log.getStackTraceString(e));
 		}
 
-		//System.out.println("主题是： " + currentActivity.getTheme());
-		
-		
-		locatTextView.setValue("<img src='home'/> "+ currentActivity.getAddress() );
-		typeTextView.setValue("<img src='tag' /> " + currentActivity.getType());
-	    themeTextView.setValue("<img src='favorite' /> " + currentActivity.getTheme());
-	    reporterTextView.setValue("<img src='user' /> " + currentActivity.getReporterInfo());
-	    temperatureTextView.setValue("<img src='heart' /> " + Integer.toString(currentActivity.getTemperature()) + "℃");	
-	    temperatureTextView.setTextColor(Color.RED);
-	    contentTextView.setText(currentActivity.getContent());
-	    procedureTextView.setText(currentActivity.getProcedure());
-	    
+		try {
+			clockTextView.setValue("<img src='clock'/> "
+					+ new SimpleDateFormat("HH:mm:ss").format(currentActivity
+							.getTime()));
+		} catch (NullPointerException e) {
+			Log.e("CP Error", e.getMessage());
+			Log.w("CP Exception", Log.getStackTraceString(e));
+		} catch (IllegalArgumentException e) {
+			Log.e("CP Error", e.getMessage());
+			Log.w("CP Exception", Log.getStackTraceString(e));
+		}
 
-		
-		
+		locatTextView.setValue("<img src='home'/> "
+				+ currentActivity.getAddress());
+		typeTextView.setValue("<img src='tag' /> " + currentActivity.getType());
+		themeTextView.setValue("<img src='favorite' /> "
+				+ currentActivity.getTheme());
+		reporterTextView.setValue("<img src='user' /> "
+				+ currentActivity.getReporterInfo());
+		temperatureTextView.setValue("<img src='heart' /> "
+				+ Integer.toString(currentActivity.getTemperature()) + "℃");
+		temperatureTextView.setTextColor(Color.RED);
+		contentTextView.setText(currentActivity.getContent());
+
+		procedureTextView.setText(currentActivity.getProcedure());
+		scrollView.setOnTouchListener(new OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				InputMethodManager manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+				if (event.getAction() == MotionEvent.ACTION_DOWN) {
+					if (getCurrentFocus() != null
+							&& getCurrentFocus().getWindowToken() != null) {
+						manager.hideSoftInputFromWindow(getCurrentFocus()
+								.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+					}
+				}
+				return true;
+			}
+		});
 	}
 
 	private void hintUserUnLogin() {
@@ -204,7 +233,7 @@ private ShareActionProvider shareActionProvider;
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-	
+
 		case R.id.detail_comment:
 			if (currentUser == null)
 				hintUserUnLogin();
@@ -243,12 +272,12 @@ private ShareActionProvider shareActionProvider;
 	@Override
 	protected void onResume() {
 		super.onResume();
-		reload();
-		reDownload();
+		load();
+		download();
 
 	}
 
-	private void reload() {
+	private void load() {
 		List<ContentValues> list = Entity.selectFromSQLite("comment",
 				new String[] { "content" }, "ActivityID = ?",
 				new String[] { currentActivity.getId().toString() }, this);
@@ -261,7 +290,7 @@ private ShareActionProvider shareActionProvider;
 		addViews(comments);
 	}
 
-	private void reDownload() {
+	private void download() {
 		MessageAdapter adapter = new MessageAdapter() {
 			@Override
 			public void onRcvJSONArray(JSONArray array) {
@@ -272,9 +301,11 @@ private ShareActionProvider shareActionProvider;
 						comment.transJSON(array.getJSONObject(i));
 						comments.add(comment);
 					} catch (JSONException e) {
-						e.printStackTrace();
+						Log.e("CP Error", e.getMessage());
+						Log.w("CP Exception", Log.getStackTraceString(e));
 					} catch (ParseException e) {
-						e.printStackTrace();
+						Log.e("CP Error", e.getMessage());
+						Log.w("CP Exception", Log.getStackTraceString(e));
 					}
 				}
 				Entity.insertIntoSQLite(comments, DetailActivity.this);
@@ -288,14 +319,14 @@ private ShareActionProvider shareActionProvider;
 
 			@Override
 			public void onFinish() {
-				reload();
+				load();
 			}
 		};
 
 		DatabaseConnector connector = new DatabaseConnector();
 		connector.addParams(DatabaseConnector.METHOD, "GETCOMMENT");
 		connector.addParams("activity_id", currentActivity.getId().toString());
-		connector.asyncConnect(adapter);
+		connector.executeConnector(adapter);
 	}
 
 	private void addViews(List<Comment> comments) {
@@ -317,7 +348,7 @@ private ShareActionProvider shareActionProvider;
 			public void onDone(String ret) {
 				Toast.makeText(DetailActivity.this, "评论成功", Toast.LENGTH_SHORT)
 						.show();
-				reDownload();
+				download();
 			}
 
 			@Override
@@ -338,7 +369,7 @@ private ShareActionProvider shareActionProvider;
 		connector.addParams("user_id", currentUser.getId().toString());
 		connector.addParams("activity_id", currentActivity.getId().toString());
 		connector.addParams("content", editText.getText().toString());
-		connector.asyncConnect(adapter);
+		connector.executeConnector(adapter);
 	}
+	
 }
-

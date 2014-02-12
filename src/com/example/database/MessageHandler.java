@@ -15,6 +15,10 @@ public class MessageHandler extends Handler {
 	private Map<String, String> para;
 	private MessageAdapter messageAdapter;
 	private Activity activity;
+	public final static String CONNECT_ERROR_STR = "CONERROR";
+	public final static String TIME_OUT_STR = "TIMEOUT";
+	public final static String DONE_QUERY_STR = "DONE";
+	public final static String ERROR_QUERY_STR = "ERROR";
 	
 	public void setPara(Map<String, String> para) {
 		this.para = para;
@@ -37,22 +41,22 @@ public class MessageHandler extends Handler {
 			//收到空信息
 			messageAdapter.onEmptyReceived();
 		}
-		else if(get.equals("CONERROR"))
+		else if(get.equals(CONNECT_ERROR_STR))
 		{
 			//数据库连接错误
-			Toast.makeText(activity.getApplicationContext(), "连接错误，请检查网络连接和服务器状态", Toast.LENGTH_SHORT).show();
+			
 		}
-		else if(get.startsWith("ERROR")) 
+		else if(get.startsWith(ERROR_QUERY_STR)) 
 		{
 			//数据库操作错误
 			messageAdapter.onErrorOccur(get.substring(5));
 		}
-		else if(get.startsWith("DONE")) {
+		else if(get.startsWith(DONE_QUERY_STR)) {
 			//数据库操作成功
 			messageAdapter.onDone(get.substring(4));
 			
 		}
-		else if (get.equals("timeout")) {
+		else if (get.equals(TIME_OUT_STR)) {
 			messageAdapter.onTimeout();
 		}
 		

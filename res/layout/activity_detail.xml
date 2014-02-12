@@ -8,7 +8,7 @@
     tools:context=".DetailActivity" >
 
     <ScrollView
-        android:id="@+id/scrollView1"
+        android:id="@+id/detail_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/detail_input_layout" >

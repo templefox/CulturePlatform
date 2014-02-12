@@ -66,7 +66,7 @@ public class RatingActivity extends android.app.Activity {
 			connector.addParams("environment", environmentRating.getDoubleRating().toString());
 			connector.addParams("staff", staffRating.getDoubleRating().toString());
 			connector.addParams("advice", "hello");
-			connector.asyncConnect(new MessageAdapter() {
+			connector.executeConnector(new MessageAdapter() {
 
 				@Override
 				public void onDone(String ret) {

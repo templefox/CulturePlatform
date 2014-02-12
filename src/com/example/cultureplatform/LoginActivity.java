@@ -171,7 +171,7 @@ public class LoginActivity extends Activity {
 		connector.addParams(DatabaseConnector.METHOD, "GETUSER");
 		connector.addParams("Email",mEmail);
 		connector.addParams("password", mPassword);
-		connector.asyncConnect(loginAdapter);
+		connector.executeConnector(loginAdapter);
 	}
 
 	/**
@@ -273,7 +273,7 @@ public class LoginActivity extends Activity {
 						connector.addParams(DatabaseConnector.METHOD, "ADDUSER");
 						connector.addParams("Email", mEmail);
 						connector.addParams("password", mPassword);
-						connector.asyncConnect(registerAdapter);
+						connector.executeConnector(registerAdapter);
 					}
 					else {
 						Toast.makeText(LoginActivity.this, "√‹¬Î≤ª∆•≈‰", Toast.LENGTH_SHORT).show();

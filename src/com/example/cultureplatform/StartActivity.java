@@ -98,7 +98,7 @@ public class StartActivity extends Activity {
 				connector.addParams(DatabaseConnector.METHOD, "GETUSER");
 				connector.addParams("Email", Email);
 				connector.addParams("password", password);
-				connector.asyncConnect(new MessageAdapter() {
+				connector.executeConnector(new MessageAdapter() {
 					@Override
 					public void onRcvJSONArray(JSONArray array) {
 						User user = new User();

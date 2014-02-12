@@ -51,8 +51,8 @@ public abstract class Entity {
 	}
 	private static synchronized void insertOrUpdata(Entity entity, SQLiteDatabase db) {
 		try {
-				ContentValues values = entity.getContentValues();
-				db.replace(entity.getTableName(), null, values);
+			ContentValues values = entity.getContentValues();
+			db.replace(entity.getTableName(), null, values);
 		} catch (IllegalArgumentException e) {
 			Log.e("CP Error", e.getMessage());
 			Log.w("CP Exception", Log.getStackTraceString(e));
@@ -65,7 +65,6 @@ public abstract class Entity {
 	protected abstract ContentValues getContentValues() throws IllegalArgumentException,NullPointerException;
 	protected abstract String getTableName();
 
-	//TODO ¼ÌÐø
 	public static List<ContentValues> selectFromSQLite(String table,String[] columns,Context context) {
 		return selectFromSQLite(table, columns, context, null);
 	}
