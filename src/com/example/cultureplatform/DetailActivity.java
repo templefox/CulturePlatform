@@ -17,6 +17,8 @@ import com.example.database.data.Entity;
 import com.example.database.data.User;
 import com.example.widget.AsyncImageView;
 import com.example.widget.ImageTextView;
+
+import android.R.integer;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.content.ContentValues;
@@ -47,9 +49,6 @@ import android.widget.Toast;
 public class DetailActivity extends android.app.Activity {
 	private Activity currentActivity;
 	private LinearLayout area;
-	private EditText editText;
-	private Button clear;
-	private Button submit;
 	private User currentUser;
 
 	private ImageTextView dateTextView;
@@ -61,7 +60,9 @@ public class DetailActivity extends android.app.Activity {
 	private ImageTextView clockTextView;
 	private TextView contentTextView;
 	private TextView procedureTextView;
+	private Button showMore;
 	private ScrollView scrollView;
+	private View gallary_small;
 
 	private AsyncImageView imageView;
 	String image_url = "";
@@ -82,55 +83,7 @@ public class DetailActivity extends android.app.Activity {
 		currentUser = ((ApplicationHelper) getApplication()).getCurrentUser();
 
 		area = (LinearLayout) findViewById(R.id.area_comments);
-		clear = (Button) findViewById(R.id.detail_button_clear);
-		submit = (Button) findViewById(R.id.detail_button_submit);
-		editText = (EditText) findViewById(R.id.detail_comment_text);
 
-		clear.setVisibility(View.INVISIBLE);
-
-		editText.addTextChangedListener(new TextWatcher() {
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before,
-					int count) {
-				if (count != 0)
-					clear.setVisibility(View.VISIBLE);
-				else {
-					clear.setVisibility(View.INVISIBLE);
-				}
-			}
-
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
-			}
-		});
-		clear.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				v.setVisibility(View.INVISIBLE);
-				editText.setText("");
-			}
-		});
-		submit.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (currentUser == null)
-					hintUserUnLogin();
-				else if (currentUser.getAuthority() == User.AUTHORITY_UNCHECK)
-					hintUserUnCheck();
-				else
-					submit();
-
-				editText.clearFocus();
-				editText.setText("");
-			}
-
-		});
 		image_url = DatabaseConnector.target_url
 				+ currentActivity.getPictureUrl();
 		dateTextView = (ImageTextView) findViewById(R.id.date);
@@ -143,7 +96,9 @@ public class DetailActivity extends android.app.Activity {
 		contentTextView = (TextView) findViewById(R.id.detail_content);
 		procedureTextView = (TextView) findViewById(R.id.procedure);
 		imageView = (AsyncImageView) findViewById(R.id.image);
+		showMore = (Button) findViewById(R.id.detail_show_more);
 		scrollView = (ScrollView) findViewById(R.id.detail_scroll_view);
+		gallary_small = findViewById(R.id.detail_gallary_small);
 
 		imageView.asyncLoad(image_url);
 
@@ -185,7 +140,7 @@ public class DetailActivity extends android.app.Activity {
 
 		procedureTextView.setText(currentActivity.getProcedure());
 		scrollView.setOnTouchListener(new OnTouchListener() {
-			
+
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				InputMethodManager manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -193,10 +148,32 @@ public class DetailActivity extends android.app.Activity {
 					if (getCurrentFocus() != null
 							&& getCurrentFocus().getWindowToken() != null) {
 						manager.hideSoftInputFromWindow(getCurrentFocus()
-								.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+								.getWindowToken(),
+								InputMethodManager.HIDE_NOT_ALWAYS);
 					}
 				}
-				return true;
+				return false;
+			}
+		});
+
+		showMore.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(DetailActivity.this,
+						CommentsActivity.class);
+				intent.putExtra("activity", currentActivity);
+				startActivity(intent);
+			}
+		});
+
+		gallary_small.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(DetailActivity.this,
+						GalleryActivity.class);
+				startActivity(intent);
 			}
 		});
 	}
@@ -331,7 +308,8 @@ public class DetailActivity extends android.app.Activity {
 
 	private void addViews(List<Comment> comments) {
 		area.removeAllViews();
-		for (Comment comment : comments) {
+		for (int i = 0; i < comments.size() && i < 2; i++) {
+			Comment comment = comments.get(i);
 			View view = LayoutInflater.from(this).inflate(
 					R.layout.item_comment, area, false);
 			TextView textView = (TextView) view
@@ -341,35 +319,4 @@ public class DetailActivity extends android.app.Activity {
 		}
 	}
 
-	private void submit() {
-		MessageAdapter adapter = new MessageAdapter() {
-
-			@Override
-			public void onDone(String ret) {
-				Toast.makeText(DetailActivity.this, "评论成功", Toast.LENGTH_SHORT)
-						.show();
-				download();
-			}
-
-			@Override
-			public void onTimeout() {
-				Toast.makeText(getApplicationContext(), "连接超时",
-						Toast.LENGTH_SHORT).show();
-			}
-
-			@Override
-			public void onErrorOccur(String ret) {
-				Toast.makeText(DetailActivity.this, "评论失败，请联系管理员",
-						Toast.LENGTH_SHORT).show();
-			}
-		};
-
-		DatabaseConnector connector = new DatabaseConnector();
-		connector.addParams(DatabaseConnector.METHOD, "ADDCOMMENT");
-		connector.addParams("user_id", currentUser.getId().toString());
-		connector.addParams("activity_id", currentActivity.getId().toString());
-		connector.addParams("content", editText.getText().toString());
-		connector.executeConnector(adapter);
-	}
-	
 }

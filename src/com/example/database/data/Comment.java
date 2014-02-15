@@ -24,7 +24,7 @@ public class Comment extends Entity implements java.io.Serializable {
 	 */
 	private static final long serialVersionUID = 6225609792902914062L;
 	private Integer id;
-	private Activity activity;
+	private Integer activityID;
 	private User user;
 	private String content;
 	private Date datatime;
@@ -37,9 +37,9 @@ public class Comment extends Entity implements java.io.Serializable {
 		this.datatime = datatime;
 	}
 
-	public Comment(Activity activity, User user, String content, Date datatime,
+	public Comment(Integer activity, User user, String content, Date datatime,
 			String pictureUrl) {
-		this.activity = activity;
+		this.activityID = activity;
 		this.user = user;
 		this.content = content;
 		this.datatime = datatime;
@@ -54,12 +54,12 @@ public class Comment extends Entity implements java.io.Serializable {
 		this.id = id;
 	}
 
-	public Activity getActivity() {
-		return this.activity;
+	public Integer getActivityID() {
+		return this.activityID;
 	}
 
-	public void setActivity(Activity activity) {
-		this.activity = activity;
+	public void setActivityID(Integer activity) {
+		this.activityID = activity;
 	}
 
 	public User getUser() {
@@ -99,6 +99,7 @@ public class Comment extends Entity implements java.io.Serializable {
 		ContentValues contentValues = new ContentValues();
 		contentValues.put("id", id);
 		contentValues.put("content", content);
+		contentValues.put("ActivityID", activityID);
 		try {
 			contentValues.put("datetime", new SimpleDateFormat(
 					"yyyy-MM-dd HH:mm:ss").format(datatime));
@@ -123,6 +124,7 @@ public class Comment extends Entity implements java.io.Serializable {
 			ParseException {
 		this.setId(obj.getInt("id"));
 		this.setContent(obj.getString("content"));
+		this.setActivityID(obj.getInt("ActivityID"));
 		try {
 			this.setDatatime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 					.parse(obj.getString("datetime")));

@@ -1,16 +1,22 @@
 package com.example.widget;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 
 import com.example.cultureplatform.R;
+import com.example.database.DatabaseConnector;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -72,7 +78,10 @@ public class AsyncImageView extends ImageView {
 				if (bitmap != null) {
 					return bitmap;
 				} else {
-					HttpClient httpClient = new DefaultHttpClient();
+					HttpParams param = new BasicHttpParams();
+					HttpConnectionParams.setConnectionTimeout(param, DatabaseConnector.TIME_OUT/10);
+					HttpConnectionParams.setSoTimeout(param, DatabaseConnector.TIME_OUT/10);
+					HttpClient httpClient = new DefaultHttpClient(param);
 					HttpGet httpGet = new HttpGet((String) params[0]);
 
 					HttpResponse httpResponse;
@@ -93,7 +102,12 @@ public class AsyncImageView extends ImageView {
 						}
 					} catch (ClientProtocolException e) {
 						 Log.e("CP Error",e.getMessage());Log.w("CP Exception", Log.getStackTraceString(e));
-					} catch (IOException e) {
+					}catch (SocketTimeoutException e) {
+						// TODO: handle exception
+					} catch (ConnectTimeoutException e) {
+						// TODO: handle exception
+					}
+					catch (IOException e) {
 						 Log.e("CP Error",e.getMessage());Log.w("CP Exception", Log.getStackTraceString(e));
 					}
 

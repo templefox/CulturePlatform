@@ -22,7 +22,7 @@ public class TestFragment extends Fragment {
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		View view = inflater.inflate(R.layout.frag_test, container,false);
-		TextView textView = (TextView) view.findViewById(R.id.textView1);
+		TextView textView = (TextView) view.findViewById(R.id.item_comment_namew);
 		textView.setText("The "+a);
 		return view;
 	}

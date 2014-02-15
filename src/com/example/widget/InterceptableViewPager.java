@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 
 public class InterceptableViewPager extends ViewPager {
-	private boolean isIntercept = true;
+	private boolean isMovable = true;
 	@SuppressWarnings("unused")
 	private Context context;
 	
@@ -20,24 +20,17 @@ public class InterceptableViewPager extends ViewPager {
 		this.context = context;
 	}
 
-	@Override
-	public boolean onInterceptTouchEvent(MotionEvent arg0) {
-		// TODO Auto-generated method stub
-		if(isIntercept)
-			return super.onInterceptTouchEvent(arg0);
-    	else
-            return false;
+	
+	public void setMovable(boolean isMovable) {
+		this.isMovable = isMovable;
 	}
 	
-    /**
-     * 设置ViewPager是否拦截点击事件
-     * @param value if true, ViewPager拦截点击事件
-     *                                 if false, ViewPager将不能滑动，ViewPager的子View可以获得点击事件
-     *                                 主要受影响的点击事件为横向滑动
-     *
-     */
-	public void setInterceptable(boolean isIntercept) {
-		this.isIntercept = isIntercept;
-	}
-
+	@Override
+	public boolean onTouchEvent(MotionEvent arg0) {
+		if(isMovable)
+			return super.onTouchEvent(arg0);
+		else {
+			return false;
+		}
+	}	
 }

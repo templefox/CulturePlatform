@@ -10,5 +10,7 @@
     <string name="title_activity_rating">RatingActivity</string>
     <string name="title_activity_comment">CommentActivity</string>
     <string name="title_activity_add_act">添加新活动</string>
+    <string name="title_activity_comments">CommentsActivity</string>
+    <string name="title_activity_gallary">GallaryActivity</string>
 
 </resources>

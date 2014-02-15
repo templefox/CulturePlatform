@@ -67,7 +67,7 @@ public class DatabaseConnector {
 	static final private String boundary = "******";
 	static final public String METHOD = "METHOD";
 	static final public String UPLOAD = "UPLOAD";
-	static final private int TIME_OUT = 3000;
+	static final public int TIME_OUT = 3000;
 	public static Lock lock = new ReentrantLock(true);
 	static private ExecutorService threadPool = Executors.newCachedThreadPool();
 	private Map<String, String> keyValue = new HashMap<String, String>();
@@ -95,10 +95,10 @@ public class DatabaseConnector {
 		threadPool.execute(new Runnable() {
 			@Override
 			public void run() {
-				lock.lock();
+				//lock.lock();
 				handler.setMessageAdapter(callback);
 				multifunctionalConnect(target_url, keyValue, null, handler);
-				lock.unlock();
+				//lock.unlock();
 			}
 		});
 	}
