@@ -58,8 +58,8 @@ import android.os.Message;
 import android.util.Log;
 
 public class DatabaseConnector {
-	// static public String target_url = "http://templefox.xicp.net:998/";
-	static public String url = "http://templefox.xicp.net:998/";
+	static public String url = "http://192.168.1.198:998/db/index.php";
+	//static public String url = "http://templefox.xicp.net:998/";
 	static public String upload_url = url + "upload_picture.php";
 	static final public String METHOD = "method";
 	static final public String QUERY = "query";

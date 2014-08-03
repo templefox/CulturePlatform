@@ -6,7 +6,7 @@ import java.util.List;
 import net.templefox.database.data.Entity;
 import net.templefox.fragment.item.ClassifyItemAdapter;
 
-import com.example.cultureplatform.R;
+import net.templefox.cultureplatform.R;
 
 import android.os.Bundle;
 import android.app.Activity;

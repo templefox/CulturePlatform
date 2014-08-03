@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.androidannotations.annotations.EFragment;
+
 import net.templefox.cultureplatform.ApplicationHelper;
 import net.templefox.database.data.Activity;
 import net.templefox.database.data.Entity;
@@ -12,7 +14,7 @@ import net.templefox.database.data.User;
 import net.templefox.fragment.item.CalendarItemAdapter;
 import net.templefox.fragment.item.ClassifyItemAdapter;
 
-import com.example.cultureplatform.R;
+import net.templefox.cultureplatform.R;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
@@ -25,6 +27,7 @@ import android.widget.CalendarView;
 import android.widget.CalendarView.OnDateChangeListener;
 import android.widget.ListView;
 
+@EFragment(R.layout.frag_calendar)
 @SuppressLint("SimpleDateFormat")
 public class CalendarFragment extends AbsFragment {
 	private ListView listView;

@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.androidannotations.annotations.EFragment;
+
 import net.templefox.cultureplatform.ApplicationHelper;
 import net.templefox.cultureplatform.LoginActivity;
 import net.templefox.database.data.Activity;
@@ -13,7 +15,7 @@ import net.templefox.database.data.User;
 import net.templefox.fragment.item.ClassifyItemAdapter;
 import net.templefox.fragment.item.UserItemAdapter;
 
-import com.example.cultureplatform.R;
+import net.templefox.cultureplatform.R;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
@@ -27,6 +29,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 
+@EFragment(R.layout.frag_user)
 @SuppressLint("SimpleDateFormat")
 public class UserFragment extends AbsFragment {
 	private View noUser;

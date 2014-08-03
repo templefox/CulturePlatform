@@ -1,6 +1,8 @@
 package net.templefox.fragment;
 
-import com.example.cultureplatform.R;
+import org.androidannotations.annotations.EFragment;
+
+import net.templefox.cultureplatform.R;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -9,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+@EFragment(R.layout.frag_test)
 public class TestFragment extends Fragment {
 	int a;
 	public void setA(int a) {

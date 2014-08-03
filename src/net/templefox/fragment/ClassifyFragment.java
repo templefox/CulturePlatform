@@ -20,11 +20,12 @@ import net.templefox.fragment.item.ClassifyItemAdapter;
 import net.templefox.widget.Optionor;
 import net.templefox.widget.Panel;
 
+import org.androidannotations.annotations.EFragment;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.example.cultureplatform.R;
+import net.templefox.cultureplatform.R;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
@@ -43,6 +44,7 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 
+@EFragment(R.layout.frag_classify)
 @SuppressLint("SimpleDateFormat")
 public class ClassifyFragment extends AbsFragment {
 	private Optionor optionorType;

@@ -21,7 +21,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import com.example.cultureplatform.R;
+import net.templefox.cultureplatform.R;
 
 @SuppressLint("SimpleDateFormat")
 public class UserItemAdapter extends BaseAdapter{

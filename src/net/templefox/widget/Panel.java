@@ -1,6 +1,6 @@
 package net.templefox.widget;
 
-import com.example.cultureplatform.R;
+import net.templefox.cultureplatform.R;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -515,7 +515,7 @@ public class Panel extends LinearLayout
 			mState = State.FLYING;
 
 			float velocityX2, velocityY2;
-			if (lastRawX == -1 && lastRawY == -1)	//瑙乷nScroll鏂规�?
+			if (lastRawX == -1 && lastRawY == -1)	//瑙乷nScroll鏂规�?
 			{
 				velocityX2 = (curRawX - e1.getRawX())
 						/ (curEventTime - e1.getEventTime()) * 1000; //  px/s
@@ -597,7 +597,7 @@ public class Panel extends LinearLayout
 			{
 				mTrackX = tmpX;
 				mTrackY = tmpY;
-				// invalidate(); //�?惧湪姝ゅ鑷存�?�蹇�婊戝姩鑷硉ouch鍖哄煙澶栫晫闈笉鍒锋柊锛坢TrackX銆乵TrackY鍧囦�?0锛�			}
+				// invalidate(); //�?惧湪姝ゅ鑷存�?�蹇�婊戝姩鑷硉ouch鍖哄煙澶栫晫闈笉鍒锋柊锛坢TrackX銆乵TrackY鍧囦�?0锛�			}
 			invalidate();
 
 			lastRawX = curRawX;

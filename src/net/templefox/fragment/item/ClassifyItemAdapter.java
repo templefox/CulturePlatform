@@ -26,7 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.example.cultureplatform.R;
+import net.templefox.cultureplatform.R;
 
 @SuppressLint("SimpleDateFormat")
 public class ClassifyItemAdapter extends BaseAdapter {

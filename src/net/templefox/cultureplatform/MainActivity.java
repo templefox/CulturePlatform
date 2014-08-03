@@ -1,16 +1,26 @@
 package net.templefox.cultureplatform;
 
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.OptionsItem;
+import org.androidannotations.annotations.OptionsMenu;
+
 import net.templefox.database.DatabaseConnector;
 import net.templefox.database.MessageAdapter;
 import net.templefox.database.data.User;
 import net.templefox.fragment.CalendarFragment;
+import net.templefox.fragment.CalendarFragment_;
 import net.templefox.fragment.ClassifyFragment;
+import net.templefox.fragment.ClassifyFragment_;
 import net.templefox.fragment.RecommendFragment;
+import net.templefox.fragment.RecommendFragment_;
 import net.templefox.fragment.TestFragment;
+import net.templefox.fragment.TestFragment_;
 import net.templefox.fragment.UserFragment;
+import net.templefox.fragment.UserFragment_;
 import net.templefox.widget.InterceptableViewPager;
 
-import com.example.cultureplatform.R;
+import net.templefox.cultureplatform.R;
 
 import android.app.ActionBar;
 import android.app.ActionBar.TabListener;
@@ -35,17 +45,16 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
-/**
- * Entrance of the Application. Create the viewPager, which contains some
- * fragments with various functions.
- */
+@EActivity(R.layout.activity_main)
+@OptionsMenu(R.menu.main)
 public class MainActivity extends Activity {
 	private InterceptableViewPager viewPager;
 	private FragmentPagerAdapter fragmentPagerAdapter;
+	private ActionBar actionBar;
 	@SuppressWarnings("unchecked")
-	private Class<Fragment>[] cls = new Class[] { RecommendFragment.class,
-			ClassifyFragment.class, UserFragment.class, CalendarFragment.class,
-			TestFragment.class };
+	private Class<Fragment>[] cls = new Class[] { RecommendFragment_.class,
+			ClassifyFragment_.class, UserFragment_.class, CalendarFragment_.class,
+			TestFragment_.class };
 
 	/**
 	 * Entrance. Initial the actionBar and the viewPager.
@@ -54,16 +63,14 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setTheme(R.style.ActionBar);
-		setContentView(R.layout.activity_main);
-
-
-		//connector.testConnect(new MessageAdapter() {});
+		
+		// connector.testConnect(new MessageAdapter() {});
 		// 为了测验模拟登录
-		//User user = new User();
-		//user.setId(1);
-		//user.setName("test@test");
-		//user.setAuthority(User.AUTHORITY_AUTHORIZED);
-		//((ApplicationHelper) this.getApplication()).setCurrentUser(user);
+		// User user = new User();
+		// user.setId(1);
+		// user.setName("test@test");
+		// user.setAuthority(User.AUTHORITY_AUTHORIZED);
+		// ((ApplicationHelper) this.getApplication()).setCurrentUser(user);
 		// 测验结束
 
 		// test
@@ -80,10 +87,16 @@ public class MainActivity extends Activity {
 		 */
 
 		// Set actionBar
-		final ActionBar actionBar = getActionBar();
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
 		// Set fragmentPagerAdapter
+
+		
+	}
+
+	@AfterViews
+	protected void afterViews(){
+		actionBar = getActionBar();
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		fragmentPagerAdapter = new FragmentPagerAdapter(getFragmentManager()) {
 			@Override
 			public int getCount() {
@@ -97,9 +110,11 @@ public class MainActivity extends Activity {
 				try {
 					fragment = class1.newInstance();
 				} catch (InstantiationException e) {
-					 Log.e("CP Error",e.getMessage());Log.w("CP Exception", Log.getStackTraceString(e));
+					Log.e("CP Error", e.getMessage());
+					Log.w("CP Exception", Log.getStackTraceString(e));
 				} catch (IllegalAccessException e) {
-					 Log.e("CP Error",e.getMessage());Log.w("CP Exception", Log.getStackTraceString(e));
+					Log.e("CP Error", e.getMessage());
+					Log.w("CP Exception", Log.getStackTraceString(e));
 				} finally {
 					if (fragment == null) {
 						fragment = new TestFragment();
@@ -162,40 +177,32 @@ public class MainActivity extends Activity {
 			actionBar.addTab(tab);
 		}
 	}
-
+	
 	final private <T> boolean intent2(Class<T> cls) {
 		Intent intent = new Intent(this, cls);
 		startActivity(intent);
 		return true;
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.main, menu);
-		return true;
+	@OptionsItem(R.id.action_bar_user)
+	protected void toUserActivity() {
+		UserActivity_.intent(this).start();
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.action_bar_user:
-			return intent2(UserActivity.class);
-		case R.id.action_bar_add_activity:
-			if (((ApplicationHelper) this.getApplication()).getUserAuthority() == User.AUTHORITY_AUTHORIZED
-					|| ((ApplicationHelper) this.getApplication())
-							.getUserAuthority() == User.AUTHORITY_ULTIMATED)
-				return intent2(AddActActivity.class);
-			else {
-				Toast.makeText(this, "没有足够的权限", Toast.LENGTH_SHORT).show();
-				return super.onOptionsItemSelected(item);
-			}
-		case R.id.action_bar_search:
-			return intent2(SearchActivity.class);
-		default:
-			break;
+	@OptionsItem(R.id.action_bar_add_activity)
+	protected void toAddActivity() {
+		if (((ApplicationHelper) this.getApplication()).getUserAuthority() == User.AUTHORITY_AUTHORIZED
+				|| ((ApplicationHelper) this.getApplication())
+						.getUserAuthority() == User.AUTHORITY_ULTIMATED)
+			intent2(AddActActivity.class);
+		else {
+			Toast.makeText(this, "没有足够的权限", Toast.LENGTH_SHORT).show();
 		}
-		return super.onOptionsItemSelected(item);
+	}
+
+	@OptionsItem(R.id.action_bar_search)
+	protected void toSearchActivity() {
+		intent2(SearchActivity.class);
 	}
 
 	@Override

@@ -8,7 +8,7 @@ import net.templefox.database.MessageAdapter;
 import net.templefox.database.MessageHandler;
 import net.templefox.database.data.Entity;
 
-import com.example.cultureplatform.R;
+import net.templefox.cultureplatform.R;
 
 import android.net.Uri;
 import android.os.Bundle;

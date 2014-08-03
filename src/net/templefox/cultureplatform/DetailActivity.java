@@ -19,7 +19,7 @@ import net.templefox.widget.ImageTextView;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import com.example.cultureplatform.R;
+import net.templefox.cultureplatform.R;
 
 import android.R.integer;
 import android.annotation.SuppressLint;

@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.example.cultureplatform.R;
+import net.templefox.cultureplatform.R;
 
 public class CalendarItemAdapter extends BaseAdapter{
 	List<Activity> activities;

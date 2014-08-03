@@ -1,6 +1,6 @@
 package net.templefox.database;
 
-import com.example.cultureplatform.R;
+import net.templefox.cultureplatform.R;
 
 import junit.framework.Assert;
 import android.graphics.Bitmap;

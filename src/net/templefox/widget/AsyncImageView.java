@@ -17,7 +17,7 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 
-import com.example.cultureplatform.R;
+import net.templefox.cultureplatform.R;
 
 import android.content.Context;
 import android.graphics.Bitmap;

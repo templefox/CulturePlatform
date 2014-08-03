@@ -6,7 +6,7 @@ import net.templefox.database.DatabaseConnector;
 import net.templefox.database.MessageAdapter;
 import net.templefox.database.data.User;
 
-import com.example.cultureplatform.R;
+import net.templefox.cultureplatform.R;
 
 import android.net.Uri;
 import android.os.Bundle;

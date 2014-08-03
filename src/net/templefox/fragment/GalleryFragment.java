@@ -4,7 +4,7 @@ import net.templefox.widget.AsyncImageView;
 import net.templefox.widget.InterceptableViewPager;
 import net.templefox.widget.TouchImageView;
 
-import com.example.cultureplatform.R;
+import net.templefox.cultureplatform.R;
 
 import android.app.Fragment;
 import android.os.Bundle;

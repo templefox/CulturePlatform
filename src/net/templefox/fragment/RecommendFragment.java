@@ -13,11 +13,13 @@ import net.templefox.database.data.Activity;
 import net.templefox.database.data.Entity;
 import net.templefox.fragment.item.RecommendItemAdapter;
 
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.ViewById;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.example.cultureplatform.R;
+import net.templefox.cultureplatform.R;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
@@ -32,10 +34,16 @@ import android.widget.Toast;
 /**
  * First screen of the application. Download first part of activities.
  */
+@EFragment(R.layout.frag_recommend)
 public class RecommendFragment extends AbsFragment {
 	private RecommendItemAdapter adapter = new RecommendItemAdapter(null);
-	private LinearLayout left;
-	private LinearLayout right;
+	
+	@ViewById(R.id.reco_left)
+	LinearLayout left;
+	
+	@ViewById(R.id.reco_right)
+	LinearLayout right;
+	
 	private final int MAX_COUNT = 8;
 
 	public void freshList(List<Activity> activities) {
@@ -49,15 +57,6 @@ public class RecommendFragment extends AbsFragment {
 				left.addView(adapter.getView(i, null, left));
 			}
 		}
-	}
-
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.frag_recommend, container, false);
-		left = (LinearLayout) view.findViewById(R.id.reco_left);
-		right = (LinearLayout) view.findViewById(R.id.reco_right);
-		return view;
 	}
 
 	@Override

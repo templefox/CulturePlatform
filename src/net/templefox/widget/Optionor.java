@@ -4,7 +4,7 @@ package net.templefox.widget;
 
 import java.util.List;
 
-import com.example.cultureplatform.R;
+import net.templefox.cultureplatform.R;
 
 import android.content.Context;
 import android.graphics.Color;

@@ -2,7 +2,7 @@ package net.templefox.widget;
 
 import java.lang.reflect.Field;
 
-import com.example.cultureplatform.R;
+import net.templefox.cultureplatform.R;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;

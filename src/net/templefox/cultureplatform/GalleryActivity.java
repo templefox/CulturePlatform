@@ -6,7 +6,7 @@ import java.util.Set;
 import net.templefox.fragment.GalleryFragment;
 import net.templefox.widget.InterceptableViewPager;
 
-import com.example.cultureplatform.R;
+import net.templefox.cultureplatform.R;
 
 import android.os.Bundle;
 import android.app.Activity;

@@ -5,7 +5,7 @@ import net.templefox.database.MessageAdapter;
 import net.templefox.database.data.Activity;
 import net.templefox.database.data.User;
 
-import com.example.cultureplatform.R;
+import net.templefox.cultureplatform.R;
 
 import android.content.Intent;
 import android.os.Bundle;

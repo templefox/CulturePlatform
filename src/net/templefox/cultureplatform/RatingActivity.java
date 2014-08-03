@@ -6,7 +6,7 @@ import net.templefox.database.data.Activity;
 import net.templefox.database.data.User;
 import net.templefox.widget.TextRatingBar;
 
-import com.example.cultureplatform.R;
+import net.templefox.cultureplatform.R;
 
 import android.os.Bundle;
 import android.view.Menu;

@@ -7,7 +7,7 @@ import net.templefox.database.DatabaseConnector;
 import net.templefox.database.data.Activity;
 import net.templefox.widget.AsyncImageView;
 
-import com.example.cultureplatform.R;
+import net.templefox.cultureplatform.R;
 
 import android.content.Intent;
 import android.view.LayoutInflater;
