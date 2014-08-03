@@ -8,37 +8,37 @@
     android:gravity="bottom"
     tools:context=".RatingActivity" >
 
-    <com.example.widget.TextRatingBar
+    <net.templefox.widget.TextRatingBar
         android:id="@+id/rating_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         rating:title = "讲座内容"
         android:layout_weight="0.1" >
-    </com.example.widget.TextRatingBar>
+    </net.templefox.widget.TextRatingBar>
 
-    <com.example.widget.TextRatingBar
+    <net.templefox.widget.TextRatingBar
         android:id="@+id/rating_reporter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         rating:title = "主持嘉宾"
         android:layout_weight="0.1" >
-    </com.example.widget.TextRatingBar>
+    </net.templefox.widget.TextRatingBar>
 
-    <com.example.widget.TextRatingBar
+    <net.templefox.widget.TextRatingBar
         android:id="@+id/rating_staff"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         rating:title = "工作人员"
         android:layout_weight="0.1" >
-    </com.example.widget.TextRatingBar>
+    </net.templefox.widget.TextRatingBar>
 
-    <com.example.widget.TextRatingBar
+    <net.templefox.widget.TextRatingBar
         android:id="@+id/rating_environment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         rating:title = "环境设备"
         android:layout_weight="0.1" >
-    </com.example.widget.TextRatingBar>
+    </net.templefox.widget.TextRatingBar>
 
     <EditText
         android:id="@+id/rating_edit"

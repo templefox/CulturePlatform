@@ -6,7 +6,7 @@
     android:background="@drawable/list_selector"
     android:orientation="vertical" >
 
-    <com.example.widget.AsyncImageView
+    <net.templefox.widget.AsyncImageView
         android:id="@+id/item_recommend_image"
         android:layout_width="160dp"
         android:layout_height="160dp"

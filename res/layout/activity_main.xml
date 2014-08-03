@@ -6,7 +6,7 @@
     tools:context=".MainActivity" 
     >
 
-    <com.example.widget.InterceptableViewPager  
+    <net.templefox.widget.InterceptableViewPager  
         android:id="@+id/pager"  
         android:layout_width="match_parent"  
         android:layout_height="match_parent" /> 

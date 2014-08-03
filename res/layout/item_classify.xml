@@ -18,7 +18,7 @@
         android:background="@drawable/image_bg"
         android:padding="3dip" >
 
-        <com.example.widget.AsyncImageView
+        <net.templefox.widget.AsyncImageView
             android:id="@+id/item_cla_image"
             android:layout_width="70dip"
             android:layout_height="75dip"
