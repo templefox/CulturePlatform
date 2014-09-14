@@ -11,6 +11,7 @@ import net.templefox.misc.Encoder;
 import net.templefox.misc.SharedPreferences_;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.sharedpreferences.Pref;
@@ -79,16 +80,19 @@ public class StartActivity extends Activity {
 									Toast.makeText(StartActivity.this, "Login:"+currentUser.getEMail(), Toast.LENGTH_SHORT).show();
 								}
 							}
-
-							MainActivity_.intent(StartActivity.this).start();
-							finish();
+							toMainActivity();
 
 						}
 					});
 		} else {
-			MainActivity_.intent(StartActivity.this).start();
-			finish();
+			toMainActivity();
 		}
+	}
+	
+	@Background(delay=1000)
+	void toMainActivity(){
+		MainActivity_.intent(StartActivity.this).start();
+		finish();
 	}
 
 	/*

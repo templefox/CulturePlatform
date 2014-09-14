@@ -1,5 +1,6 @@
 package net.templefox.cultureplatform;
 
+import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OptionsItem;
@@ -56,47 +57,68 @@ public class MainActivity extends Activity {
 			ClassifyFragment_.class, UserFragment_.class, CalendarFragment_.class,
 			TestFragment_.class };
 
-	/**
-	 * Entrance. Initial the actionBar and the viewPager.
-	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setTheme(R.style.ActionBar);
-		
-		// connector.testConnect(new MessageAdapter() {});
-		// 为了测验模拟登录
-		// User user = new User();
-		// user.setId(1);
-		// user.setName("test@test");
-		// user.setAuthority(User.AUTHORITY_AUTHORIZED);
-		// ((ApplicationHelper) this.getApplication()).setCurrentUser(user);
-		// 测验结束
-
-		// test
-		/*
-		 * Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
-		 * R.drawable.init); MessageAdapter callback = new MessageAdapter(){
-		 * 
-		 * @Override public void onDone(String ret) { // TODO Auto-generated
-		 * method stub Toast.makeText(getApplicationContext(), "Done",
-		 * Toast.LENGTH_SHORT).show(); }
-		 * 
-		 * }; DatabaseConnector databaseConnector = new DatabaseConnector();
-		 * databaseConnector.asyncUpload(bitmap, callback);
-		 */
-
-		// Set actionBar
-
-		// Set fragmentPagerAdapter
-
-		
 	}
 
 	@AfterViews
 	protected void afterViews(){
 		actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		prepareFragmentPageAdapter();
+		prepareViewPager();
+		linkPager_ActionBar();
+	}
+
+	private void linkPager_ActionBar() {
+		for (int i = 0; i < fragmentPagerAdapter.getCount(); i++) {
+			Tab tab = actionBar.newTab();
+			tab.setText(fragmentPagerAdapter.getPageTitle(i)).setTabListener(
+					new TabListener() {
+
+						@Override
+						public void onTabUnselected(Tab tab,
+								FragmentTransaction ft) {
+						}
+
+						@Override
+						public void onTabSelected(Tab tab,
+								FragmentTransaction ft) {
+							viewPager.setCurrentItem(tab.getPosition());
+						}
+
+						@Override
+						public void onTabReselected(Tab tab,
+								FragmentTransaction ft) {
+						}
+					});
+			actionBar.addTab(tab);
+		}
+	}
+
+	private void prepareViewPager() {
+		viewPager = (InterceptableViewPager) findViewById(R.id.pager);
+		viewPager.setOffscreenPageLimit(4);
+		viewPager.setAdapter(fragmentPagerAdapter);
+		viewPager.setOnPageChangeListener(new OnPageChangeListener() {
+			@Override
+			public void onPageSelected(int arg0) {
+				actionBar.setSelectedNavigationItem(arg0);
+			}
+
+			@Override
+			public void onPageScrolled(int arg0, float arg1, int arg2) {
+			}
+
+			@Override
+			public void onPageScrollStateChanged(int arg0) {
+			}
+		});
+	}
+
+	private void prepareFragmentPageAdapter() {
 		fragmentPagerAdapter = new FragmentPagerAdapter(getFragmentManager()) {
 			@Override
 			public int getCount() {
@@ -132,50 +154,6 @@ public class MainActivity extends Activity {
 			}
 
 		};
-
-		// Set viewPager
-		viewPager = (InterceptableViewPager) findViewById(R.id.pager);
-		viewPager.setOffscreenPageLimit(4);
-		viewPager.setAdapter(fragmentPagerAdapter);
-		viewPager.setOnPageChangeListener(new OnPageChangeListener() {
-			@Override
-			public void onPageSelected(int arg0) {
-				actionBar.setSelectedNavigationItem(arg0);
-			}
-
-			@Override
-			public void onPageScrolled(int arg0, float arg1, int arg2) {
-			}
-
-			@Override
-			public void onPageScrollStateChanged(int arg0) {
-			}
-		});
-
-		// Link viewPager and actionBar
-		for (int i = 0; i < fragmentPagerAdapter.getCount(); i++) {
-			Tab tab = actionBar.newTab();
-			tab.setText(fragmentPagerAdapter.getPageTitle(i)).setTabListener(
-					new TabListener() {
-
-						@Override
-						public void onTabUnselected(Tab tab,
-								FragmentTransaction ft) {
-						}
-
-						@Override
-						public void onTabSelected(Tab tab,
-								FragmentTransaction ft) {
-							viewPager.setCurrentItem(tab.getPosition());
-						}
-
-						@Override
-						public void onTabReselected(Tab tab,
-								FragmentTransaction ft) {
-						}
-					});
-			actionBar.addTab(tab);
-		}
 	}
 	
 	final private <T> boolean intent2(Class<T> cls) {
@@ -218,11 +196,6 @@ public class MainActivity extends Activity {
 			}
 		}
 		return super.onKeyDown(keyCode, event);
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
 	}
 
 }

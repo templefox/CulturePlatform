@@ -3,32 +3,58 @@ package net.templefox.fragment;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import net.templefox.cultureplatform.ApplicationHelper;
+import net.templefox.database.DataLoader;
 import net.templefox.database.DatabaseConnector;
+import net.templefox.database.FakeLoadDataListener;
+import net.templefox.database.LoadDataListener;
 import net.templefox.database.MessageAdapter;
+import net.templefox.database.SQLiteWorker;
 import net.templefox.database.data.Activity;
 import net.templefox.database.data.Attention;
+import net.templefox.database.data.CurrentUser;
 import net.templefox.database.data.Entity;
 import net.templefox.database.data.Location;
 import net.templefox.database.data.Type;
 import net.templefox.database.data.User;
 import net.templefox.fragment.item.ClassifyItemAdapter;
+import net.templefox.misc.DateFormater;
+import net.templefox.misc.Encoder;
+import net.templefox.misc.OnUserChangedListener;
 import net.templefox.widget.Optionor;
 import net.templefox.widget.Panel;
+import net.templefox.widget.pullrefresh.PullToRefreshBase;
+import net.templefox.widget.pullrefresh.PullToRefreshListView;
+import net.templefox.widget.pullrefresh.PullToRefreshBase.OnRefreshListener2;
 
+import org.androidannotations.annotations.AfterInject;
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.RootContext;
+import org.androidannotations.annotations.ViewById;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 
 import net.templefox.cultureplatform.R;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,6 +64,7 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -46,45 +73,153 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 
 @EFragment(R.layout.frag_classify)
 @SuppressLint("SimpleDateFormat")
-public class ClassifyFragment extends AbsFragment {
-	private Optionor optionorType;
-	private Optionor optionorLocation;
-	private Panel panel;
-	private ClassifyItemAdapter adapter = new ClassifyItemAdapter(null);
-	private ListView listView;
-	private View footerView;
-	private final int MAX_ITEM_DOWNLOAD = 1;
-	private boolean onReload = false;
-	private boolean moreData = true;
-	private String selectedType = null;
-	private String selectedLocation = null;
+public class ClassifyFragment extends AbstractFragment {
+	private int currentPosition = 0;
+	private int BLOCK_NUMBER = 2;
+
+	@Bean
+	CurrentUser currentUser;
+
+	@ViewById(R.id.classify_panel)
+	Panel panel;
+
+	@ViewById(R.id.optionor_type)
+	Optionor optionorType;
+
+	@ViewById(R.id.optionor_location)
+	Optionor optionorLocation;
+
+	@Bean
+	ClassifyItemAdapter adapter;
+
+	@ViewById(R.id.list_classify)
+	PullToRefreshListView listView;
+
+	private String selectedType = "%";
+	private String selectedLocation = "%";
 
 	public void notifyList(List<Activity> activities) {
 		adapter.setActivities(activities);
 		adapter.notifyDataSetChanged();
 	}
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.frag_classify, container, false);
-		panel = (Panel) view.findViewById(R.id.classify_panel);
-		optionorType = (Optionor) view.findViewById(R.id.optionor_type);
-		optionorLocation = (Optionor) view.findViewById(R.id.optionor_location);
-		listView = (ListView) view.findViewById(R.id.list_classify);
+	@AfterInject
+	protected void FirstLoadDate() {
+		int offset = 0;
+		int limit = BLOCK_NUMBER;
+		adapter.loadRemoteDate(new FutureCallback<JsonArray>() {
+			@Override
+			public void onCompleted(Exception arg0, JsonArray arg1) {
+				Context rootContext = getActivity();
+				if (arg0 != null) {
+					Toast.makeText(rootContext, arg0.getMessage(), Toast.LENGTH_SHORT).show();
+				} else if (arg1.size() < 1) {
+					Toast.makeText(rootContext, "No more activity!", Toast.LENGTH_SHORT).show();
+				} else {
+					JsonElement resultElement = arg1.get(0).getAsJsonObject().get("result");
+					if (resultElement != null && resultElement.getAsString().equals("error")) {
+						Toast.makeText(rootContext, arg1.get(0).getAsJsonObject().get("error").getAsString(), Toast.LENGTH_LONG).show();
+						return;
+					}
+					currentPosition += arg1.size();
+					for (int i = 0; i < arg1.size(); i++) {
+						Activity activity = new Activity();
+						JsonObject object = arg1.get(i).getAsJsonObject();
+						activity.setId(object.get("id_activity").getAsInt());
+						activity.setName(object.get("name").getAsString());
+						activity.setDate(DateFormater.parse(object.get("datetime").getAsString()));
+						adapter.getActivities().add(activity);
+					}
+					adapter.notifyDataSetChanged();
+				}
+			}
+		}, String.format("select id_activity,name,datetime from activity order by datetime desc limit %s,%s", offset, limit));
+		adapter.loadLocalData(null);
+	}
 
-		ApplicationHelper application = ((ApplicationHelper) getActivity()
-				.getApplication());
-		application
-				.setOnUserChangedListener(new ApplicationHelper.OnUserChangedListener() {
+	@AfterViews
+	protected void afterViews() {
+		currentUser.setOnUserChangedListener(new OnUserChangedListener() {
+			@Override
+			public void onUserChanged(Integer newId) {
+				// TODO
+			}
+		});
+
+		loadOptions();
+		initListView();
+		initOptionorOnChangeListener();
+	}
+
+	private void loadOptions() {
+		Ion.with(getActivity()).load(DatabaseConnector.url).setBodyParameter(DatabaseConnector.METHOD, DatabaseConnector.M_SELECT)
+				.setBodyParameter(DatabaseConnector.QUERY, Encoder.encodeString("SELECT id_type,name FROM type")).asJsonArray()
+				.setCallback(new FutureCallback<JsonArray>() {
 					@Override
-					public void onUserChanged(User newUser) {
-						download();
+					public void onCompleted(Exception arg0, JsonArray arg1) {
+						Context rootContext = getActivity();
+						if (arg0 != null) {
+							Toast.makeText(rootContext, arg0.getMessage(), Toast.LENGTH_SHORT).show();
+						} else if (arg1.size() < 1) {
+							Toast.makeText(rootContext, "No type!", Toast.LENGTH_SHORT).show();
+						} else {
+							JsonElement resultElement = arg1.get(0).getAsJsonObject().get("result");
+							if (resultElement != null && resultElement.getAsString().equals("error")) {
+								Toast.makeText(rootContext, arg1.get(0).getAsJsonObject().get("error").getAsString(), Toast.LENGTH_LONG)
+										.show();
+								return;
+							}
+							for (int i = 0; i < arg1.size(); i++) {
+								Type type = new Type();
+								JsonObject object = arg1.get(i).getAsJsonObject();
+								type.setId(object.get("id_type").getAsInt());
+								type.setName(object.get("name").getAsString());
+								SQLiteWorker.insertIntoSQLite(type, rootContext);
+							}
+						}
+						List<ContentValues> types = SQLiteWorker.selectFromSQLite("type", new String[] { "name" }, rootContext);
+						optionorType.addString("全部");
+						for (ContentValues contentValues : types) {
+							optionorType.addString(contentValues.getAsString("name"));
+						}
 					}
 				});
 
-		setOptionorOnChangeListener();
+		Ion.with(getActivity()).load(DatabaseConnector.url).setBodyParameter(DatabaseConnector.METHOD, DatabaseConnector.M_SELECT)
+				.setBodyParameter(DatabaseConnector.QUERY, Encoder.encodeString("SELECT id_organization,name FROM organization"))
+				.asJsonArray().setCallback(new FutureCallback<JsonArray>() {
+					@Override
+					public void onCompleted(Exception arg0, JsonArray arg1) {
+						Context rootContext = getActivity();
+						if (arg0 != null) {
+							Toast.makeText(rootContext, arg0.getMessage(), Toast.LENGTH_SHORT).show();
+						} else if (arg1.size() < 1) {
+							Toast.makeText(rootContext, "No organization!", Toast.LENGTH_SHORT).show();
+						} else {
+							JsonElement resultElement = arg1.get(0).getAsJsonObject().get("result");
+							if (resultElement != null && resultElement.getAsString().equals("error")) {
+								Toast.makeText(rootContext, arg1.get(0).getAsJsonObject().get("error").getAsString(), Toast.LENGTH_LONG)
+										.show();
+								return;
+							}
+							for (int i = 0; i < arg1.size(); i++) {
+								Location location = new Location();
+								JsonObject object = arg1.get(i).getAsJsonObject();
+								location.setId(object.get("id_organization").getAsInt());
+								location.setName(object.get("name").getAsString());
+								SQLiteWorker.insertIntoSQLite(location, rootContext);
+							}
+						}
+						List<ContentValues> types = SQLiteWorker.selectFromSQLite("location", new String[] { "name" }, rootContext);
+						optionorLocation.addString("全部");
+						for (ContentValues contentValues : types) {
+							optionorLocation.addString(contentValues.getAsString("name"));
+						}
+					}
+				});
+	}
 
+	private void initListView() {
 		listView.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
@@ -93,137 +228,125 @@ public class ClassifyFragment extends AbsFragment {
 				return false;
 			}
 		});
+		listView.setAdapter(adapter);
+		registeDataProcess();
+	}
 
-		initListView();
-		return view;
+	private void registeDataProcess() {
+		listView.setOnRefreshListener(new OnRefreshListener2<ListView>() {
+
+			@Override
+			public void onPullDownToRefresh(final PullToRefreshBase refreshView) {
+				int offset = 0;
+				int limit = currentPosition;
+				adapter.loadRemoteDate(
+						new FutureCallback<JsonArray>() {
+							@Override
+							public void onCompleted(Exception arg0, JsonArray arg1) {
+								Context rootContext = getActivity();
+								if (arg0 != null) {
+									Toast.makeText(rootContext, arg0.getMessage(), Toast.LENGTH_SHORT).show();
+								} else if (arg1.size() < 1) {
+									Toast.makeText(rootContext, "No more activity!", Toast.LENGTH_SHORT).show();
+								} else {
+									JsonElement resultElement = arg1.get(0).getAsJsonObject().get("result");
+									if (resultElement != null && resultElement.getAsString().equals("error")) {
+										Toast.makeText(rootContext, arg1.get(0).getAsJsonObject().get("error").getAsString(),
+												Toast.LENGTH_LONG).show();
+										refreshView.onRefreshComplete();
+										return;
+									}
+									for (int i = 0; i < arg1.size(); i++) {
+										Activity activity = new Activity();
+										JsonObject object = arg1.get(i).getAsJsonObject();
+										activity.setId(object.get("id_activity").getAsInt());
+										activity.setName(object.get("name").getAsString());
+										activity.setDate(DateFormater.parse(object.get("datetime").getAsString()));
+										adapter.getActivities().add(activity);
+									}
+									adapter.notifyDataSetChanged();
+								}
+								refreshView.onRefreshComplete();
+							}
+						},
+						String.format(
+								"select id_activity,name,datetime from (select id_activity,name,datetime,type,location from activity_type_location order by datetime desc limit %s,%s) as `a`  where type like '%s' and location like '%s'",
+								offset, limit, selectedType, selectedLocation));
+
+			}
+
+			@Override
+			public void onPullUpToRefresh(final PullToRefreshBase refreshView) {
+				int offset = currentPosition;
+				int limit = BLOCK_NUMBER;
+				adapter.loadRemoteDate(
+						new FutureCallback<JsonArray>() {
+							@Override
+							public void onCompleted(Exception arg0, JsonArray arg1) {
+								Context rootContext = getActivity();
+								if (arg0 != null) {
+									Toast.makeText(rootContext, arg0.getMessage(), Toast.LENGTH_SHORT).show();
+								} else if (arg1.size() < 1) {
+									Toast.makeText(rootContext, "No more activity!", Toast.LENGTH_SHORT).show();
+								} else {
+									JsonElement resultElement = arg1.get(0).getAsJsonObject().get("result");
+									if (resultElement != null && resultElement.getAsString().equals("error")) {
+										Toast.makeText(rootContext, arg1.get(0).getAsJsonObject().get("error").getAsString(),
+												Toast.LENGTH_LONG).show();
+										refreshView.onRefreshComplete();
+										return;
+									}
+									currentPosition += arg1.size();
+									for (int i = 0; i < arg1.size(); i++) {
+										Activity activity = new Activity();
+										JsonObject object = arg1.get(i).getAsJsonObject();
+										activity.setId(object.get("id_activity").getAsInt());
+										activity.setName(object.get("name").getAsString());
+										activity.setDate(DateFormater.parse(object.get("datetime").getAsString()));
+										adapter.getActivities().add(activity);
+									}
+									adapter.notifyDataSetChanged();
+								}
+								refreshView.onRefreshComplete();
+							}
+						},
+						String.format(
+								"select id_activity,name,datetime from (select id_activity,name,datetime,type,location from activity_type_location order by datetime desc limit %s,%s) as `a`  where type like '%s' and location like '%s'",
+								offset, limit, selectedType, selectedLocation));
+			}
+		});
 	}
 
 	/**
 	 * Set optionor to make sure that list view will load after optionor
 	 * loading.
 	 */
-	private void setOptionorOnChangeListener() {
+	private void initOptionorOnChangeListener() {
 		optionorType.setOnCheckedChangedListener(new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
-				RadioButton button = (RadioButton) group
-						.findViewById(checkedId);
+				RadioButton button = (RadioButton) group.findViewById(checkedId);
 				if (button != null) {
 					selectedType = button.getText().toString();
+					if (selectedType.equals("全部")) {
+						selectedType = "%%";
+					}
 					loadActivities(selectedType, selectedLocation);
 				}
 			}
 		});
 
-		optionorLocation
-				.setOnCheckedChangedListener(new OnCheckedChangeListener() {
-					@Override
-					public void onCheckedChanged(RadioGroup group, int checkedId) {
-						RadioButton button = (RadioButton) group
-								.findViewById(checkedId);
-						if (button != null) {
-							selectedLocation = button.getText().toString();
-							loadActivities(selectedType, selectedLocation);
-						}
+		optionorLocation.setOnCheckedChangedListener(new OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(RadioGroup group, int checkedId) {
+				RadioButton button = (RadioButton) group.findViewById(checkedId);
+				if (button != null) {
+					selectedLocation = button.getText().toString();
+					if (selectedLocation.equals("全部")) {
+						selectedLocation = "%%";
 					}
-				});
-	}
-
-	/**
-	 * 1.Set footerView for listview. 2.Set onScrollListener. When scroll to the
-	 * button, loading more data.
-	 */
-	private void initListView() {
-		footerView = LayoutInflater.from(getActivity()).inflate(
-				R.layout.item_classify_footer, null);
-		footerView.setVisibility(View.INVISIBLE);
-
-		listView.addFooterView(footerView);
-		listView.setAdapter(adapter);
-
-		final MessageAdapter activityAdapter = new MessageAdapter() {
-			@Override
-			public void onRcvJSONArray(JSONArray array) {
-				Set<Activity> activities = new HashSet<Activity>();
-				for (int i = 0; i < array.length(); i++) {
-					Activity activity = new Activity();
-					JSONObject obj;
-					try {
-						obj = array.getJSONObject(i);
-						activity.transJSON(obj);
-					} catch (JSONException e) {
-						Log.e("CP Error", e.getMessage());
-						Log.w("CP Exception", Log.getStackTraceString(e));
-					} catch (ParseException e) {
-						Log.e("CP Error", e.getMessage());
-						Log.w("CP Exception", Log.getStackTraceString(e));
-					}
-					activities.add(activity);
+					loadActivities(selectedType, selectedLocation);
 				}
-				Entity.insertIntoSQLite(activities, getActivity());
-			}
-
-			@Override
-			public void onEmptyReceived() {
-				moreData = false;
-				listView.removeFooterView(footerView);
-				Toast.makeText(getActivity(), "没有更多的数据了", Toast.LENGTH_SHORT)
-						.show();
-			}
-
-			@Override
-			public void onTimeout() {
-				moreData = false;
-				listView.removeFooterView(footerView);
-				Toast.makeText(getActivity(), "连接超时", Toast.LENGTH_SHORT)
-						.show();
-			}
-
-			@Override
-			public void onFinish() {
-				listView.postDelayed(new Runnable() {
-					@Override
-					public void run() {
-						if (moreData) {
-							footerView.setVisibility(View.INVISIBLE);
-							loadActivities(selectedType, selectedLocation);
-						}
-						onReload = false;
-					}
-				}, 1000);
-			}
-		};
-
-		listView.setOnScrollListener(new OnScrollListener() {
-
-			@Override
-			public void onScroll(AbsListView view, int firstVisibleItem,
-					int visibleItemCount, int totalItemCount) {
-				if (totalItemCount != 0 + listView.getFooterViewsCount()
-						&& view.getLastVisiblePosition() + 1 != totalItemCount
-						&& !moreData) {
-					moreData = true;
-					listView.addFooterView(footerView);
-				}
-
-				if (totalItemCount != 0
-						&& view.getLastVisiblePosition() + 1 == totalItemCount
-						&& !onReload && moreData) {
-					onReload = true;
-					footerView.setVisibility(View.VISIBLE);
-					DatabaseConnector connector = new DatabaseConnector();
-					connector
-							.addParams(DatabaseConnector.METHOD, "GETACTIVITY");
-					connector.addParams("limit",
-							Integer.toString(MAX_ITEM_DOWNLOAD));
-					connector.addParams("offset",
-							Integer.toString(totalItemCount));
-					connector.executeConnector(activityAdapter);
-				}
-			}
-
-			@Override
-			public void onScrollStateChanged(AbsListView view, int scrollState) {
 			}
 		});
 	}
@@ -263,7 +386,7 @@ public class ClassifyFragment extends AbsFragment {
 					JSONObject obj;
 					try {
 						obj = array.getJSONObject(i);
-						type.transJSON(obj);
+						type.resolveJSON(obj);
 						types.add(type);
 					} catch (JSONException e) {
 						Log.e("CP Error", e.getMessage());
@@ -273,13 +396,12 @@ public class ClassifyFragment extends AbsFragment {
 						Log.w("CP Exception", Log.getStackTraceString(e));
 					}
 				}
-				Entity.insertIntoSQLite(types, getActivity());
+				SQLiteWorker.insertIntoSQLite(types, getActivity());
 			}
 
 			@Override
 			public void onTimeout() {
-				Toast.makeText(getActivity(), "连接超时", Toast.LENGTH_SHORT)
-						.show();
+				Toast.makeText(getActivity(), "连接超时", Toast.LENGTH_SHORT).show();
 			}
 
 			@Override
@@ -297,7 +419,7 @@ public class ClassifyFragment extends AbsFragment {
 					JSONObject obj;
 					try {
 						obj = array.getJSONObject(i);
-						location.transJSON(obj);
+						location.resolveJSON(obj);
 						locations.add(location);
 					} catch (JSONException e) {
 						Log.e("CP Error", e.getMessage());
@@ -307,13 +429,12 @@ public class ClassifyFragment extends AbsFragment {
 						Log.w("CP Exception", Log.getStackTraceString(e));
 					}
 				}
-				Entity.insertIntoSQLite(locations, getActivity());
+				SQLiteWorker.insertIntoSQLite(locations, getActivity());
 			}
 
 			@Override
 			public void onTimeout() {
-				Toast.makeText(getActivity(), "连接超时", Toast.LENGTH_SHORT)
-						.show();
+				Toast.makeText(getActivity(), "连接超时", Toast.LENGTH_SHORT).show();
 			}
 
 			@Override
@@ -321,7 +442,7 @@ public class ClassifyFragment extends AbsFragment {
 				load();
 			}
 		};
-		
+
 		final MessageAdapter attentionAdapter = new MessageAdapter() {
 
 			@Override
@@ -332,7 +453,7 @@ public class ClassifyFragment extends AbsFragment {
 						Attention attention = new Attention();
 						JSONObject obj;
 						obj = array.getJSONObject(i);
-						attention.transJSON(obj);
+						attention.resolveJSON(obj);
 						attentions.add(attention);
 					} catch (JSONException e) {
 						Log.e("CP Error", e.getMessage());
@@ -342,7 +463,7 @@ public class ClassifyFragment extends AbsFragment {
 						Log.w("CP Exception", Log.getStackTraceString(e));
 					}
 				}
-				Entity.insertIntoSQLite(attentions, getActivity());
+				SQLiteWorker.insertIntoSQLite(attentions, getActivity());
 			}
 
 			@Override
@@ -350,10 +471,7 @@ public class ClassifyFragment extends AbsFragment {
 			}
 		};
 
-		
-		
-		User user = ((ApplicationHelper) getActivity().getApplication())
-				.getCurrentUser();
+		User user = ((ApplicationHelper) getActivity().getApplication()).getCurrentUser();
 		DatabaseConnector connector = new DatabaseConnector();
 		connector.addParams(DatabaseConnector.METHOD, "GETTYPE");
 		connector.executeConnector(typeAdapter);
@@ -367,7 +485,7 @@ public class ClassifyFragment extends AbsFragment {
 		if (user != null)
 			connector2.addParams("userID", user.getId().toString());
 		connector2.executeConnector(attentionAdapter);
-		
+
 	}
 
 	/**
@@ -379,15 +497,13 @@ public class ClassifyFragment extends AbsFragment {
 		optionorType.removeAllString();
 		optionorLocation.removeAllString();
 		optionorType.addString("全部");
-		List<ContentValues> list = Entity.selectFromSQLite("type",
-				new String[] { "name" }, getActivity());
+		List<ContentValues> list = SQLiteWorker.selectFromSQLite("type", new String[] { "name" }, getActivity());
 		for (ContentValues contentValue : list) {
 			optionorType.addString(contentValue.getAsString("name"));
 		}
 
 		optionorLocation.addString("全部");
-		list = Entity.selectFromSQLite("location", new String[] { "name" },
-				getActivity());
+		list = SQLiteWorker.selectFromSQLite("location", new String[] { "name" }, getActivity());
 		for (ContentValues contentValues : list) {
 			optionorLocation.addString(contentValues.getAsString("name"));
 		}
@@ -402,10 +518,21 @@ public class ClassifyFragment extends AbsFragment {
 	 *            location of activities.
 	 */
 	private void loadActivities(String type, String location) {
+		if (type != null && type.equals("全部")) {
+			type = "%";
+		}
+
+		if (location != null && location.equals("全部")) {
+			location = "%";
+		}
+
+		if (1 == 1) {
+			return;
+		}
 		List<Activity> activities = new ArrayList<Activity>();
 
-		User currentUser = ((ApplicationHelper) getActivity().getApplication())
-				.getCurrentUser();
+		// User currentUser = ((ApplicationHelper)
+		// getActivity().getApplication()).getCurrentUser();
 
 		if (type != null && type.equals("全部")) {
 			type = "%";
@@ -415,18 +542,14 @@ public class ClassifyFragment extends AbsFragment {
 			location = "%";
 		}
 
-		List<ContentValues> list = Entity.selectFromSQLite("activity",
-				new String[] { "id", "name", "address", "picture_url", "date",
-						"type", "theme", "temperature", "reporter_info",
-						"content", "procedure", "time" }, "type like ?",
-				new String[] { type }, getActivity(), "date desc");
+		List<ContentValues> list = SQLiteWorker.selectFromSQLite("activity", new String[] { "id", "name", "address", "picture_url", "date",
+				"type", "theme", "temperature", "reporter_info", "content", "procedure", "time" }, "type like ?", new String[] { type },
+				getActivity(), "date desc");
 
 		List<ContentValues> attentionList = null;
 		if (currentUser != null) {
-			attentionList = Entity.selectFromSQLite("attention",
-					new String[] { "ActivityID" }, "UserID = ?",
-					new String[] { currentUser.getId().toString() },
-					getActivity());
+			attentionList = SQLiteWorker.selectFromSQLite("attention", new String[] { "ActivityID" }, "UserID = ?",
+					new String[] { currentUser.getId().toString() }, getActivity());
 		}
 
 		for (ContentValues contentValue : list) {
@@ -436,16 +559,14 @@ public class ClassifyFragment extends AbsFragment {
 			activity.setAddress(contentValue.getAsString("address"));
 
 			try {
-				activity.setDate(new SimpleDateFormat("yyyy-MM-dd")
-						.parse(contentValue.getAsString("date")));
+				activity.setDate(new SimpleDateFormat("yyyy-MM-dd").parse(contentValue.getAsString("date")));
 			} catch (ParseException e) {
 				Log.e("CP Error", e.getMessage());
 				Log.w("CP Exception", Log.getStackTraceString(e));
 			}
 
 			try {
-				activity.setTime(new SimpleDateFormat("HH:mm:ss")
-						.parse(contentValue.getAsString("time")));
+				activity.setTime(new SimpleDateFormat("HH:mm:ss").parse(contentValue.getAsString("time")));
 			} catch (ParseException e) {
 				Log.e("CP Error", e.getMessage());
 				Log.w("CP Exception", Log.getStackTraceString(e));
@@ -455,16 +576,14 @@ public class ClassifyFragment extends AbsFragment {
 			activity.setReporterInfo(contentValue.getAsString("reporter_info"));
 			activity.setTheme(contentValue.getAsString("theme"));
 			activity.setType(contentValue.getAsString("type"));
-			activity.setTemperature(Integer.parseInt(contentValue
-					.getAsString("temperature")));
+			activity.setTemperature(Integer.parseInt(contentValue.getAsString("temperature")));
 			activity.setContent(contentValue.getAsString("content"));
 			activity.setProcedure(contentValue.getAsString("procedure"));
 
 			activity.setisAttention(0);
 			if (currentUser != null) {
 				for (ContentValues attentionCV : attentionList) {
-					if (activity.getId() == attentionCV
-							.getAsInteger("ActivityID")) {
+					if (activity.getId() == attentionCV.getAsInteger("ActivityID")) {
 						activity.setisAttention(1);
 						break;
 					}
@@ -476,14 +595,4 @@ public class ClassifyFragment extends AbsFragment {
 		}
 		notifyList(activities);
 	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-		panel.setOpen(false, false);
-		load();
-		if (firstIn())
-			download();
-	}
-
 }

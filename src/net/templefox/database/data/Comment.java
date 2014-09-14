@@ -95,7 +95,7 @@ public class Comment extends Entity implements java.io.Serializable {
 	}
 
 	@Override
-	protected ContentValues getContentValues() {
+	public ContentValues getContentValues() {
 		ContentValues contentValues = new ContentValues();
 		contentValues.put("id", id);
 		contentValues.put("content", content);
@@ -115,12 +115,12 @@ public class Comment extends Entity implements java.io.Serializable {
 	}
 
 	@Override
-	protected String getTableName() {
+	public String getTableName() {
 		return "comment";
 	}
 
 	@Override
-	public Entity transJSON(JSONObject obj) throws JSONException,
+	public Entity resolveJSON(JSONObject obj) throws JSONException,
 			ParseException {
 		this.setId(obj.getInt("id"));
 		this.setContent(obj.getString("content"));

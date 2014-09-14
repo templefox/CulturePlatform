@@ -2,6 +2,8 @@ package net.templefox.database.data;
 
 import java.util.List;
 
+import net.templefox.database.SQLiteWorker;
+
 import junit.framework.Assert;
 
 import android.content.ContentValues;
@@ -20,10 +22,10 @@ public class EntityTest extends AndroidTestCase {
 	{
 		activity.setId(99);
 		activity.setName("TEST");
-		Entity.insertIntoSQLite(activity, this.getContext());
+		SQLiteWorker.insertIntoSQLite(activity, this.getContext());
 		
 		List<ContentValues> cvs = 
-				Entity.selectFromSQLite("activity", new String[]{"name"}, 
+				SQLiteWorker.selectFromSQLite("activity", new String[]{"name"}, 
 						"name = ?", 
 				new String[]{"TEST"}, getContext());
 		

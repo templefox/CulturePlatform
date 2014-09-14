@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:panel="http://schemas.android.com/apk/res/net.templefox.cultureplatform"
+    xmlns:ptr="http://schemas.android.com/apk/res/net.templefox.cultureplatform"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clickable="true"
@@ -10,14 +11,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-        <ListView
+        <net.templefox.widget.pullrefresh.PullToRefreshListView
             android:id="@+id/list_classify"
             android:dividerHeight="3dp"
             android:divider="#EAEAEA"
             android:layout_margin="3dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
-        </ListView>
+            android:layout_height="match_parent"
+            ptr:ptrMode="both" >
+        </net.templefox.widget.pullrefresh.PullToRefreshListView>
 
     </RelativeLayout>
 

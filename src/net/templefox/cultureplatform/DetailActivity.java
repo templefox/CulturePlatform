@@ -9,9 +9,9 @@ import java.util.Set;
 
 import net.templefox.database.DatabaseConnector;
 import net.templefox.database.MessageAdapter;
+import net.templefox.database.SQLiteWorker;
 import net.templefox.database.data.Activity;
 import net.templefox.database.data.Comment;
-import net.templefox.database.data.Entity;
 import net.templefox.database.data.User;
 import net.templefox.widget.AsyncImageView;
 import net.templefox.widget.ImageTextView;
@@ -258,7 +258,7 @@ public class DetailActivity extends android.app.Activity {
 	}
 
 	private void load() {
-		List<ContentValues> list = Entity.selectFromSQLite("comment",
+		List<ContentValues> list = SQLiteWorker.selectFromSQLite("comment",
 				new String[] { "content" }, "ActivityID = ?",
 				new String[] { currentActivity.getId().toString() }, this);
 		List<Comment> comments = new ArrayList<Comment>();
@@ -278,7 +278,7 @@ public class DetailActivity extends android.app.Activity {
 				for (int i = 0; i < array.length(); i++) {
 					try {
 						Comment comment = new Comment();
-						comment.transJSON(array.getJSONObject(i));
+						comment.resolveJSON(array.getJSONObject(i));
 						comments.add(comment);
 					} catch (JSONException e) {
 						Log.e("CP Error", e.getMessage());
@@ -288,7 +288,7 @@ public class DetailActivity extends android.app.Activity {
 						Log.w("CP Exception", Log.getStackTraceString(e));
 					}
 				}
-				Entity.insertIntoSQLite(comments, DetailActivity.this);
+				SQLiteWorker.insertIntoSQLite(comments, DetailActivity.this);
 			}
 
 			@Override

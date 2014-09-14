@@ -1,7 +1,5 @@
 package net.templefox.widget;
 
-
-
 import java.util.List;
 
 import net.templefox.cultureplatform.R;
@@ -21,59 +19,59 @@ public class Optionor extends LinearLayout {
 	private RadioGroup group;
 	@SuppressWarnings("unused")
 	private HorizontalScrollView view;
-	
+
 	public Optionor(Context context) {
 		super(context);
 	}
 
 	public Optionor(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		if (isInEditMode()) { return; }
-		
-		LayoutInflater.from(context).inflate(R.layout.optionor, this,true);
-		
+		if (isInEditMode()) {
+			return;
+		}
+
+		LayoutInflater.from(context).inflate(R.layout.optionor, this, true);
+
 		group = (RadioGroup) findViewById(R.id.optionor_radiogroup);
 		view = (HorizontalScrollView) findViewById(R.id.optionor);
-		
-		
+
 	}
-	
-	public void removeAllString(){
+
+	public void removeAllString() {
 		group.removeAllViews();
 	}
-	
-	public void addString(String name){
+
+	public void addString(String name) {
 		RadioButton button = new RadioButton(getContext());
 		button.setText(name);
 
 		button.setButtonDrawable(android.R.color.transparent);
 		button.setPadding(10, 0, 0, 0);
 		button.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-			
+
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				if(isChecked)
+				if (isChecked)
 					buttonView.setTextColor(Color.RED);
-				else 
+				else
 					buttonView.setTextColor(Color.BLACK);
-				
+
 			}
 		});
 
-		
 		group.addView(button);
-		if(name.equals("全部")){
+		if (name.equals("全部")) {
 			button.setChecked(true);
 		}
 	}
-	
-	public void addAll(List<String> names){
+
+	public void addAll(List<String> names) {
 		for (String name : names) {
 			addString(name);
 		}
 	}
-	
-	public void setOnCheckedChangedListener(OnCheckedChangeListener listener){
+
+	public void setOnCheckedChangedListener(OnCheckedChangeListener listener) {
 		group.setOnCheckedChangeListener(listener);
 	}
 

@@ -8,8 +8,8 @@ import java.util.List;
 import org.androidannotations.annotations.EFragment;
 
 import net.templefox.cultureplatform.ApplicationHelper;
+import net.templefox.database.SQLiteWorker;
 import net.templefox.database.data.Activity;
-import net.templefox.database.data.Entity;
 import net.templefox.database.data.User;
 import net.templefox.fragment.item.CalendarItemAdapter;
 import net.templefox.fragment.item.ClassifyItemAdapter;
@@ -29,10 +29,10 @@ import android.widget.ListView;
 
 @EFragment(R.layout.frag_calendar)
 @SuppressLint("SimpleDateFormat")
-public class CalendarFragment extends AbsFragment {
+public class CalendarFragment extends AbstractFragment {
 	private ListView listView;
 	//private CalendarItemAdapter adapter = new CalendarItemAdapter(null);
-	private ClassifyItemAdapter adapter = new ClassifyItemAdapter(null);
+	private ClassifyItemAdapter adapter = new ClassifyItemAdapter();
 	private CalendarView calendarView;
 	private View view_yes;
 	private View view_no;
@@ -67,7 +67,7 @@ public class CalendarFragment extends AbsFragment {
 				} catch (ParseException e) {
 					 Log.e("CP Error",e.getMessage());Log.w("CP Exception", Log.getStackTraceString(e));
 				}
-				List<ContentValues> list = Entity.selectFromSQLite("activity", new String[]{"id,name"},"date = ? ",new String[]{query_date}, view.getContext());
+				List<ContentValues> list = SQLiteWorker.selectFromSQLite("activity", new String[]{"id,name"},"date = ? ",new String[]{query_date}, view.getContext());
 				
 				List<Activity> activities = new ArrayList<Activity>();
 				
@@ -100,7 +100,7 @@ public class CalendarFragment extends AbsFragment {
 
 	@Override
 	public void load() {
-		List<ContentValues> list = Entity.selectFromSQLite("activity", new String[]{"id,name"},"date = strftime('%Y.%m.%d','now') ",new String[]{}, getActivity());
+		List<ContentValues> list = SQLiteWorker.selectFromSQLite("activity", new String[]{"id,name"},"date = strftime('%Y.%m.%d','now') ",new String[]{}, getActivity());
 		List<Activity> activities = new ArrayList<Activity>();
 		
 		for(ContentValues value:list){

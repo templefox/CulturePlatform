@@ -6,7 +6,7 @@ import java.util.List;
 import net.templefox.database.DatabaseConnector;
 import net.templefox.database.MessageAdapter;
 import net.templefox.database.MessageHandler;
-import net.templefox.database.data.Entity;
+import net.templefox.database.SQLiteWorker;
 
 import net.templefox.cultureplatform.R;
 
@@ -122,7 +122,7 @@ public class AddActActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				List<ContentValues> cvs = Entity.selectFromSQLite("type",
+				List<ContentValues> cvs = SQLiteWorker.selectFromSQLite("type",
 						new String[] { "name" }, AddActActivity.this);
 				final List<CharSequence> items = new ArrayList<CharSequence>();
 				for (ContentValues cv : cvs) {

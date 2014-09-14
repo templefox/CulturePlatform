@@ -9,8 +9,8 @@ import java.util.Set;
 
 import net.templefox.database.DatabaseConnector;
 import net.templefox.database.MessageAdapter;
+import net.templefox.database.SQLiteWorker;
 import net.templefox.database.data.Activity;
-import net.templefox.database.data.Entity;
 import net.templefox.fragment.item.RecommendItemAdapter;
 
 import org.androidannotations.annotations.EFragment;
@@ -35,7 +35,7 @@ import android.widget.Toast;
  * First screen of the application. Download first part of activities.
  */
 @EFragment(R.layout.frag_recommend)
-public class RecommendFragment extends AbsFragment {
+public class RecommendFragment extends AbstractFragment {
 	private RecommendItemAdapter adapter = new RecommendItemAdapter(null);
 	
 	@ViewById(R.id.reco_left)
@@ -76,7 +76,7 @@ public class RecommendFragment extends AbsFragment {
 					JSONObject obj;
 					try {
 						obj = array.getJSONObject(i);
-						activity.transJSON(obj);
+						activity.resolveJSON(obj);
 					} catch (JSONException e) {
 						 Log.e("CP Error",e.getMessage());Log.w("CP Exception", Log.getStackTraceString(e));
 					} catch (ParseException e) {
@@ -85,7 +85,7 @@ public class RecommendFragment extends AbsFragment {
 					activities.add(activity);
 
 				}
-				Entity.insertIntoSQLite(activities, getActivity());
+				SQLiteWorker.insertIntoSQLite(activities, getActivity());
 			}
 
 			@Override
@@ -112,7 +112,7 @@ public class RecommendFragment extends AbsFragment {
 	@Override
 	public void load() {
 		List<Activity> activities = new ArrayList<Activity>();
-		List<ContentValues> list = Entity.selectFromSQLite("activity",
+		List<ContentValues> list = SQLiteWorker.selectFromSQLite("activity",
 				new String[] { "id", "name", "address", "picture_url", "date",
 						"type", "theme", "temperature", "reporter_info",
 						"content", "procedure","time" }, getActivity(), "date desc");

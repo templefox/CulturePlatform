@@ -32,7 +32,7 @@ public class Type extends Entity implements Serializable {
 	}
 	
 	@Override
-	protected ContentValues getContentValues() {
+	public ContentValues getContentValues() {
 		ContentValues value = new ContentValues();
 		value.put("name", name);
 		value.put("id", id);
@@ -40,12 +40,12 @@ public class Type extends Entity implements Serializable {
 	}
 	
 	@Override
-	protected String getTableName() {
+	public String getTableName() {
 		return "type";
 	}
 	
 	@Override
-	public Entity transJSON(JSONObject obj) throws JSONException,
+	public Entity resolveJSON(JSONObject obj) throws JSONException,
 			ParseException {
 		this.setId(obj.getInt("id"));
 		this.setName(obj.getString("name"));

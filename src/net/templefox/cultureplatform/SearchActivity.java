@@ -3,7 +3,7 @@ package net.templefox.cultureplatform;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.templefox.database.data.Entity;
+import net.templefox.database.SQLiteWorker;
 import net.templefox.fragment.item.ClassifyItemAdapter;
 
 import net.templefox.cultureplatform.R;
@@ -23,7 +23,7 @@ import android.widget.SearchView.OnQueryTextListener;
 public class SearchActivity extends Activity {
 	private SearchView searchView;
 	private ListView listView;
-	private ClassifyItemAdapter adapter = new ClassifyItemAdapter(null);
+	private ClassifyItemAdapter adapter = new ClassifyItemAdapter();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -47,7 +47,7 @@ public class SearchActivity extends Activity {
 			@Override
 			public boolean onQueryTextSubmit(String query) {
 				List<net.templefox.database.data.Activity> activities = new ArrayList<net.templefox.database.data.Activity>();
-				List<ContentValues> list = Entity.selectFromSQLite("activity", new String[]{"id","name"},
+				List<ContentValues> list = SQLiteWorker.selectFromSQLite("activity", new String[]{"id","name"},
 						"content like ?",new String[]{"%"+query+"%"}, SearchActivity.this);
 				for(ContentValues contentValue: list){
 					net.templefox.database.data.Activity activity = new net.templefox.database.data.Activity();

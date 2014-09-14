@@ -122,7 +122,7 @@ public class Attention extends Entity implements java.io.Serializable {
 	}
 
 	@Override
-	protected ContentValues getContentValues() {
+	public ContentValues getContentValues() {
 		ContentValues value = new ContentValues();
 		value.put("id", id);
 		value.put("isPresent", isPresent);
@@ -133,13 +133,13 @@ public class Attention extends Entity implements java.io.Serializable {
 	}
 
 	@Override
-	protected String getTableName() {
+	public String getTableName() {
 		// TODO Auto-generated method stub
 		return "attention";
 	}
 
 	@Override
-	public Entity transJSON(JSONObject obj) throws JSONException,
+	public Entity resolveJSON(JSONObject obj) throws JSONException,
 			ParseException {
 		this.setId(obj.getInt("id"));
 		this.setIsPresent(obj.getInt("isPresent")==1?true:false);

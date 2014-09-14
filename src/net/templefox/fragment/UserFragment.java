@@ -9,8 +9,8 @@ import org.androidannotations.annotations.EFragment;
 
 import net.templefox.cultureplatform.ApplicationHelper;
 import net.templefox.cultureplatform.LoginActivity;
+import net.templefox.database.SQLiteWorker;
 import net.templefox.database.data.Activity;
-import net.templefox.database.data.Entity;
 import net.templefox.database.data.User;
 import net.templefox.fragment.item.ClassifyItemAdapter;
 import net.templefox.fragment.item.UserItemAdapter;
@@ -31,7 +31,7 @@ import android.widget.ListView;
 
 @EFragment(R.layout.frag_user)
 @SuppressLint("SimpleDateFormat")
-public class UserFragment extends AbsFragment {
+public class UserFragment extends AbstractFragment {
 	private View noUser;
 	private View yesUser;
 	private User currentUser;
@@ -93,7 +93,7 @@ public class UserFragment extends AbsFragment {
 	public void load() {
 		List<Activity> activities = new ArrayList<Activity>();
 			
-		List<ContentValues> list = Entity.selectFromSQLite("activity,attention", new String[]{"activity.id","activity.name","activity.date"}
+		List<ContentValues> list = SQLiteWorker.selectFromSQLite("activity,attention", new String[]{"activity.id","activity.name","activity.date"}
 					,"UserID = ? and ActivityID = activity.id",new String[]{currentUser.getId().toString()}, getActivity());
 		
 		

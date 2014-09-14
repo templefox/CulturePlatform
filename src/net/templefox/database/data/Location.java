@@ -83,7 +83,7 @@ public class Location extends Entity implements java.io.Serializable {
 	}
 
 	@Override
-	protected ContentValues getContentValues() throws IllegalArgumentException,
+	public ContentValues getContentValues() throws IllegalArgumentException,
 			NullPointerException {
 		ContentValues value = new ContentValues();
 		value.put("name", name);
@@ -92,12 +92,12 @@ public class Location extends Entity implements java.io.Serializable {
 	}
 
 	@Override
-	protected String getTableName() {
+	public String getTableName() {
 		return "location";
 	}
 
 	@Override
-	public Entity transJSON(JSONObject obj) throws JSONException,
+	public Entity resolveJSON(JSONObject obj) throws JSONException,
 			ParseException {
 		this.setId(obj.getInt("id"));
 		this.setName(obj.getString("name"));
