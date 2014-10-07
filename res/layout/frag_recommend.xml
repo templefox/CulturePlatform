@@ -1,44 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="1dp"
     android:background="#EAEAEA"  >
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <net.templefox.widget.staggeredGrid.StaggeredGridView
+        android:id="@+id/recommend_staggered_grid"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        >
+        app:item_margin="8dp"
+        app:column_count="2" >        
+    </net.templefox.widget.staggeredGrid.StaggeredGridView>
+    
+    <TextView
+        android:id="@+id/recomment_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:text="Loading data..."/>
 
-        <LinearLayout
-            android:id="@+id/reco_left"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.5"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/reco_title"
-                android:layout_width="match_parent"
-                android:layout_height="42dp"
-                android:gravity="center"
-                android:layout_marginBottom="3dp"
-                android:layout_marginLeft="3dp"
-                android:layout_marginRight="3dp"
-                android:background="@drawable/list_selector"
-                android:text="Title"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/reco_right"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.5"
-            android:orientation="vertical" >
-        </LinearLayout>
-    </LinearLayout>
-
-</ScrollView>
+</FrameLayout>

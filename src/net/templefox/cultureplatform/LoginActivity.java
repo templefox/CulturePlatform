@@ -168,7 +168,7 @@ public class LoginActivity extends Activity {
 				.setBodyParameter(
 						DatabaseConnector.QUERY,
 						Encoder.encodeString(
-								"select * from user where name = '%s'",
+								"select * from user where email = '%s'",
 								mEmail)).asJsonArray()
 				.setCallback(new FutureCallback<JsonArray>() {
 

@@ -301,20 +301,20 @@ public class Activity extends Entity implements java.io.Serializable, Comparable
 		try {
 			value.put("time", new SimpleDateFormat("HH:mm:ss").format(time));
 		} catch (NullPointerException e) {
-			Log.e("CP Error", e.getMessage());
-			Log.w("CP Exception", Log.getStackTraceString(e));
+			//Log.e("CP Error", e.getMessage());
+			//Log.w("CP Exception", Log.getStackTraceString(e));
 		} catch (IllegalArgumentException e) {
-			Log.e("CP Error", e.getMessage());
-			Log.w("CP Exception", Log.getStackTraceString(e));
+			//Log.e("CP Error", e.getMessage());
+			//Log.w("CP Exception", Log.getStackTraceString(e));
 		}
 		try {
 			value.put("date", new SimpleDateFormat("yyyy-MM-dd").format(date));
 		} catch (NullPointerException e) {
-			Log.e("CP Error", e.getMessage());
-			Log.w("CP Exception", Log.getStackTraceString(e));
+			//Log.e("CP Error", e.getMessage());
+			//Log.w("CP Exception", Log.getStackTraceString(e));
 		} catch (IllegalArgumentException e) {
-			Log.e("CP Error", e.getMessage());
-			Log.w("CP Exception", Log.getStackTraceString(e));
+			//Log.e("CP Error", e.getMessage());
+			//Log.w("CP Exception", Log.getStackTraceString(e));
 		}
 		return value;
 	}

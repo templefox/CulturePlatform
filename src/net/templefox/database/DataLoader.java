@@ -7,6 +7,7 @@ import com.koushikdutta.async.future.FutureCallback;
 
 import net.templefox.database.data.Entity;
 
+@Deprecated
 public interface DataLoader {
 	/**
 	 * The implementation should <b>save</b> the new loaded data into all rest
@@ -15,6 +16,7 @@ public interface DataLoader {
 	 * 
 	 * @return The new loaded data.
 	 */
+	@Deprecated
 	List<? extends Entity> loadLocalData(LoadDataListener loadDataListener);
 
 	/**
@@ -24,5 +26,6 @@ public interface DataLoader {
 	 * 
 	 * @return The new loaded data.
 	 */
+	@Deprecated
 	List<? extends Entity> loadRemoteDate(FutureCallback<JsonArray> listener, String query);
 }

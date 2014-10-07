@@ -9,6 +9,7 @@ import net.templefox.database.data.CurrentUser;
 import net.templefox.database.data.User;
 import net.templefox.misc.Encoder;
 import net.templefox.misc.SharedPreferences_;
+import net.templefox.widget.BlurActionBar.GlassActionBarHelper;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
@@ -35,14 +36,25 @@ import android.util.Log;
 import android.view.Menu;
 import android.widget.Toast;
 
-@EActivity(R.layout.activity_start)
+@EActivity
 public class StartActivity extends Activity {
+	private GlassActionBarHelper helper;
+	
 	@Bean
 	CurrentUser currentUser;
 
 	@Pref
 	SharedPreferences_ preferences;
 
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setTheme(R.style.AppTheme_TranslucentActionBar);
+		helper = new GlassActionBarHelper().contentLayout(R.layout.activity_start);
+        setContentView(helper.createView(this));
+		
+	}
+	
 	@AfterViews
 	protected void afterViews() {
 		if (preferences.autoLogin().get()) {

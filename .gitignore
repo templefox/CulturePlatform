@@ -2,3 +2,4 @@
 gen
 project.properties
 /generated classes
+/bin

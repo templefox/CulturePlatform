@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:ptr="http://schemas.android.com/apk/res/net.templefox.cultureplatform"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <net.templefox.widget.pullrefresh.PullToRefreshListView
-        android:id="@+id/ptr"
+    <net.templefox.widget.staggeredGrid.StaggeredGridView
+        android:id="@+id/staggeredGridView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:item_margin="8dp"
+        app:column_count="2" >
+    </net.templefox.widget.staggeredGrid.StaggeredGridView>
+    
+    <TextView
+        android:id="@android:id/empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        ptr:ptrMode="both" >
-    </net.templefox.widget.pullrefresh.PullToRefreshListView>
-
+        android:gravity="center"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:text="Loading data..."/>
 </FrameLayout>

@@ -4,13 +4,12 @@
     android:layout_height="match_parent"
     android:layout_gravity="center" >
 
-    <net.templefox.widget.AsyncImageView
+    <net.templefox.widget.gestureImageView.GestureImageView
         android:id="@+id/gallery_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:src="@drawable/init"
         android:scaleType="centerInside" />
-
 
 </FrameLayout>

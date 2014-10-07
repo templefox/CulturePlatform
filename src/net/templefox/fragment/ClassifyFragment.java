@@ -12,6 +12,7 @@ import net.templefox.cultureplatform.ApplicationHelper;
 import net.templefox.database.DataLoader;
 import net.templefox.database.DatabaseConnector;
 import net.templefox.database.FakeLoadDataListener;
+import net.templefox.database.IonRemoteLoader;
 import net.templefox.database.LoadDataListener;
 import net.templefox.database.MessageAdapter;
 import net.templefox.database.SQLiteWorker;
@@ -75,7 +76,7 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 @SuppressLint("SimpleDateFormat")
 public class ClassifyFragment extends AbstractFragment {
 	private int currentPosition = 0;
-	private int BLOCK_NUMBER = 2;
+	private int BLOCK_NUMBER = 20;
 
 	@Bean
 	CurrentUser currentUser;
@@ -92,6 +93,9 @@ public class ClassifyFragment extends AbstractFragment {
 	@Bean
 	ClassifyItemAdapter adapter;
 
+	@Bean
+	IonRemoteLoader remoteLoader;
+
 	@ViewById(R.id.list_classify)
 	PullToRefreshListView listView;
 
@@ -107,34 +111,38 @@ public class ClassifyFragment extends AbstractFragment {
 	protected void FirstLoadDate() {
 		int offset = 0;
 		int limit = BLOCK_NUMBER;
-		adapter.loadRemoteDate(new FutureCallback<JsonArray>() {
-			@Override
-			public void onCompleted(Exception arg0, JsonArray arg1) {
-				Context rootContext = getActivity();
-				if (arg0 != null) {
-					Toast.makeText(rootContext, arg0.getMessage(), Toast.LENGTH_SHORT).show();
-				} else if (arg1.size() < 1) {
-					Toast.makeText(rootContext, "No more activity!", Toast.LENGTH_SHORT).show();
-				} else {
-					JsonElement resultElement = arg1.get(0).getAsJsonObject().get("result");
-					if (resultElement != null && resultElement.getAsString().equals("error")) {
-						Toast.makeText(rootContext, arg1.get(0).getAsJsonObject().get("error").getAsString(), Toast.LENGTH_LONG).show();
-						return;
+		remoteLoader.selectRemoteDate(
+				String.format("select id_activity,name,datetime,picture_urls from activity order by datetime desc limit %s,%s", offset, limit),
+				new FutureCallback<JsonArray>() {
+					@Override
+					public void onCompleted(Exception arg0, JsonArray arg1) {
+						Context rootContext = getActivity();
+						if (arg0 != null) {
+							Toast.makeText(rootContext, arg0.getMessage(), Toast.LENGTH_SHORT).show();
+						} else if (arg1.size() < 1) {
+							Toast.makeText(rootContext, "No more activity!", Toast.LENGTH_SHORT).show();
+						} else {
+							JsonElement resultElement = arg1.get(0).getAsJsonObject().get("result");
+							if (resultElement != null && resultElement.getAsString().equals("error")) {
+								Toast.makeText(rootContext, arg1.get(0).getAsJsonObject().get("error").getAsString(), Toast.LENGTH_LONG)
+										.show();
+								return;
+							}
+							currentPosition += arg1.size();
+							for (int i = 0; i < arg1.size(); i++) {
+								Activity activity = new Activity();
+								JsonObject object = arg1.get(i).getAsJsonObject();
+								activity.setId(object.get("id_activity").getAsInt());
+								activity.setName(object.get("name").getAsString());
+								activity.setDate(DateFormater.parse(object.get("datetime").getAsString()));
+								activity.setPictureUrl(object.get("picture_urls").getAsString());
+								adapter.getActivities().add(activity);
+								SQLiteWorker.insertIntoSQLite(activity, rootContext);
+							}
+							adapter.notifyDataSetChanged();
+						}
 					}
-					currentPosition += arg1.size();
-					for (int i = 0; i < arg1.size(); i++) {
-						Activity activity = new Activity();
-						JsonObject object = arg1.get(i).getAsJsonObject();
-						activity.setId(object.get("id_activity").getAsInt());
-						activity.setName(object.get("name").getAsString());
-						activity.setDate(DateFormater.parse(object.get("datetime").getAsString()));
-						adapter.getActivities().add(activity);
-					}
-					adapter.notifyDataSetChanged();
-				}
-			}
-		}, String.format("select id_activity,name,datetime from activity order by datetime desc limit %s,%s", offset, limit));
-		adapter.loadLocalData(null);
+				});
 	}
 
 	@AfterViews
@@ -152,71 +160,65 @@ public class ClassifyFragment extends AbstractFragment {
 	}
 
 	private void loadOptions() {
-		Ion.with(getActivity()).load(DatabaseConnector.url).setBodyParameter(DatabaseConnector.METHOD, DatabaseConnector.M_SELECT)
-				.setBodyParameter(DatabaseConnector.QUERY, Encoder.encodeString("SELECT id_type,name FROM type")).asJsonArray()
-				.setCallback(new FutureCallback<JsonArray>() {
-					@Override
-					public void onCompleted(Exception arg0, JsonArray arg1) {
-						Context rootContext = getActivity();
-						if (arg0 != null) {
-							Toast.makeText(rootContext, arg0.getMessage(), Toast.LENGTH_SHORT).show();
-						} else if (arg1.size() < 1) {
-							Toast.makeText(rootContext, "No type!", Toast.LENGTH_SHORT).show();
-						} else {
-							JsonElement resultElement = arg1.get(0).getAsJsonObject().get("result");
-							if (resultElement != null && resultElement.getAsString().equals("error")) {
-								Toast.makeText(rootContext, arg1.get(0).getAsJsonObject().get("error").getAsString(), Toast.LENGTH_LONG)
-										.show();
-								return;
-							}
-							for (int i = 0; i < arg1.size(); i++) {
-								Type type = new Type();
-								JsonObject object = arg1.get(i).getAsJsonObject();
-								type.setId(object.get("id_type").getAsInt());
-								type.setName(object.get("name").getAsString());
-								SQLiteWorker.insertIntoSQLite(type, rootContext);
-							}
-						}
-						List<ContentValues> types = SQLiteWorker.selectFromSQLite("type", new String[] { "name" }, rootContext);
-						optionorType.addString("全部");
-						for (ContentValues contentValues : types) {
-							optionorType.addString(contentValues.getAsString("name"));
-						}
+		remoteLoader.selectRemoteDate("SELECT id_type,name FROM type", new FutureCallback<JsonArray>() {
+			@Override
+			public void onCompleted(Exception arg0, JsonArray arg1) {
+				Context rootContext = getActivity();
+				if (arg0 != null) {
+					Toast.makeText(rootContext, arg0.getMessage(), Toast.LENGTH_SHORT).show();
+				} else if (arg1.size() < 1) {
+					Toast.makeText(rootContext, "No type!", Toast.LENGTH_SHORT).show();
+				} else {
+					JsonElement resultElement = arg1.get(0).getAsJsonObject().get("result");
+					if (resultElement != null && resultElement.getAsString().equals("error")) {
+						Toast.makeText(rootContext, arg1.get(0).getAsJsonObject().get("error").getAsString(), Toast.LENGTH_LONG).show();
+						return;
 					}
-				});
+					for (int i = 0; i < arg1.size(); i++) {
+						Type type = new Type();
+						JsonObject object = arg1.get(i).getAsJsonObject();
+						type.setId(object.get("id_type").getAsInt());
+						type.setName(object.get("name").getAsString());
+						SQLiteWorker.insertIntoSQLite(type, rootContext);
+					}
+				}
+				List<ContentValues> types = SQLiteWorker.selectFromSQLite("type", new String[] { "name" }, rootContext);
+				optionorType.addString("全部");
+				for (ContentValues contentValues : types) {
+					optionorType.addString(contentValues.getAsString("name"));
+				}
+			}
+		});
 
-		Ion.with(getActivity()).load(DatabaseConnector.url).setBodyParameter(DatabaseConnector.METHOD, DatabaseConnector.M_SELECT)
-				.setBodyParameter(DatabaseConnector.QUERY, Encoder.encodeString("SELECT id_organization,name FROM organization"))
-				.asJsonArray().setCallback(new FutureCallback<JsonArray>() {
-					@Override
-					public void onCompleted(Exception arg0, JsonArray arg1) {
-						Context rootContext = getActivity();
-						if (arg0 != null) {
-							Toast.makeText(rootContext, arg0.getMessage(), Toast.LENGTH_SHORT).show();
-						} else if (arg1.size() < 1) {
-							Toast.makeText(rootContext, "No organization!", Toast.LENGTH_SHORT).show();
-						} else {
-							JsonElement resultElement = arg1.get(0).getAsJsonObject().get("result");
-							if (resultElement != null && resultElement.getAsString().equals("error")) {
-								Toast.makeText(rootContext, arg1.get(0).getAsJsonObject().get("error").getAsString(), Toast.LENGTH_LONG)
-										.show();
-								return;
-							}
-							for (int i = 0; i < arg1.size(); i++) {
-								Location location = new Location();
-								JsonObject object = arg1.get(i).getAsJsonObject();
-								location.setId(object.get("id_organization").getAsInt());
-								location.setName(object.get("name").getAsString());
-								SQLiteWorker.insertIntoSQLite(location, rootContext);
-							}
-						}
-						List<ContentValues> types = SQLiteWorker.selectFromSQLite("location", new String[] { "name" }, rootContext);
-						optionorLocation.addString("全部");
-						for (ContentValues contentValues : types) {
-							optionorLocation.addString(contentValues.getAsString("name"));
-						}
+		remoteLoader.selectRemoteDate("SELECT id_organization,name FROM organization", new FutureCallback<JsonArray>() {
+			@Override
+			public void onCompleted(Exception arg0, JsonArray arg1) {
+				Context rootContext = getActivity();
+				if (arg0 != null) {
+					Toast.makeText(rootContext, arg0.getMessage(), Toast.LENGTH_SHORT).show();
+				} else if (arg1.size() < 1) {
+					Toast.makeText(rootContext, "No organization!", Toast.LENGTH_SHORT).show();
+				} else {
+					JsonElement resultElement = arg1.get(0).getAsJsonObject().get("result");
+					if (resultElement != null && resultElement.getAsString().equals("error")) {
+						Toast.makeText(rootContext, arg1.get(0).getAsJsonObject().get("error").getAsString(), Toast.LENGTH_LONG).show();
+						return;
 					}
-				});
+					for (int i = 0; i < arg1.size(); i++) {
+						Location location = new Location();
+						JsonObject object = arg1.get(i).getAsJsonObject();
+						location.setId(object.get("id_organization").getAsInt());
+						location.setName(object.get("name").getAsString());
+						SQLiteWorker.insertIntoSQLite(location, rootContext);
+					}
+				}
+				List<ContentValues> types = SQLiteWorker.selectFromSQLite("location", new String[] { "name" }, rootContext);
+				optionorLocation.addString("全部");
+				for (ContentValues contentValues : types) {
+					optionorLocation.addString(contentValues.getAsString("name"));
+				}
+			}
+		});
 	}
 
 	private void initListView() {
@@ -239,8 +241,10 @@ public class ClassifyFragment extends AbstractFragment {
 			public void onPullDownToRefresh(final PullToRefreshBase refreshView) {
 				int offset = 0;
 				int limit = currentPosition;
-				adapter.loadRemoteDate(
-						new FutureCallback<JsonArray>() {
+				remoteLoader.selectRemoteDate(
+						String.format(
+								"select id_activity,name,datetime,picture_urls from (select id_activity,name,datetime,type,location,picture_urls from activity_type_location order by datetime desc limit %s,%s) as `a`  where type like '%s' and location like '%s'",
+								offset, limit, selectedType, selectedLocation), new FutureCallback<JsonArray>() {
 							@Override
 							public void onCompleted(Exception arg0, JsonArray arg1) {
 								Context rootContext = getActivity();
@@ -262,25 +266,25 @@ public class ClassifyFragment extends AbstractFragment {
 										activity.setId(object.get("id_activity").getAsInt());
 										activity.setName(object.get("name").getAsString());
 										activity.setDate(DateFormater.parse(object.get("datetime").getAsString()));
+										activity.setPictureUrl(object.get("picture_urls").getAsString());
 										adapter.getActivities().add(activity);
+										SQLiteWorker.insertIntoSQLite(activity, rootContext);
 									}
 									adapter.notifyDataSetChanged();
 								}
 								refreshView.onRefreshComplete();
 							}
-						},
-						String.format(
-								"select id_activity,name,datetime from (select id_activity,name,datetime,type,location from activity_type_location order by datetime desc limit %s,%s) as `a`  where type like '%s' and location like '%s'",
-								offset, limit, selectedType, selectedLocation));
-
+						});
 			}
 
 			@Override
 			public void onPullUpToRefresh(final PullToRefreshBase refreshView) {
 				int offset = currentPosition;
 				int limit = BLOCK_NUMBER;
-				adapter.loadRemoteDate(
-						new FutureCallback<JsonArray>() {
+				remoteLoader.selectRemoteDate(
+						String.format(
+								"select id_activity,name,datetime,picture_urls from (select id_activity,name,datetime,type,location,picture_urls from activity_type_location order by datetime desc limit %s,%s) as `a`  where type like '%s' and location like '%s'",
+								offset, limit, selectedType, selectedLocation), new FutureCallback<JsonArray>() {
 							@Override
 							public void onCompleted(Exception arg0, JsonArray arg1) {
 								Context rootContext = getActivity();
@@ -303,16 +307,15 @@ public class ClassifyFragment extends AbstractFragment {
 										activity.setId(object.get("id_activity").getAsInt());
 										activity.setName(object.get("name").getAsString());
 										activity.setDate(DateFormater.parse(object.get("datetime").getAsString()));
+										activity.setPictureUrl(object.get("picture_urls").getAsString());
 										adapter.getActivities().add(activity);
+										SQLiteWorker.insertIntoSQLite(activity, rootContext);
 									}
 									adapter.notifyDataSetChanged();
 								}
 								refreshView.onRefreshComplete();
 							}
-						},
-						String.format(
-								"select id_activity,name,datetime from (select id_activity,name,datetime,type,location from activity_type_location order by datetime desc limit %s,%s) as `a`  where type like '%s' and location like '%s'",
-								offset, limit, selectedType, selectedLocation));
+						});
 			}
 		});
 	}

@@ -2,12 +2,15 @@ package net.templefox.cultureplatform;
 
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.OptionsMenu;
 
 import net.templefox.database.DatabaseConnector;
 import net.templefox.database.MessageAdapter;
+import net.templefox.database.data.CurrentUser;
 import net.templefox.database.data.User;
 import net.templefox.fragment.CalendarFragment;
 import net.templefox.fragment.CalendarFragment_;
@@ -49,6 +52,9 @@ import android.widget.Toast;
 @EActivity(R.layout.activity_main)
 @OptionsMenu(R.menu.main)
 public class MainActivity extends Activity {
+	@Bean
+	CurrentUser currentUser;
+	
 	private InterceptableViewPager viewPager;
 	private FragmentPagerAdapter fragmentPagerAdapter;
 	private ActionBar actionBar;
@@ -169,10 +175,8 @@ public class MainActivity extends Activity {
 
 	@OptionsItem(R.id.action_bar_add_activity)
 	protected void toAddActivity() {
-		if (((ApplicationHelper) this.getApplication()).getUserAuthority() == User.AUTHORITY_AUTHORIZED
-				|| ((ApplicationHelper) this.getApplication())
-						.getUserAuthority() == User.AUTHORITY_ULTIMATED)
-			intent2(AddActActivity.class);
+		if (currentUser!=null&&currentUser.getAuthority()<=User.AUTHORITY_AUTHORIZED)
+			AddActActivity_.intent(this).start();
 		else {
 			Toast.makeText(this, "没有足够的权限", Toast.LENGTH_SHORT).show();
 		}

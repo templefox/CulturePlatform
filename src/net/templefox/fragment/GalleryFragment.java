@@ -1,34 +1,46 @@
 package net.templefox.fragment;
 
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.ViewById;
+
 import net.templefox.widget.AsyncImageView;
 import net.templefox.widget.InterceptableViewPager;
 import net.templefox.widget.TouchImageView;
+import net.templefox.widget.gestureImageView.GestureImageView;
 
 import net.templefox.cultureplatform.R;
+import net.templefox.cultureplatform.events.EventBus4Gallary;
+import net.templefox.cultureplatform.events.OnViewPagerShowEvent;
 
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.Toast;
 
+@EFragment(R.layout.frag_gallery)
 public class GalleryFragment extends Fragment {
-	private InterceptableViewPager pager;
-	public GalleryFragment() {
-		// TODO Auto-generated constructor stub
-	}
+	@ViewById(R.id.gallery_image)
+	GestureImageView imageView;
 	
-	public void setViewPager(InterceptableViewPager pager){
-		this.pager = pager;
+	@Bean
+	EventBus4Gallary eventBus;
+	
+	@AfterViews
+	protected void afterViews(){
+		try{
+		eventBus.register(this);
+		}catch(Exception exception){
+			String str = exception.getMessage();
+			str.endsWith("");
+		}
 	}
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.frag_gallery, container,false);
-		AsyncImageView imageView = (AsyncImageView) view.findViewById(R.id.gallery_image);
-		imageView.asyncLoad("http://img.nynet.com.cn/underwear/fashion/Atlas/details/2012-7-3/1286882949071wrareks3lk.jpg");
-		return view;
+	public void onEvent(OnViewPagerShowEvent event){
+		imageView.reset();
 	}
-
 }

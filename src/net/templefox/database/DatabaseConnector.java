@@ -59,6 +59,7 @@ import android.util.Log;
 
 public class DatabaseConnector {
 	static public String url = "http://192.168.1.198:998/db/index.php";
+	static public String urlPath = "http://192.168.1.198:998/db/";
 	//static public String url = "http://templefox.xicp.net:998/";
 	static public String upload_url = url + "upload_picture.php";
 	static final public String METHOD = "method";
@@ -67,17 +68,19 @@ public class DatabaseConnector {
 	static final public String M_INSERT = "insert";
 	static final public String M_DELETE = "delete";
 	static final public String M_UPDATE = "update";
+	static final public String UPLOAD = "upload";
 	
 	static final private String end = "\r\n";
 	static final private String twoHyphens = "--";
 	static final private String boundary = "******";
-	static final public String UPLOAD = "UPLOAD";
+	
 	static final public int TIME_OUT = 3000;
 	public static Lock lock = new ReentrantLock(true);
 	static private ExecutorService threadPool = Executors.newCachedThreadPool();
 	private Map<String, String> keyValue = new HashMap<String, String>();
 	private Map<String, Bitmap> keyBitmap = new HashMap<String, Bitmap>();
 
+	@Deprecated
 	public DatabaseConnector addParams(String key, String value) {
 		keyValue.put(key, value);
 		return this;
@@ -94,7 +97,7 @@ public class DatabaseConnector {
 			}
 		});
 	}
-
+	@Deprecated
 	public void executeConnector(final MessageAdapter callback) {
 		final MessageHandler handler = new MessageHandler();
 		threadPool.execute(new Runnable() {
@@ -123,6 +126,7 @@ public class DatabaseConnector {
 	 * @throws IOException
 	 * @throws ClientProtocolException
 	 */
+	@Deprecated
 	private void multifunctionalConnect(final String url,
 			final Map<String, String> keyValuePair,
 			final Map<String, Bitmap> keyFilePair, final MessageHandler handler) {
@@ -193,7 +197,7 @@ public class DatabaseConnector {
 			Log.w("CP Exception", Log.getStackTraceString(e));
 		}
 	}
-
+	@Deprecated
 	private String getResponse(HttpURLConnection httpURLConnection)
 			throws IOException, UnsupportedEncodingException {
 		InputStream inputStream = httpURLConnection.getInputStream();
@@ -207,7 +211,7 @@ public class DatabaseConnector {
 
 		return result.toString();
 	}
-
+	@Deprecated
 	private void httpExecute(final Map<String, String> keyValuePair,
 			final Map<String, Bitmap> keyFilePair,
 			DataOutputStream dataOutPutStream) throws FileNotFoundException,

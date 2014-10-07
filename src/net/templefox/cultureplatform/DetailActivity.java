@@ -12,12 +12,23 @@ import net.templefox.database.MessageAdapter;
 import net.templefox.database.SQLiteWorker;
 import net.templefox.database.data.Activity;
 import net.templefox.database.data.Comment;
+import net.templefox.database.data.CurrentUser;
 import net.templefox.database.data.User;
 import net.templefox.widget.AsyncImageView;
 import net.templefox.widget.ImageTextView;
 
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.OptionsItem;
+import org.androidannotations.annotations.OptionsMenu;
+import org.androidannotations.annotations.OptionsMenuItem;
+import org.androidannotations.annotations.ViewById;
 import org.json.JSONArray;
 import org.json.JSONException;
+
+import com.koushikdutta.ion.Ion;
 
 import net.templefox.cultureplatform.R;
 
@@ -42,143 +53,115 @@ import android.view.View.OnTouchListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
 import android.widget.Toast;
 
-@SuppressLint("SimpleDateFormat")
+@EActivity(R.layout.activity_detail)
+@OptionsMenu(R.menu.detail)
+@SuppressLint({ "SimpleDateFormat", "NewApi" })
 public class DetailActivity extends android.app.Activity {
+	@OptionsMenuItem(R.id.detail_share)
+	MenuItem shareItem;
+
 	private Activity currentActivity;
-	private LinearLayout area;
-	private User currentUser;
 
-	private ImageTextView dateTextView;
-	private ImageTextView locatTextView;
-	private ImageTextView typeTextView;
-	private ImageTextView themeTextView;
-	private ImageTextView reporterTextView;
-	private ImageTextView temperatureTextView;
-	private ImageTextView clockTextView;
-	private TextView contentTextView;
-	private TextView procedureTextView;
-	private Button showMore;
-	private ScrollView scrollView;
-	private View gallary_small;
+	@ViewById(R.id.area_comments)
+	LinearLayout area;
 
-	private AsyncImageView imageView;
+	@Bean
+	CurrentUser currentUser;
+
+	@ViewById(R.id.date)
+	ImageTextView dateTextView;
+
+	@ViewById(R.id.address)
+	ImageTextView locatTextView;
+
+	@ViewById(R.id.type)
+	ImageTextView typeTextView;
+
+	@ViewById(R.id.theme)
+	ImageTextView themeTextView;
+
+	@ViewById(R.id.reporter)
+	ImageTextView reporterTextView;
+
+	@ViewById(R.id.temperature)
+	ImageTextView temperatureTextView;
+
+	@ViewById(R.id.clock)
+	ImageTextView clockTextView;
+
+	@ViewById(R.id.detail_content)
+	TextView contentTextView;
+
+	@ViewById(R.id.procedure)
+	TextView procedureTextView;
+
+	@ViewById(R.id.detail_scroll_view)
+	ScrollView scrollView;
+
+	@ViewById(R.id.image)
+	ImageView imageView;
 	String image_url = "";
 	private ShareActionProvider shareActionProvider;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		currentActivity = (Activity) getIntent().getSerializableExtra(
-				"activity");
-
 		setTheme(R.style.ActionBar);
-		setContentView(R.layout.activity_detail);
+		currentActivity = (Activity) getIntent().getSerializableExtra("activity");
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setTitle(currentActivity.getName());
+	}
 
-		currentUser = ((ApplicationHelper) getApplication()).getCurrentUser();
+	@AfterViews
+	protected void afterViews() {
 
-		area = (LinearLayout) findViewById(R.id.area_comments);
-
-		image_url = DatabaseConnector.url
-				+ currentActivity.getPictureUrl();
-		dateTextView = (ImageTextView) findViewById(R.id.date);
-		locatTextView = (ImageTextView) findViewById(R.id.address);
-		typeTextView = (ImageTextView) findViewById(R.id.type);
-		themeTextView = (ImageTextView) findViewById(R.id.theme);
-		reporterTextView = (ImageTextView) findViewById(R.id.reporter);
-		clockTextView = (ImageTextView) findViewById(R.id.clock);
-		temperatureTextView = (ImageTextView) findViewById(R.id.temperature);
-		contentTextView = (TextView) findViewById(R.id.detail_content);
-		procedureTextView = (TextView) findViewById(R.id.procedure);
-		imageView = (AsyncImageView) findViewById(R.id.image);
-		showMore = (Button) findViewById(R.id.detail_show_more);
-		scrollView = (ScrollView) findViewById(R.id.detail_scroll_view);
-		gallary_small = findViewById(R.id.detail_gallary_small);
-
-		imageView.asyncLoad(image_url);
-
-		try {
-			dateTextView.setValue("<img src='calendar'/> "
-					+ new SimpleDateFormat("yyyy-MM-dd").format(currentActivity
-							.getDate()));
-		} catch (NullPointerException e) {
-			Log.e("CP Error", e.getMessage());
-			Log.w("CP Exception", Log.getStackTraceString(e));
-		} catch (IllegalArgumentException e) {
-			Log.e("CP Error", e.getMessage());
-			Log.w("CP Exception", Log.getStackTraceString(e));
-		}
-
-		try {
-			clockTextView.setValue("<img src='clock'/> "
-					+ new SimpleDateFormat("HH:mm:ss").format(currentActivity
-							.getTime()));
-		} catch (NullPointerException e) {
-			Log.e("CP Error", e.getMessage());
-			Log.w("CP Exception", Log.getStackTraceString(e));
-		} catch (IllegalArgumentException e) {
-			Log.e("CP Error", e.getMessage());
-			Log.w("CP Exception", Log.getStackTraceString(e));
-		}
-
-		locatTextView.setValue("<img src='home'/> "
-				+ currentActivity.getAddress());
+		image_url = DatabaseConnector.urlPath + currentActivity.getPictureUrl();
+		Ion.with(imageView).placeholder(R.drawable.default_pic).load(image_url);
+		
+		dateTextView.setValue("<img src='calendar'/> " + new SimpleDateFormat("yyyy-MM-dd").format(currentActivity.getDate()));
+		clockTextView.setValue("<img src='clock'/> " + new SimpleDateFormat("HH:mm:ss").format(currentActivity.getDate()));
+		locatTextView.setValue("<img src='home'/> " + currentActivity.getAddress());
 		typeTextView.setValue("<img src='tag' /> " + currentActivity.getType());
-		themeTextView.setValue("<img src='favorite' /> "
-				+ currentActivity.getTheme());
-		reporterTextView.setValue("<img src='user' /> "
-				+ currentActivity.getReporterInfo());
-		temperatureTextView.setValue("<img src='heart' /> "
-				+ Integer.toString(currentActivity.getTemperature()) + "℃");
+		themeTextView.setValue("<img src='favorite' /> " + currentActivity.getTheme());
+		reporterTextView.setValue("<img src='user' /> " + currentActivity.getReporterInfo());
+		temperatureTextView.setValue("<img src='heart' /> " + Integer.toString(currentActivity.getTemperature()) + "℃");
 		temperatureTextView.setTextColor(Color.RED);
 		contentTextView.setText(currentActivity.getContent());
-
 		procedureTextView.setText(currentActivity.getProcedure());
+
 		scrollView.setOnTouchListener(new OnTouchListener() {
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				InputMethodManager manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 				if (event.getAction() == MotionEvent.ACTION_DOWN) {
-					if (getCurrentFocus() != null
-							&& getCurrentFocus().getWindowToken() != null) {
-						manager.hideSoftInputFromWindow(getCurrentFocus()
-								.getWindowToken(),
-								InputMethodManager.HIDE_NOT_ALWAYS);
+					if (getCurrentFocus() != null && getCurrentFocus().getWindowToken() != null) {
+						manager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 					}
 				}
 				return false;
 			}
 		});
-
-		showMore.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(DetailActivity.this,
-						CommentsActivity.class);
-				intent.putExtra("activity", currentActivity);
-				startActivity(intent);
-			}
-		});
-
-		gallary_small.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(DetailActivity.this,
-						GalleryActivity.class);
-				startActivity(intent);
-			}
-		});
+	}
+	
+	@Click(R.id.detail_show_more)
+	protected void clickShowMore(){
+		Intent intent = new Intent(DetailActivity.this, CommentsActivity.class);
+		intent.putExtra("activity", currentActivity);
+		startActivity(intent);
+	}
+	
+	@Click(R.id.detail_gallary_small)
+	protected void clickGallarySmall(){
+		GalleryActivity_.intent(this).start();
 	}
 
 	private void hintUserUnLogin() {
@@ -186,80 +169,56 @@ public class DetailActivity extends android.app.Activity {
 	}
 
 	private void hintUserUnCheck() {
-		Toast.makeText(DetailActivity.this, "您的账户尚未确认", Toast.LENGTH_SHORT)
-				.show();
+		Toast.makeText(DetailActivity.this, "您的账户尚未确认", Toast.LENGTH_SHORT).show();
 	}
 
-	@SuppressLint("NewApi")
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.detail, menu);
+		// Initial share item.
+		// TODO
 		MenuItem item = menu.findItem(R.id.detail_share);
 		shareActionProvider = (ShareActionProvider) item.getActionProvider();
-		setShareIntent();
-		return true;
-	}
-
-	@SuppressLint("NewApi")
-	private void setShareIntent() {
 		Intent myIntent = new Intent();
 		myIntent.setAction(Intent.ACTION_SEND);
 		myIntent.putExtra(Intent.EXTRA_TEXT, currentActivity.getName());
 		myIntent.setType("text/plain");
 		shareActionProvider.setShareIntent(myIntent);
+		return true;
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-
-		case R.id.detail_comment:
-			if (currentUser == null)
-				hintUserUnLogin();
-			else if (currentUser.getAuthority() == User.AUTHORITY_UNCHECK)
-				hintUserUnCheck();
-			else {
-				Intent intent = new Intent(this, CommentActivity.class);
-				intent.putExtra("activity", currentActivity);
-				startActivity(intent);
-			}
-			break;
-		case R.id.detail_rating:
-			if (currentUser == null)
-				hintUserUnLogin();
-			else if (currentUser.getAuthority() == User.AUTHORITY_UNCHECK)
-				hintUserUnCheck();
-			else {
-				Intent intent1 = new Intent(this, RatingActivity.class);
-				intent1.putExtra("activity", currentActivity);
-				startActivity(intent1);
-			}
-			break;
-		case R.id.detail_setting:
-			break;
-		case R.id.detail_share:
-			break;
-		case android.R.id.home:
-			finish();
-			return true;
-		default:
-			break;
+	@OptionsItem(R.id.detail_comment)
+	protected void clickComment() {
+		if (currentUser == null)
+			hintUserUnLogin();
+		else if (currentUser.getAuthority() == User.AUTHORITY_UNCHECK)
+			hintUserUnCheck();
+		else {
+			Intent intent = new Intent(this, CommentActivity.class);
+			intent.putExtra("activity", currentActivity);
+			startActivity(intent);
 		}
-		return super.onOptionsItemSelected(item);
 	}
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		load();
-		download();
+	@OptionsItem(R.id.detail_rating)
+	protected void clickRating() {
+		if (currentUser == null)
+			hintUserUnLogin();
+		else if (currentUser.getAuthority() == User.AUTHORITY_UNCHECK)
+			hintUserUnCheck();
+		else {
+			Intent intent1 = new Intent(this, RatingActivity.class);
+			intent1.putExtra("activity", currentActivity);
+			startActivity(intent1);
+		}
+	}
 
+	@OptionsItem(android.R.id.home)
+	protected void clickHome() {
+		finish();
 	}
 
 	private void load() {
-		List<ContentValues> list = SQLiteWorker.selectFromSQLite("comment",
-				new String[] { "content" }, "ActivityID = ?",
+		List<ContentValues> list = SQLiteWorker.selectFromSQLite("comment", new String[] { "content" }, "ActivityID = ?",
 				new String[] { currentActivity.getId().toString() }, this);
 		List<Comment> comments = new ArrayList<Comment>();
 		for (ContentValues value : list) {
@@ -293,8 +252,7 @@ public class DetailActivity extends android.app.Activity {
 
 			@Override
 			public void onTimeout() {
-				Toast.makeText(getApplicationContext(), "连接超时",
-						Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), "连接超时", Toast.LENGTH_SHORT).show();
 			}
 
 			@Override
@@ -313,10 +271,8 @@ public class DetailActivity extends android.app.Activity {
 		area.removeAllViews();
 		for (int i = 0; i < comments.size() && i < 2; i++) {
 			Comment comment = comments.get(i);
-			View view = LayoutInflater.from(this).inflate(
-					R.layout.item_comment, area, false);
-			TextView textView = (TextView) view
-					.findViewById(R.id.item_comment_text);
+			View view = LayoutInflater.from(this).inflate(R.layout.item_comment, area, false);
+			TextView textView = (TextView) view.findViewById(R.id.item_comment_text);
 			textView.setText(comment.getContent());
 			area.addView(view);
 		}

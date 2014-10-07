@@ -30,6 +30,7 @@ import android.widget.ImageView;
 /**
  * ImageView that able to download asynchronously.
  */
+@Deprecated
 public class AsyncImageView extends ImageView {
 
 	public static MemoryCache memoryCache = new MemoryCache();
